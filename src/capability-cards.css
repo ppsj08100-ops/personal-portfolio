@@ -1,0 +1,206 @@
+/* The original capabilities composition is the background plane, without clones. */
+.capability-scene { background: var(--insight-color-bg); }
+.capability-scene__viewport { position: relative; }
+.capability-scene__veil { display: none; }
+.capability-cards {
+  /* Measured reference .cap-block dimensions; motion keeps its existing scale. */
+  --stack-card-width: 29.5vw;
+  --stack-card-height: 33.5vw;
+  --stack-card-radius: 2vw;
+  position: relative;
+  isolation: isolate;
+  color: var(--insight-color-text);
+  background: var(--insight-color-bg);
+  font-family: var(--insight-font-family);
+}
+.capability-cards__header {
+  position: absolute;
+  top: var(--space-8);
+  inset-inline: var(--container-gutter);
+  z-index: 5;
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-6);
+  color: var(--color-muted);
+  font-size: var(--font-size-ui);
+  line-height: var(--line-height-ui);
+}
+.capability-cards__header h2, .capability-cards__header p { margin: 0; font: inherit; }
+.capability-cards__scroll { margin-left: var(--space-8); }
+.capability-cards__navigation { display: flex; align-items: center; gap: var(--space-3); }
+.capability-cards__navigation button {
+  display: none;
+  place-items: center;
+  width: var(--tap-target-min);
+  height: var(--tap-target-min);
+  padding: 0;
+  border: var(--border-decorative);
+  border-radius: var(--radius-circle);
+  background: transparent;
+  color: var(--insight-color-text);
+  font: inherit;
+  cursor: pointer;
+}
+.capability-cards__navigation button[aria-disabled="true"] { opacity: .35; cursor: default; }
+.capability-cards__stage { padding: var(--space-24) var(--space-8) var(--space-16); }
+.capability-cards__sequence { margin: 0; padding: 0; list-style: none; }
+.capability-step { width: var(--stack-card-width); margin: 0 auto var(--space-12); position: relative; }
+.capability-card {
+  position: relative;
+  width: 100%;
+  height: var(--stack-card-height);
+  border: 1px solid color-mix(in srgb, var(--color-soft-blue-gray) 20%, transparent);
+  border-radius: var(--stack-card-radius);
+  overflow: hidden;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--insight-color-navy) 98%, transparent), color-mix(in srgb, var(--ocean-color-mid) 97%, transparent));
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, .08);
+  transition: border-color var(--duration-hover) var(--ease-out);
+}
+.capability-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: .16;
+  background: radial-gradient(ellipse at 22% 90%, var(--color-blue), transparent 68%);
+}
+.capability-card__top { position: absolute; top: 9%; inset-inline: var(--space-6); text-align: center; font-size: var(--font-size-ui); font-weight: 400; }
+.capability-card__title {
+  position: absolute;
+  inset-inline: 5%;
+  top: 22%;
+  margin: 0;
+  font-size: clamp(2rem, calc(var(--stack-card-width) * .115), 3.6rem);
+  font-weight: 200;
+  line-height: .97;
+  letter-spacing: var(--letter-spacing-section);
+  text-align: center;
+}
+.capability-card__title--long { font-size: clamp(1.625rem, calc(var(--stack-card-width) * .097), 3.05rem); }
+.capability-card__description {
+  position: absolute;
+  inset-inline: 9%;
+  bottom: 10%;
+  margin: 0 auto;
+  max-width: 38ch;
+  font-size: var(--font-size-ui);
+  font-weight: 400;
+  line-height: 1.2;
+  text-align: center;
+  text-transform: uppercase;
+}
+.capability-card__details summary {
+  position: absolute;
+  right: var(--space-3);
+  bottom: var(--space-2);
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: var(--tap-target-min);
+  height: var(--tap-target-min);
+  cursor: pointer;
+  list-style: none;
+  color: var(--color-muted);
+}
+.capability-card__details summary::-webkit-details-marker { display: none; }
+.capability-card__details summary:focus-visible { outline: var(--focus-ring); outline-offset: -6px; border-radius: var(--radius-circle); }
+.capability-card__toggle { font-size: 1.25rem; font-weight: 200; transition: rotate var(--duration-hover) var(--ease-out); }
+.capability-card__details[open] .capability-card__toggle { rotate: 45deg; }
+.capability-card__expanded {
+  position: absolute;
+  z-index: 1;
+  inset: var(--space-2);
+  display: flex;
+  flex-direction: column;
+  justify-content: safe center;
+  gap: var(--space-6);
+  padding: 10%;
+  border-radius: calc(var(--stack-card-radius) - var(--space-2));
+  overflow-y: auto;
+  background: var(--insight-color-navy);
+  text-align: center;
+}
+.capability-card__expanded h4 { margin: 0; font-size: 1.125rem; font-weight: 300; }
+.capability-card__expanded p { margin: 0; color: var(--color-muted); font-family: var(--font-family-body); font-size: 1rem; line-height: var(--line-height-body); }
+/* Background (0), veil (1), deck (2), and foreground UI (3) are independent. */
+.is-immersive .capability-scene__viewport {
+  isolation: isolate;
+  overflow: clip;
+  /* Let the existing description and button travel into the reading area before
+     the bottom of this viewport reaches the pin. No cards move during this lead-in. */
+  padding-bottom: 28svh;
+  /* The background plane can leave the viewport without revealing other sections. */
+  background: var(--insight-color-bg);
+}
+.is-immersive .capabilities { z-index: 0; will-change: transform, opacity; }
+.is-immersive .capability-scene__veil {
+  display: block;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: var(--insight-color-depth);
+}
+.is-immersive .capability-cards {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 0;
+  bottom: 0;
+  height: 100svh;
+  background: transparent;
+  pointer-events: none;
+}
+.is-immersive .capability-cards__header { z-index: 3; align-items: center; }
+.is-immersive .capability-cards__navigation { pointer-events: auto; }
+.is-immersive .capability-cards__navigation button { display: grid; }
+.is-immersive .capability-cards__stage {
+  height: 100svh;
+  padding: 0;
+  display: grid;
+  place-items: center;
+  /* The outer viewport clips at the screen edge. A second clip here would cut
+     a rising card early when mobile browser chrome changes the visible height. */
+  overflow: visible;
+}
+.is-immersive .capability-cards__sequence { position: relative; width: var(--stack-card-width); height: var(--stack-card-height); }
+.is-immersive .capability-step { position: absolute; inset: 0; margin: 0; width: 100%; will-change: transform, opacity; }
+.is-immersive .capability-step.is-active { pointer-events: auto; }
+.is-immersive .capability-step:not(.is-active) { pointer-events: none; }
+@media (min-width: 768px) and (max-width: 1100px) {
+  .is-immersive .capability-cards__header { top: var(--space-5); }
+  .capability-cards__scroll { display: none; }
+}
+@media (max-width: 991px) {
+  .capability-cards {
+    --stack-card-width: 63vw;
+    --stack-card-height: 73vw;
+    --stack-card-radius: 6.5vw;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .capability-step.is-active .capability-card:hover { border-color: color-mix(in srgb, var(--color-soft-blue-gray) 55%, transparent); }
+  .capability-card__details summary:hover { color: var(--color-off-white); }
+}
+@media (max-width: 767px) {
+  .capability-cards__header h2 { max-width: 18ch; }
+  .is-immersive .capability-cards__header { top: var(--space-5); gap: var(--space-3); }
+  .is-immersive .capability-cards__header h2 { max-width: 12ch; }
+  .is-immersive .capability-cards__navigation { flex-shrink: 0; gap: var(--space-2); }
+  .is-immersive .capability-cards__navigation p { white-space: nowrap; }
+  .capability-cards__scroll { display: none; }
+  .capability-card__description { inset-inline: 8%; font-size: var(--font-size-ui); }
+  .capability-card__top { font-size: var(--font-size-ui); }
+  .capability-cards__stage { padding-inline: var(--space-5); }
+}
+@media (max-width: 479px) {
+  .capability-cards {
+    --stack-card-width: 79.2vw;
+    --stack-card-height: 89.6vw;
+    --stack-card-radius: 8vw;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .capability-card, .capability-card__toggle { transition: none; }
+}

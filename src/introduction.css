@@ -1,0 +1,143 @@
+/* Scope the Korean font to this copy so other sections retain their fonts. */
+@font-face {
+  font-family: 'Intro Pretendard';
+  src: url('/fonts/intro-pretendard-light.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+}
+
+/* The preceding section already provides space below the pearl shell. */
+.introduction {
+  --introduction-rule-color: color-mix(in srgb, var(--introduction-color-text) 16%, transparent);
+  --introduction-axis-color: color-mix(in srgb, var(--introduction-color-text) 12%, transparent);
+  --introduction-axis-lead: clamp(6rem, 10vw, 12rem);
+  position: relative;
+  isolation: isolate;
+  padding: var(--introduction-padding-start) var(--container-gutter) var(--introduction-padding-end);
+  background: var(--introduction-color-bg);
+  color: var(--introduction-color-text);
+  text-align: center;
+}
+.introduction::before {
+  content: "";
+  position: absolute;
+  z-index: 0;
+  top: calc(var(--introduction-padding-start) + var(--introduction-star-size) / 2 - var(--introduction-axis-lead));
+  bottom: calc(var(--introduction-padding-end) + var(--introduction-button-height));
+  left: calc(50% - .5px);
+  width: 1px;
+  pointer-events: none;
+  background: linear-gradient(180deg, transparent, var(--introduction-axis-color) 20%, var(--introduction-axis-color) 85%, var(--introduction-axis-color));
+}
+.introduction__divider,
+.introduction__copy,
+.introduction__line,
+.introduction__action { position: relative; z-index: 1; }
+
+.introduction__divider {
+  position: relative;
+  display: grid;
+  place-items: center;
+  height: var(--introduction-star-size);
+}
+.introduction__divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: calc(-1 * var(--container-gutter));
+  right: calc(-1 * var(--container-gutter));
+  height: 1px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  background: linear-gradient(90deg, transparent, var(--introduction-rule-color) 12%, var(--introduction-rule-color) 88%, transparent);
+}
+.introduction__star {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: var(--introduction-star-size);
+  height: var(--introduction-star-size);
+  color: var(--introduction-color-star);
+}
+
+.introduction__copy {
+  max-width: var(--introduction-copy-width);
+  margin: var(--introduction-copy-gap) auto 0;
+  font-family: 'Intro Pretendard', var(--font-family-body);
+  font-size: var(--introduction-font-size);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: var(--letter-spacing-body);
+  text-transform: var(--text-transform-body);
+  text-wrap: balance;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  /* Mask only the text block; the shared axis continues above and below it. */
+  background: var(--introduction-color-bg);
+}
+.introduction__copy span { display: block; }
+
+.introduction__line {
+  width: 1px;
+  height: var(--introduction-line-length);
+  margin: var(--introduction-line-gap) auto 0;
+  /* Preserve the existing reading space; the section now paints the single axis. */
+  background: none;
+  transform-origin: 50% 0%;
+}
+.introduction__action { display: grid; justify-items: center; }
+.introduction__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--introduction-button-height);
+  max-width: 100%;
+  padding: var(--space-3) var(--introduction-button-padding);
+  border: var(--border-width) solid var(--introduction-color-border);
+  border-radius: var(--radius-pill);
+  background: transparent;
+  color: inherit;
+  font-family: var(--insight-font-family);
+  font-size: var(--introduction-font-size);
+  font-weight: var(--font-weight-body);
+  line-height: var(--introduction-line-height);
+  letter-spacing: var(--letter-spacing-ui);
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+  transition: border-color var(--duration-hover) var(--ease-out), background-color var(--duration-hover) var(--ease-out);
+}
+.introduction__button:disabled { opacity: 1; cursor: default; }
+.introduction__button:not(:disabled) { cursor: pointer; }
+@media (hover: hover) and (pointer: fine) {
+  .introduction__button:hover {
+    border-color: rgba(180, 205, 231, .28);
+    background-color: rgba(180, 205, 231, .025);
+  }
+}
+
+/* Content is visible until JavaScript opts into the one-time reveal. */
+.introduction.is-motion-ready [data-introduction-reveal].is-revealed {
+  transition: opacity var(--duration-reveal) var(--ease-out), transform var(--duration-reveal) var(--ease-out);
+}
+.introduction.is-motion-ready [data-introduction-reveal]:not(.is-revealed) {
+  opacity: 0;
+  transform: translateY(var(--space-2));
+}
+.introduction.is-motion-ready .introduction__line.is-revealed {
+  transition-duration: var(--duration-reveal), var(--duration-title);
+}
+.introduction.is-motion-ready .introduction__line:not(.is-revealed) { transform: scaleY(0); }
+
+@media (max-width: 767px) {
+  .introduction { --introduction-copy-gap: var(--space-16); }
+  .introduction__copy { line-height: 1.3; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .introduction [data-introduction-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
+}

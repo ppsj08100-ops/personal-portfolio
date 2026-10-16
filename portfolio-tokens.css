@@ -1,0 +1,367 @@
+/*
+ * 박서진 Personal Portfolio — Design Tokens
+ * Source: ./design-guideline.md (개인 포트폴리오 권장값)
+ *
+ * Usage: <link rel="stylesheet" href="portfolio-tokens.css">
+ * 이 파일은 custom property만 정의한다. 컴포넌트 CSS에서 var()로 사용한다.
+ * rem 환산 기준은 기본 글자 크기 16px이며, html 글자 크기를 강제하지 않는다.
+ * 웹폰트는 별도로 준비한다. 이 파일은 폰트·이미지·라이브러리를 다운로드하지 않는다.
+ *
+ * Breakpoints: Mobile <768px / Tablet >=768px / Desktop >=992px
+ * CSS 변수는 @media 조건에 사용할 수 없으므로 조건의 너비는 명시한다.
+ * GSAP·WebGL·비디오·Lenis는 JS에서도 prefers-reduced-motion을 처리해야 한다.
+ */
+
+:root {
+  /* 01. Color — guideline 2, 9
+   * 권장 시각 비중: bg 70 / surface 10 / text 8 / muted 2 / blue 3 / accent 7.
+   * 비율은 디자인 참고값이다. 이미지 색상과 실제 면적을 자동 제어하지 않는다.
+   */
+  --color-bg: #000000;
+  --color-surface: #111315;
+  --color-text: #ffffff;
+  --color-muted: #b8bcc7;
+  --color-blue: #36589e; /* 배경·장식용 */
+  --color-accent: #b6a0e3;
+  --color-navy: #091221; /* 히어로 이미지에서 추출한 분위기 색 */
+
+  /* Scroll ornament / following section: keep the existing HERO sky unchanged. */
+  --color-deep-blue-black: #081421;
+  --color-midnight-navy: #0a192b;
+  --color-soft-blue-gray: #71829c;
+  --color-off-white: #f4f6fa;
+  --color-scroll-orbit: rgba(113, 130, 156, 0.28);
+  --scroll-orbit-size: min(63vw, clamp(13.5rem, 33.75vw, 30.46875rem));
+  --scroll-orbit-visible-ratio: 0.44;
+  --scroll-orbit-fade-end: .86;
+  --scroll-orbit-clearance: 40px;
+  --scroll-cue-offset-ratio: 0.28;
+  --scroll-arrow-distance: 2px;
+  --duration-scroll-arrow: 3.2s;
+
+  /* One shared seam colour: the image fade and following section meet here. */
+  /* Source water at y=880–929 is around rgb(0,30,109); absorb light gently. */
+  --section-bridge-rgb: 0, 28, 88;
+  --section-bridge-color: rgb(var(--section-bridge-rgb));
+  --hero-fade-ratio: 0.25;
+  --hero-fade-clearance: var(--space-6);
+  --hero-surface-end-ratio: .68;
+
+  /* DESIGN THAT TURNS INSIGHT INTO FORM — editorial section. */
+  /* Carry the water's cobalt into the seam, then steadily absorb its light. */
+  --insight-color-transition: var(--section-bridge-color);
+  --insight-color-bg: #020b1d;
+  --ocean-color-mid: #02173c;
+  --insight-color-navy: #041733;
+  --insight-color-depth: #031024;
+  --insight-color-text: #f4f1ea;
+  --insight-font-family: "Hero Roboto", "Helvetica Neue", Arial, sans-serif;
+  --insight-font-weight: 200; /* Locally supplied OFL font; no commercial font embedding. */
+  --insight-font-size: clamp(2.5rem, 13.1vw, 16rem); /* Shared by all four lines; former THAT MOVES scale. */
+  --insight-orbit-buffer: var(--space-16);
+  --insight-line-height: 0.82; /* Eased from the reference's .76 for the local fallback. */
+  --insight-letter-spacing: -0.02em;
+  /* The supplied cutout has less empty space; keep its visible outline no larger. */
+  --insight-object-width: clamp(11.88rem, 27.28vw, 33.22rem);
+  --insight-object-overlap: calc(var(--insight-font-size) * .18);
+  --insight-transition-gap: clamp(var(--space-6), 1.5vw, var(--space-8));
+  /* Total surface-to-heading distance, including the HERO fade and inset.
+     Do not add a second water-column height or extra padding to this budget. */
+  --ocean-transition-distance: clamp(7.5rem, 42vw, 11rem);
+
+  /* Introduction: measured against Naya's 1920px description and capsule. */
+  --introduction-color-bg: var(--insight-color-bg);
+  --introduction-color-text: var(--insight-color-text);
+  --introduction-color-star: #a5b2c5;
+  --introduction-color-line: rgba(160, 195, 228, .16);
+  --introduction-color-border: rgba(180, 205, 231, .16);
+  --introduction-font-size: clamp(.875rem, .73vw, 1rem);
+  --introduction-line-height: 1.1;
+  --introduction-copy-width: 50rem;
+  --introduction-star-size: clamp(1.25rem, 1.6vw, 2rem);
+  --introduction-copy-gap: clamp(var(--space-12), 3.5vw, 4.2rem);
+  --introduction-line-gap: clamp(var(--space-12), 5vw, var(--space-24));
+  --introduction-line-length: clamp(var(--space-32), 11.8vw, 14.16rem);
+  --introduction-padding-start: clamp(var(--space-6), 2vw, var(--space-10));
+  --introduction-padding-end: clamp(var(--space-24), 8vw, var(--space-48));
+  --introduction-button-height: clamp(3.5rem, 3.8vw, 4.625rem);
+  --introduction-button-padding: clamp(var(--space-6), 2.18vw, var(--space-12));
+
+  --color-on-accent: var(--color-bg);
+  --color-link: var(--color-text);
+  --color-link-active: var(--color-accent);
+  --color-focus: var(--color-accent);
+  --color-line-decorative: rgba(255, 255, 255, 0.15);
+  --color-border-interactive: var(--color-muted);
+  --color-surface-hover: rgba(255, 255, 255, 0.08);
+  --color-header-scrolled: rgba(0, 0, 0, 0.88);
+  --color-overlay: rgba(0, 0, 0, 0.72);
+  --color-selection-bg: var(--color-accent);
+  --color-selection-text: var(--color-on-accent);
+
+  --gradient-glass: linear-gradient(
+    180deg,
+    rgba(255, 255, 255, 0.06),
+    rgba(255, 255, 255, 0.02)
+  );
+  --gradient-hero-shade: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.7) 0%,
+    rgba(0, 0, 0, 0.2) 50%,
+    var(--color-bg) 100%
+  );
+
+  /* 02. Font families / weights — guideline 3
+   * display의 300 굵기를 지원하는 폰트를 준비한다.
+   * Carl Brown은 자동 로드하지 않는다. 장식 서체는 사용권 확보 후 별도 적용한다.
+   */
+  --font-family-display: "Helvetica Neue", "Pretendard", Arial, sans-serif;
+  --font-family-body: "Pretendard", "Apple SD Gothic Neo", "Noto Sans KR", system-ui, sans-serif;
+  --font-family-ui: var(--font-family-body);
+
+  --font-weight-display: 300;
+  --font-weight-heading-ko: 500;
+  --font-weight-project: 500;
+  --font-weight-body: 400;
+  --font-weight-ui: 500;
+
+  /* 03. Typography — mobile defaults, rem 기반 최소·최대 크기 */
+  --font-size-hero: clamp(3rem, 12vw, 4rem); /* 48–64px */
+  --font-size-section: clamp(2.25rem, 8vw, 3.25rem); /* 36–52px */
+  --font-size-heading-ko: clamp(1.75rem, 5vw, 2rem); /* 28–32px */
+  --font-size-project: clamp(1.375rem, 4vw, 1.5rem); /* 22–24px */
+  --font-size-body: 1rem; /* 16px */
+  --font-size-ui: 0.875rem; /* 14px */
+  --font-size-meta: var(--font-size-ui);
+
+  --line-height-hero: 0.95;
+  --line-height-section: 1;
+  --line-height-heading-ko: 1.25;
+  --line-height-project: 1.25;
+  --line-height-body: 1.6;
+  --line-height-ui: 1.4;
+  --line-height-meta: var(--line-height-ui);
+
+  --letter-spacing-hero: -0.04em;
+  --letter-spacing-section: -0.03em;
+  --letter-spacing-heading-ko: -0.025em;
+  --letter-spacing-project: -0.02em;
+  --letter-spacing-body: -0.01em;
+  --letter-spacing-ui: 0;
+  --letter-spacing-label: 0.04em;
+
+  /* 영문 라벨은 uppercase, 한글 설명문은 원래 표기를 유지한다. */
+  --text-transform-label: uppercase;
+  --text-transform-body: none;
+
+  /* 04. Space scale — 4px 기준, rem으로 확대 설정 반영 */
+  --space-0: 0;
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-18: 4.5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+  --space-36: 9rem;
+  --space-48: 12rem;
+
+  /* 05. Layout — guideline 4, 6, 8 */
+  --container-max-width: 90rem; /* 1440px, 콘텐츠 영역 기준 */
+  --container-gutter: var(--space-5); /* 한쪽 20px */
+  --container-width: min(
+    calc(100% - var(--container-gutter) - var(--container-gutter)),
+    var(--container-max-width)
+  );
+  --content-max-width: 42.5rem; /* 본문 최대 680px */
+  --grid-columns: 4;
+  --grid-gutter: var(--space-4);
+  --project-grid-columns: 1;
+  --space-section: clamp(4.5rem, 12vw, 6rem); /* 72–96px */
+  --space-content: clamp(1.5rem, 4vw, 2rem); /* 24–32px */
+  --space-copy: var(--space-4);
+  --space-card-meta: var(--space-3);
+  --space-footer: var(--space-8);
+
+  --hero-min-height: 100svh; /* min-height로 소비: 내용이 길면 늘어남 */
+  --hero-title-max-width: 12ch;
+  --hero-image-position: 50% 40%;
+  --project-image-ratio: 4 / 3;
+  --project-image-ratio-wide: 3 / 2;
+
+  /* 06. Components — guideline 5, 9 */
+  --radius-sm: 0.75rem;
+  --radius-md: 1.5rem;
+  --radius-lg: 2rem;
+  --radius-pill: 999px;
+  --radius-circle: 50%;
+  --radius-card: var(--radius-md);
+  --radius-button: var(--radius-pill);
+  --radius-input: var(--radius-sm);
+
+  --border-width: 1px;
+  --border-decorative: var(--border-width) solid var(--color-line-decorative);
+  --border-interactive: var(--border-width) solid var(--color-border-interactive);
+  --blur-glass: 12px;
+  --blur-header: 8px;
+
+  --header-height: clamp(4rem, 10vw, 4.5rem); /* 64–72px */
+  --anchor-scroll-margin: calc(var(--header-height) + var(--space-4));
+  --button-min-height: 3rem; /* 48px */
+  --button-padding-inline: var(--space-6);
+  --button-gap: var(--space-2);
+  --button-font-size: var(--font-size-ui);
+  --input-min-height: 3.5rem;
+  --input-padding-inline: var(--space-4);
+  --input-font-size: var(--font-size-body);
+  --navigation-control-size: 3rem;
+  --tap-target-min: 2.75rem; /* 내부 디자인 기준: 44px */
+
+  --focus-ring-width: 2px;
+  --focus-ring-offset: 4px;
+  --focus-ring: var(--focus-ring-width) solid var(--color-focus);
+
+  /* 07. Layer order — 각 stacking context 안에서 사용 */
+  --z-base: 0;
+  --z-content: 1;
+  --z-sticky: 10;
+  --z-header: 100;
+  --z-menu-backdrop: 190;
+  --z-menu: 200;
+  --z-modal: 300;
+  --z-cursor: 400;
+  --z-transition: 500;
+  --z-skip-link: 600;
+
+  /* 08. Motion — guideline 7
+   * duration은 CSS 시간값이다. GSAP에서는 ms/s 단위를 초로 변환한다.
+   * motion의 enabled/scrub은 JS용 수치다. 변수만으로 동작을 초기화하지 않는다.
+   */
+  --ease-standard: cubic-bezier(0.2, 0, 0, 1);
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+
+  --duration-hover: 250ms;
+  --duration-reveal: 700ms;
+  --duration-title: 900ms;
+  --duration-body: 500ms;
+  --duration-page: 350ms;
+  --duration-gallery: 500ms;
+  --delay-stagger: 80ms;
+
+  --motion-enabled: 1;
+  --motion-reveal-y: 1.25rem;
+  --motion-title-blur: 6px;
+  --motion-hover-offset: 0.25rem;
+  --motion-parallax-y: -6%;
+  --motion-scrub: 0.6;
+  --motion-parallax-enabled: 0;
+  --motion-cursor-enabled: 0;
+  --motion-smooth-scroll-enabled: 0; /* 기본값은 일반 스크롤 */
+  --interaction-hover-enabled: 0;
+}
+
+/* 09. Tablet — guideline 3.3, 4.3, 8 */
+@media (min-width: 768px) {
+  :root {
+    --ocean-transition-distance: clamp(12rem, 24vw, 16rem);
+    --font-size-hero: clamp(4.5rem, 10vw, 6.5rem); /* 72–104px */
+    --font-size-section: clamp(3.5rem, 8vw, 5rem); /* 56–80px */
+    --font-size-heading-ko: clamp(2rem, 4vw, 2.5rem); /* 32–40px */
+    --font-size-project: clamp(1.5rem, 3vw, 1.75rem); /* 24–28px */
+    --font-size-body: clamp(1rem, 1.8vw, 1.125rem); /* 16–18px */
+
+    --container-gutter: var(--space-8);
+    --grid-columns: 8;
+    --grid-gutter: var(--space-5);
+    --project-grid-columns: 2;
+    --space-section: clamp(6rem, 12vw, 8rem); /* 96–128px */
+    --space-content: clamp(2rem, 5vw, 3rem); /* 32–48px */
+    --space-footer: var(--space-12);
+    --header-height: 5rem;
+  }
+}
+
+/* 10. Desktop — 큰 화면에서도 글자·여백의 상한 유지 */
+@media (min-width: 992px) {
+  :root {
+    --ocean-transition-distance: clamp(15rem, 17vw, 20rem);
+    --scroll-orbit-size: clamp(23.4375rem, 24vw, 30.46875rem);
+    --font-size-hero: clamp(6.5rem, 10vw, 10rem); /* 104–160px */
+    --font-size-section: clamp(5rem, 8vw, 8rem); /* 80–128px */
+    --font-size-heading-ko: clamp(2.5rem, 3vw, 3.5rem); /* 40–56px */
+    --font-size-project: clamp(1.5rem, 2vw, 2rem); /* 24–32px */
+    --font-size-body: clamp(1rem, 1.25vw, 1.125rem); /* 16–18px */
+
+    --container-gutter: clamp(3rem, 3.333333vw, 4rem); /* 48–64px */
+    --grid-columns: 12;
+    --grid-gutter: var(--space-6);
+    --space-section: clamp(9rem, 10vw, 12rem); /* 144–192px */
+    --space-content: clamp(3rem, 4vw, 4rem); /* 48–64px */
+    --header-height: clamp(5rem, 6vw, 6rem); /* 80–96px */
+    --button-min-height: 3.5rem;
+    --hero-image-position: 50% 0%;
+  }
+}
+
+/* Hover는 입력 장치의 기능에 따라 분기한다. */
+@media (hover: hover) and (pointer: fine) {
+  :root {
+    --interaction-hover-enabled: 1;
+  }
+}
+
+/* Desktop 너비여도 터치 중심 환경에서는 커서 추적·parallax를 사용하지 않는다. */
+@media (min-width: 992px) and (hover: hover) and (pointer: fine) {
+  :root {
+    --motion-parallax-enabled: 1;
+    --motion-cursor-enabled: 1;
+  }
+}
+
+/* 11. Reduced motion — 마지막에 선언해 화면 크기 분기보다 우선 적용한다.
+ * CSS에서 사용하는 모션은 정지한다. JS도 matchMedia 변경을 구독해
+ * GSAP / WebGL / Swiper 자동 재생 / 비디오 등을 정지·재구성한다.
+ * 열기·닫기·페이지 이동 완료를 transitionend 이벤트에만 의존하지 않는다.
+ */
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --duration-hover: 0ms;
+    --duration-reveal: 0ms;
+    --duration-title: 0ms;
+    --duration-body: 0ms;
+    --duration-page: 0ms;
+    --duration-gallery: 0ms;
+    --delay-stagger: 0ms;
+
+    --motion-enabled: 0;
+    --motion-reveal-y: 0rem;
+    --motion-title-blur: 0px;
+    --motion-hover-offset: 0rem;
+    --motion-parallax-y: 0%;
+    --motion-scrub: 0;
+    --motion-parallax-enabled: 0;
+    --motion-cursor-enabled: 0;
+    --motion-smooth-scroll-enabled: 0;
+  }
+}
+
+/* 컴포넌트 CSS에서 사용하는 예시:
+ * .container { width: var(--container-width); margin-inline: auto; }
+ * .section { padding-block: var(--space-section); }
+ * .grid { display: grid;
+ *   grid-template-columns: repeat(var(--grid-columns), minmax(0, 1fr));
+ *   gap: var(--grid-gutter); }
+ * .hero-title { font-family: var(--font-family-display);
+ *   font-size: var(--font-size-hero); font-weight: var(--font-weight-display);
+ *   line-height: var(--line-height-hero); letter-spacing: var(--letter-spacing-hero); }
+ * :where(a, button, input, textarea, select):focus-visible {
+ *   outline: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+ * [id] { scroll-margin-top: var(--anchor-scroll-margin); }
+ */

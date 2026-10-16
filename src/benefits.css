@@ -1,0 +1,161 @@
+.benefits {
+  --benefits-star-size: 1.6vw;
+  --benefits-label-gap: 3.5vw;
+  position: relative;
+  z-index: 3;
+  isolation: isolate;
+  /* The gallery already ends with this inset. Keep its measured 70vw stage
+     intact, with the star beginning exactly at the end of that stage. */
+  margin-top: -3.125vw;
+  padding-bottom: 9.375vw;
+  overflow-x: clip;
+  overflow-y: visible;
+  color: var(--insight-color-text);
+  background: var(--insight-color-bg);
+  font-family: var(--insight-font-family);
+}
+.benefits::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 94% 83%, color-mix(in srgb, var(--color-blue) 30%, transparent), transparent 51%),
+    radial-gradient(ellipse at 12% 88%, color-mix(in srgb, var(--color-blue) 18%, transparent), transparent 58%);
+  mask-image: linear-gradient(transparent, #000 58%);
+}
+.benefits__intro { position: relative; display: flex; flex-direction: column; align-items: center; gap: var(--benefits-label-gap); }
+.benefits__decoration { position: relative; display: grid; place-items: center; width: 100%; height: var(--benefits-star-size); }
+.benefits__star { position: relative; z-index: 1; display: block; width: var(--benefits-star-size); height: var(--benefits-star-size); color: var(--introduction-color-star); }
+.benefits__rule {
+  position: absolute;
+  left: 0; right: 0; top: calc(50% - max(.5px, .035vw));
+  height: max(1px, .07vw);
+  background: linear-gradient(90deg, transparent, var(--introduction-color-line) 15% 85%, transparent);
+  transform-origin: center;
+}
+.benefits__axis {
+  position: absolute;
+  left: calc(50% - max(.5px, .0275vw));
+  bottom: calc(-1 * var(--benefits-label-gap));
+  width: max(1px, .055vw);
+  height: 18.8vw;
+  pointer-events: none;
+}
+.benefits__axis-draw {
+  height: 100%;
+  background: linear-gradient(transparent, var(--introduction-color-line) 60%, var(--introduction-color-line));
+  transform-origin: top;
+}
+.benefits__label {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-width: 9.73vw;
+  margin: 0;
+  padding: 1.45vw 2.18vw 1.43vw;
+  border: 1px solid var(--introduction-color-border);
+  border-radius: 1.9vw;
+  font-size: .73vw;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.benefits__label-copy { display: inline-block; white-space: nowrap; }
+.benefits__layout {
+  display: grid;
+  grid-template-columns: 11.25vw 17.18vw minmax(0, 1fr);
+  margin: 15.625vw 3.125vw 0;
+}
+.benefits__eyebrow {
+  grid-column: span 2;
+  display: flex;
+  align-items: flex-start;
+  gap: .625vw;
+  margin: 0;
+  font-size: .73vw;
+  font-weight: 400;
+  line-height: 1.1;
+}
+.benefits__eyebrow-copy { display: block; width: max-content; white-space: nowrap; transform-origin: left; }
+.benefits__dot {
+  position: relative;
+  flex: 0 0 .58vw;
+  width: .58vw; height: .58vw; margin-top: .01vw;
+  border-radius: 50%;
+  background: color-mix(in srgb, currentColor 60%, transparent);
+  filter: blur(.05vw);
+}
+.benefits__dot::after { content: ''; position: absolute; width: .22vw; height: .22vw; left: 50%; top: 50%; transform: translate(-50%, -50%); border-radius: 50%; background: currentColor; filter: blur(.02vw); }
+.benefits__heading { min-width: 0; margin: 0; font-size: 7.3vw; font-weight: 100; line-height: .8; letter-spacing: normal; }
+.benefits__row { display: flex; padding-top: .9vw; margin-bottom: -.9vw; }
+.benefits__row + .benefits__row { justify-content: flex-end; padding-bottom: .02em; }
+.benefits__row:last-child { margin-right: 18.85vw; }
+.benefits__line { display: block; width: max-content; white-space: nowrap; transform-origin: left; }
+.benefits__row + .benefits__row .benefits__line { transform-origin: right; }
+.benefits__word { display: inline-block; transform-origin: center; }
+.benefits__o { display: inline-block; width: .751em; height: .75em; vertical-align: -.04em; fill: currentColor; }
+@media (max-width: 991px) {
+  .benefits {
+    --benefits-star-size: 5.3vw;
+    --benefits-label-gap: 17vw;
+    /* The loaded compact reference leaves 50.15vw from the arrow controls
+       to this star. Reuse the existing 32vw gallery inset for that distance. */
+    margin-top: 0;
+    padding-top: 18.15vw;
+    padding-bottom: 32vw;
+  }
+  .benefits__axis { left: calc(50% - max(.5px, .13vw)); width: max(1px, .26vw); height: 48.5333vw; }
+  .benefits__rule { top: calc(50% - max(.5px, .1vw)); height: max(1px, .2vw); }
+  .benefits__label { min-width: 37.8vw; padding: 5.75vw 7.2vw 5.5vw; border-radius: 8vw; font-size: 3.2vw; }
+  .benefits__layout { grid-template-columns: 32vw minmax(0, 1fr); row-gap: 13.33vw; margin: 32vw 4.8vw 0; }
+  .benefits__eyebrow { gap: 3.2vw; font-size: 3.2vw; }
+  .benefits__dot { flex-basis: 2.66vw; width: 2.66vw; height: 2.66vw; margin-top: .4vw; filter: blur(.2vw); }
+  .benefits__dot::after { width: 1.14vw; height: 1.14vw; }
+  .benefits__heading { grid-column: span 2; font-size: 10.66vw; }
+  .benefits__row:last-child { margin-right: 27.6vw; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .benefits__star, .benefits__rule, .benefits__axis-draw, .benefits__label, .benefits__word { opacity: 1 !important; filter: none !important; }
+}
+
+/* Measured source: 9.375vw below the introduction; text starts at 62.5vw. */
+.benefits__body { display: grid; grid-template-columns: minmax(0, 1fr) 36.6vw; gap: 0; margin: 9.375vw 3.125vw 0; }
+.benefits__visual { position: relative; min-width: 0; }
+/* Scroll entrance changes only the outer wrapper's opacity. Each creature has
+   independent horizontal drift, vertical buoyancy and a very slight tilt.
+   Separate periods produce gentle currents, without a shared orbital path. */
+.benefits__art-entry { display: grid; place-items: center; width: 54vw; height: 54vw; margin-top: -7vw; }
+.benefits__pair { position: relative; width: 36vw; height: 36vw; }
+.benefits__seahorse { position: absolute; inset: 0; animation: benefits-drift var(--drift-period) ease-in-out var(--drift-phase) infinite alternate; will-change: transform; }
+.benefits__seahorse-rise { width: 100%; height: 100%; animation: benefits-buoyancy var(--rise-period) ease-in-out var(--rise-phase) infinite alternate; }
+.benefits__seahorse img { display: block; width: 100%; height: 100%; object-fit: contain; animation: benefits-sway var(--sway-period) ease-in-out var(--sway-phase) infinite alternate; transform-origin: var(--pivot); }
+.benefits__seahorse--left { left: -1.5%; right: 1.5%; --drift-from: -10px; --drift-to: -6px; --rise-from: -14px; --rise-to: 10px; --tilt-from: -1.4deg; --tilt-to: 1.2deg; --pivot: 31% 49%; --drift-period: 5.35s; --drift-phase: -3.2s; --rise-period: 4.15s; --rise-phase: -1.7s; --sway-period: 5.8s; --sway-phase: -5.1s; }
+.benefits__seahorse--right { left: 1.5%; right: -1.5%; --drift-from: 6px; --drift-to: 10px; --rise-from: -10px; --rise-to: 16px; --tilt-from: -1.2deg; --tilt-to: 1.5deg; --pivot: 70% 56%; --drift-period: 4.45s; --drift-phase: -6.4s; --rise-period: 5.55s; --rise-phase: -7.3s; --sway-period: 4.85s; --sway-phase: -2.8s; }
+@keyframes benefits-drift { from { transform: translateX(var(--drift-from)); } to { transform: translateX(var(--drift-to)); } }
+@keyframes benefits-buoyancy { from { transform: translateY(var(--rise-from)); } to { transform: translateY(var(--rise-to)); } }
+@keyframes benefits-sway { from { transform: rotate(var(--tilt-from)); } to { transform: rotate(var(--tilt-to)); } }
+.benefits__reasons { display: flex; flex-direction: column; gap: 7.3vw; list-style: none; margin: 0; padding: 0; }
+.benefits__reason { display: grid; grid-template-columns: 1.19vw minmax(0, 1fr); gap: 1.04vw; align-items: start; }
+.benefits__number { font-size: .73vw; font-weight: 400; line-height: 1.1; }
+.benefits__reason-inner { display: flex; flex-direction: column; align-items: flex-start; gap: 2.5vw; min-width: 0; }
+.benefits__reason-title { margin: 0; font-size: 2.9vw; font-weight: 100; line-height: .86; letter-spacing: normal; }
+.benefits__reason-title > span { display: block; width: max-content; white-space: nowrap; transform-origin: left; }
+.benefits__description { width: 21.5vw; margin: 0; font-size: .73vw; font-weight: 400; line-height: 1.1; letter-spacing: normal; opacity: .4; }
+.benefits__description > span { display: block; width: max-content; white-space: nowrap; transform-origin: left; }
+@media (max-width: 991px) {
+  .benefits__body { grid-template-columns: minmax(0, 1fr); margin: 21.33vw 4.8vw 0; }
+  .benefits__visual { height: 105vw; display: grid; place-items: center; }
+  .benefits__art-entry { width: 90vw; height: 90vw; margin-top: 0; }
+  .benefits__pair { width: 63vw; height: 63vw; }
+  .benefits__reasons { gap: 21.33vw; }
+  .benefits__reason { grid-template-columns: 5.2vw minmax(0, 1fr); gap: 5.86vw; }
+  .benefits__number { font-size: 3.2vw; }
+  .benefits__reason-inner { gap: 10.93vw; }
+  .benefits__reason-title { font-size: 6.4vw; }
+  .benefits__description { width: 100%; font-size: 3.2vw; }
+  .benefits__description > span { display: inline; white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .benefits__seahorse, .benefits__seahorse-rise, .benefits__seahorse img { animation: none; will-change: auto; }
+}

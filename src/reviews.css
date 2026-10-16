@@ -1,0 +1,52 @@
+@font-face { font-family: 'Reviews Helvetica'; src: url('/fonts/reviews-helvetica-roman.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Reviews Helvetica'; src: url('/fonts/clients-helvetica-thin.woff2') format('woff2'); font-weight: 100; font-style: normal; font-display: swap; }
+/* Replace the title's temporary exit space with the actual next view. */
+.clients-title { padding-bottom: 15.625vw; overflow-x: clip; }
+.reviews { position: relative; margin-top: 15.625vw; color: var(--insight-color-text); font-family: 'Reviews Helvetica', Arial, sans-serif; font-weight: 400; text-transform: uppercase; }
+.reviews__stage { position: relative; height: 37vw; }
+.reviews__viewport { position: relative; margin-left: 28.43vw; width: 68.62vw; height: 100%; overflow: visible; }
+.reviews__slide { position: absolute; top: 0; left: 0; width: 40vw; height: 37vw; transform-origin: center; perspective: 300vw; backface-visibility: hidden; }
+.reviews__slide[data-review-state="previous"] { pointer-events: none; }
+.reviews__slide[hidden] { display: none !important; }
+.reviews__card { position: relative; display: flex; flex-direction: column; justify-content: space-between; width: 100%; height: 100%; padding: 2.6vw; border: 1px solid color-mix(in srgb, currentColor 7%, transparent); border-radius: 2vw; background: linear-gradient(color-mix(in srgb, currentColor 2.5%, transparent), color-mix(in srgb, currentColor 1%, transparent)); background-color: var(--insight-color-bg); overflow: hidden; transform-origin: center; }
+/* The opaque navy base occludes retiring cards. Keep the subtle surface
+   gradient above it and the content at its existing individual opacity. */
+.reviews__top, .reviews__bottom { display: grid; grid-template-columns: minmax(0, 1fr) 15vw; gap: 16px; }
+.reviews__portrait { width: 12.65vw; height: 12.65vw; border-radius: 50%; background: #777a7e; }
+.reviews__identity { display: flex; flex-direction: column; gap: 1.56vw; }
+.reviews__name { margin: 0; font-size: 2.9vw; font-weight: 100; line-height: .86; }
+.reviews__role, .reviews__description, .reviews__number { margin: 0; font-size: .73vw; line-height: 1.1; }
+.reviews__role, .reviews__description { opacity: .4; }
+.reviews__copy { display: flex; flex-direction: column; gap: 3.6vw; }
+.reviews__quote { margin: 0; font-size: 1.25vw; font-weight: 400; line-height: 1.15; }
+.reviews__number { align-self: end; }
+.reviews__navigation { position: absolute; left: 0; bottom: 0; display: flex; align-items: center; height: 9.8vw; }
+.reviews__button { position: relative; display: grid; place-items: center; flex: 0 0 auto; width: 9.8vw; height: 9.8vw; margin: 0; padding: 0; border: 1px solid color-mix(in srgb, currentColor 15%, transparent); border-radius: 50%; background: transparent; color: inherit; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+.reviews__button + .reviews__button { margin-left: -2vw; }
+.reviews__button:focus-visible { outline: 2px solid #478aff; outline-offset: 5px; }
+.reviews__button:hover { z-index: 2; }
+.reviews__arrow { width: .625vw; height: .9vw; min-width: 7px; min-height: 12px; fill: none; stroke: currentColor; stroke-width: 1.8; }
+.reviews__ring { position: absolute; inset: -1px; width: calc(100% + 2px); height: calc(100% + 2px); overflow: visible; pointer-events: none; fill: none; transform: rotate(-90deg); }
+.reviews__ring circle { stroke: #4395ff; stroke-width: .85; stroke-linecap: round; stroke-dasharray: 13 87; stroke-dashoffset: 0; opacity: 0; filter: drop-shadow(0 0 2px #3b83ff) drop-shadow(0 0 5px #2368ff); }
+@media (max-width: 991px) {
+  .clients-title { padding-bottom: 32vw; }
+  .reviews { margin-top: 32vw; }
+  .reviews__stage { height: auto; }
+  .reviews__viewport { margin-left: 0; width: calc(100% + 4.8vw); height: 98.7vw; perspective: none; touch-action: pan-y; }
+  .reviews__slide { width: 79.2vw; height: 98.7vw; perspective: none; transform-origin: top left; }
+  .reviews__card { border-radius: 10.7vw; padding: 5.3vw; }
+  .reviews__top { grid-template-columns: minmax(0, 1fr) 43.73vw; }
+  .reviews__bottom { grid-template-columns: minmax(0, 1fr); flex: 1; margin-top: 21.4vw; }
+  .reviews__portrait { width: 18.7vw; height: 18.7vw; }
+  .reviews__identity { gap: 5.33vw; }
+  .reviews__name { font-size: 6.4vw; }
+  .reviews__role, .reviews__description { font-size: 3.2vw; }
+  .reviews__quote { font-size: 4.53vw; }
+  .reviews__copy { justify-content: space-between; gap: 3vw; padding-bottom: 8vw; }
+  .reviews__number { display: none; }
+  .reviews__navigation { position: relative; justify-content: center; height: 20vw; margin-top: 7vw; }
+  .reviews__button { width: 20vw; height: 20vw; }
+  .reviews__button + .reviews__button { margin-left: -4vw; }
+  .reviews__arrow { width: 3.2vw; height: 4vw; }
+}
+@media (prefers-reduced-motion: reduce) { .reviews__ring circle { filter: none; } }

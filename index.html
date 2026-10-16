@@ -1,0 +1,408 @@
+﻿<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#000b2f" />
+    <meta name="description" content="박서진의 UI/UX, 웹디자인, 비주얼 디자인과 크리에이티브 프로젝트를 위한 퍼스널 포트폴리오." />
+    <link rel="icon" type="image/svg+xml" href="/portfolio-mark.svg" />
+    <link rel="preload" as="image" type="image/webp" href="/images/hero_edit.webp" fetchpriority="high" />
+    <title>BEYOND THE SURFACE — 박서진 Portfolio</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#hero">메인 비주얼로 바로가기</a>
+    <main id="app">
+      <section class="hero" id="hero" aria-labelledby="hero-title" tabindex="-1">
+        <!-- The existing text-free artwork stays intact. CSS masks its baked-in
+             lower arc; the centred scroll cue below is HTML/SVG. -->
+        <div class="hero__frame">
+          <picture class="hero__picture">
+            <source type="image/webp" srcset="/images/hero_edit.webp" />
+            <img class="hero__artwork" src="/images/hero_edit-background.png" width="1672" height="941" alt="네이비 밤하늘과 푸른 산, 호수 위에 누운 인어를 흰색 라인으로 그린 일러스트. 인어와 풍경이 수면에 은은하게 반사됩니다." fetchpriority="high" decoding="async" draggable="false" />
+          </picture>
+          <div class="hero__ring-repair" aria-hidden="true"></div>
+        </div>
+
+        <!-- Full-width underwater background. Its paint layer crosses the seam
+             without adding height or changing the surrounding composition. -->
+        <div class="ocean-transition" aria-hidden="true">
+          <img class="ocean-transition__texture" src="/images/underwater-scene-2048.png" srcset="/images/underwater-scene-2048.png 2048w, /images/underwater-scene.png 3840w" sizes="100vw" width="3840" height="1920" alt="" decoding="async" draggable="false" />
+        </div>
+
+        <h1 class="hero__title" id="hero-title" lang="en"><span>BEYOND</span><span>THE SURFACE</span></h1>
+        <header class="hero__header">
+          <nav class="hero__navigation" aria-label="주요 메뉴">
+            <div class="hero__nav-group">
+              <a class="hero__control" href="/images/hero_edit.png" target="_blank" rel="noopener" aria-label="GALLERY: 원본 일러스트 보기 (새 탭)" lang="en">GALLERY</a>
+              <a class="hero__control" href="tel:+821051577159" aria-label="전화하기: +82 10 5157 7159">+82 10 5157 7159</a>
+            </div>
+            <div class="hero__nav-group hero__nav-group--right">
+              <button class="hero__control hero__control--sound" type="button" data-sound-toggle aria-label="배경 사운드 켜기" aria-pressed="false">
+                <svg class="hero__sound-wave" viewBox="0 0 30 12" fill="none" aria-hidden="true"><path d="M1 8C6-2 9 2 14 7s9 3 15-5" /></svg>
+                <span lang="en">SOUND</span><span class="hero__sound-dot" aria-hidden="true"></span>
+              </button>
+              <button class="hero__control" type="button" data-menu-open aria-label="메뉴 열기" aria-controls="portfolio-menu" aria-expanded="false" aria-haspopup="dialog">
+                <svg class="hero__menu-icon" viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M1 3h10M1 6h10M1 9h10" /></svg><span lang="en">MENU</span>
+              </button>
+            </div>
+          </nav>
+        </header>
+        <div class="hero__scroll-orbit">
+          <a class="hero__scroll-cue" href="#insight-to-experience" data-scroll-next aria-label="SCROLL DOWN: 다음 타이포그래피 섹션으로 이동" lang="en">
+            <span class="hero__scroll-label">SCROLL DOWN</span>
+            <span class="hero__scroll-arrow" aria-hidden="true">
+              <svg class="hero__scroll-arrow-base" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
+              <span class="hero__scroll-arrow-light">
+                <svg class="hero__scroll-arrow-tail" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
+                <svg class="hero__scroll-arrow-tint" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
+                <svg class="hero__scroll-arrow-core" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
+              </span>
+            </span>
+          </a>
+        </div>
+        <p class="hero__error" hidden>이미지를 불러오지 못했습니다. 페이지를 다시 열어 주세요.</p>
+      </section>
+      <!-- The HERO owns the only header, scroll cue and underwater background.
+           The existing typography and pearl composition follow unchanged. -->
+      <section class="insight-section" id="insight-to-experience" aria-labelledby="insight-title" tabindex="-1">
+        <h2 class="insight-section__title" id="insight-title" lang="en" aria-label="DESIGN THAT TURNS INSIGHT INTO FORM" tabindex="-1">
+          <span class="insight-section__line"><span class="insight-section__word">DESIGN</span></span>
+          <span class="insight-section__line"><span class="insight-section__word">THAT</span> <span class="insight-section__word">TURNS</span></span>
+          <span class="insight-section__line"><span class="insight-section__word">INSIGHT</span></span>
+          <span class="insight-section__line"><span class="insight-section__word">INT<span class="sr-only">O</span><svg class="insight-section__symbol" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><path class="insight-section__crescent" fill-rule="evenodd" d="M71.57 12.5A92 92 0 0 0 128.43 187.5A92 92 0 0 0 71.57 12.5Z M72.19 14.40C30.34 28.00 19 69 29 111C39 153 85.96 199.20 127.81 185.60C169.66 172.00 181 119 169 75C158 33 114.04 .80 72.19 14.40Z" /><path class="insight-section__curve" d="M158.5 29C180 70 154 103 108 105C67 106 43 136 57 179" /></svg></span> <span class="insight-section__word">F<span class="sr-only">O</span><svg class="insight-section__symbol" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><path class="insight-section__crescent" fill-rule="evenodd" d="M71.57 12.5A92 92 0 0 0 128.43 187.5A92 92 0 0 0 71.57 12.5Z M72.19 14.40C30.34 28.00 19 69 29 111C39 153 85.96 199.20 127.81 185.60C169.66 172.00 181 119 169 75C158 33 114.04 .80 72.19 14.40Z" /><path class="insight-section__curve" d="M158.5 29C180 70 154 103 108 105C67 106 43 136 57 179" /></svg>RM</span></span>
+        </h2>
+        <figure class="insight-section__still-life" aria-hidden="true">
+          <img src="/images/pearl-shell-attached.png" width="1600" height="1600" alt="" loading="lazy" decoding="async" draggable="false" />
+        </figure>
+      </section>
+      <section class="introduction" id="introduction" aria-labelledby="introduction-title" lang="en">
+        <h2 class="sr-only" id="introduction-title">Introduction</h2>
+        <div class="introduction__divider" data-introduction-reveal aria-hidden="true">
+          <svg class="introduction__star" viewBox="0 0 32 32" fill="currentColor" focusable="false">
+            <path d="M16 0 18.6 13.4 32 16 18.6 18.6 16 32 13.4 18.6 0 16 13.4 13.4Z" />
+          </svg>
+        </div>
+        <p class="introduction__copy" data-introduction-reveal lang="ko">
+          <span>보이는 화면 너머, 사용자가 정보를 이해하는 과정을 고민합니다.</span>
+          <span>관찰한 내용을 구조와 흐름으로 정리하고,</span>
+          <span>디자인과 인터랙션으로 실제 화면을 구현합니다.</span>
+        </p>
+        <div class="introduction__line" data-introduction-reveal aria-hidden="true"></div>
+        <div class="introduction__action" data-introduction-reveal>
+          <!-- Enable and connect this control when the selected works section exists. -->
+          <button class="introduction__button" type="button" data-selected-works-pending disabled>VIEW SELECTED WORKS</button>
+        </div>
+      </section>
+      <div class="capability-scene">
+      <div class="capability-scene__viewport">
+      <section class="capabilities" id="capabilities" aria-labelledby="capabilities-title" lang="en">
+        <h2 class="capabilities__title" id="capabilities-title" aria-label="HOW I THINK DESIGN AND BUILD">
+          <span class="capabilities__line" data-capabilities-reveal>HOW I THINK</span>
+          <span class="capabilities__line" data-capabilities-reveal>DESIGN</span>
+          <span class="capabilities__line" data-capabilities-reveal>AND BUILD</span>
+        </h2>
+        <figure class="capabilities__artwork" aria-hidden="true" data-capabilities-reveal>
+          <img class="capabilities__arch" src="/images/underwater-arch.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" draggable="false" />
+        </figure>
+        <div class="capabilities__details">
+          <h3 class="capabilities__label" data-capabilities-reveal>CAPABILITIES</h3>
+          <div class="capabilities__copy" data-capabilities-reveal>
+            <p>I WORK ACROSS UX RESEARCH, VISUAL DESIGN, AND FRONT-END DEVELOPMENT.</p>
+            <p>MY APPROACH CONNECTS USER NEEDS, VISUAL THINKING, AND PRACTICAL IMPLEMENTATION.</p>
+          </div>
+          <div class="capabilities__action" data-capabilities-reveal>
+            <!-- Replace with an anchor to the real works section when it is available. -->
+            <button class="capabilities__button" type="button" data-capabilities-work-pending disabled>
+              <span>EXPLORE MY WORK</span>
+              <svg class="capabilities__arrow" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M2 8h11M9 3l5 5-5 5" /></svg>
+            </button>
+          </div>
+        </div>
+      </section>
+      <div class="capability-scene__veil" aria-hidden="true"></div>
+      <section class="capability-cards" id="capability-cards" aria-labelledby="capability-cards-title" lang="en">
+        <header class="capability-cards__header">
+          <h2 id="capability-cards-title">FOUR WAYS I BRING IDEAS TO LIFE</h2>
+          <div class="capability-cards__navigation">
+            <button class="capability-cards__previous" type="button" aria-label="Previous capability">←</button>
+            <p><span class="capability-cards__current" aria-hidden="true">01</span> / 04 <span class="capability-cards__scroll">SCROLL TO EXPLORE ↓</span></p>
+            <button class="capability-cards__next" type="button" aria-label="Next capability">→</button>
+          </div>
+        </header>
+        <div class="capability-cards__stage"><ol class="capability-cards__sequence">
+          <li class="capability-step" id="capability-research" style="--card-index: 0">
+            <article class="capability-card" aria-labelledby="card-title-1">
+              <div class="capability-card__top"><span class="capability-card__number">(01)</span></div>
+              <div class="capability-card__body">
+                <div class="capability-card__content">
+                  <h3 class="capability-card__title" id="card-title-1">UX<br>RESEARCH<br>&amp; STRATEGY</h3>
+                  <p class="capability-card__description">Understanding users, identifying problems, and shaping clear design directions.</p>
+                  <details class="capability-card__details">
+                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
+                    <div class="capability-card__expanded"><h4>From observation to direction</h4><p lang="ko">사용자 조사에서 발견한 내용을 문제 정의로 정리하고, 정보 구조와 사용자 흐름으로 연결합니다.</p></div>
+                  </details>
+                </div>
+              </div>
+            </article>
+          </li>
+          <li class="capability-step" id="capability-visual" style="--card-index: 1">
+            <article class="capability-card" aria-labelledby="card-title-2">
+              <div class="capability-card__top"><span class="capability-card__number">(02)</span></div>
+              <div class="capability-card__body">
+                <div class="capability-card__content">
+                  <h3 class="capability-card__title" id="card-title-2">UI &amp;<br>VISUAL DESIGN</h3>
+                  <p class="capability-card__description">Creating thoughtful interfaces through typography, layout, and visual systems.</p>
+                  <details class="capability-card__details">
+                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
+                    <div class="capability-card__expanded"><h4>Giving structure a visual language</h4><p lang="ko">타이포그래피, 레이아웃, 컴포넌트의 관계를 설계합니다. Figma에서 화면과 시각 시스템을 구체화합니다.</p></div>
+                  </details>
+                </div>
+              </div>
+            </article>
+          </li>
+          <li class="capability-step" id="capability-development" style="--card-index: 2">
+            <article class="capability-card" aria-labelledby="card-title-3">
+              <div class="capability-card__top"><span class="capability-card__number">(03)</span></div>
+              <div class="capability-card__body">
+                <div class="capability-card__content">
+                  <h3 class="capability-card__title capability-card__title--long" id="card-title-3">FRONT-END<br>DEVELOPMENT</h3>
+                  <p class="capability-card__description">Turning designed interfaces into responsive, functional web experiences.</p>
+                  <details class="capability-card__details">
+                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
+                    <div class="capability-card__expanded"><h4>From designed form to working interface</h4><p lang="ko">HTML, CSS, JavaScript로 디자인을 반응형 화면에 구현합니다. 화면 크기와 입력 방식에 맞게 동작을 조정합니다.</p></div>
+                  </details>
+                </div>
+              </div>
+            </article>
+          </li>
+          <li class="capability-step" id="capability-interaction" style="--card-index: 3">
+            <article class="capability-card" aria-labelledby="card-title-4">
+              <div class="capability-card__top"><span class="capability-card__number">(04)</span></div>
+              <div class="capability-card__body">
+                <div class="capability-card__content">
+                  <h3 class="capability-card__title" id="card-title-4">INTERACTION<br>DESIGN</h3>
+                  <p class="capability-card__description">Adding purposeful motion and interactions that support the user experience.</p>
+                  <details class="capability-card__details">
+                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
+                    <div class="capability-card__expanded"><h4>Motion with a reason</h4><p lang="ko">스크롤 전환과 마이크로인터랙션으로 상태 변화를 전달합니다. 키보드 입력과 모션 감소 설정도 함께 고려합니다.</p></div>
+                  </details>
+                </div>
+              </div>
+            </article>
+          </li>
+        </ol></div>
+      </section>
+      </div>
+      </div>
+      <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title" lang="en" tabindex="-1">
+        <div class="portfolio__intro">
+          <div class="portfolio__divider" aria-hidden="true">
+            <svg class="portfolio__star" viewBox="0 0 32 32" fill="currentColor" focusable="false">
+              <path d="M16 0 18.6 13.4 32 16 18.6 18.6 16 32 13.4 18.6 0 16 13.4 13.4Z" />
+            </svg>
+          </div>
+          <h2 class="portfolio__label" id="portfolio-title">PORTFOLIO</h2>
+        </div>
+        <div class="portfolio__work">
+          <svg class="portfolio__glyphs" width="0" height="0" aria-hidden="true"><defs><path id="portfolio-letter-o" fill-rule="evenodd" d="M50 0C21 0 0 22 0 50s21 50 50 50 50-22 50-50S79 0 50 0Zm17 6C44-3 18 14 13 38S18 82 36 92s43-4 50-29S86 14 67 6Z"/></defs></svg>
+          <h2 class="portfolio__heading" aria-label="OUR WORK, IN FULL BLOOM">
+            <span class="portfolio__title-line" aria-hidden="true"><span class="portfolio__word"><svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>UR</span> <span class="portfolio__word">W<svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>RK,</span></span>
+            <span class="portfolio__title-line" aria-hidden="true"><span class="portfolio__word">IN</span> <span class="portfolio__word">FULL</span> <span class="portfolio__word">BL<svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg><svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>M</span></span>
+          </h2>
+          <div class="portfolio__gallery" role="region" aria-label="Project gallery" aria-describedby="portfolio-gallery-help" tabindex="0">
+            <p class="sr-only" id="portfolio-gallery-help">Drag horizontally to explore. Use the left and right arrow keys to change projects, and Space to pause or resume automatic movement.</p>
+            <div class="portfolio__canvas" aria-hidden="true"></div>
+            <ol class="portfolio__projects">
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 01</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 02</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 03</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 04</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 05</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 06</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 07</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 08</span><span>YYYY</span></figcaption></figure></li>
+            </ol>
+            <div class="portfolio__gallery-controls">
+              <button type="button" data-gallery-previous aria-label="Previous project">←</button>
+              <button class="portfolio__pause" type="button" data-gallery-pause aria-label="Pause automatic gallery movement" aria-pressed="false">Ⅱ</button>
+              <button type="button" data-gallery-next aria-label="Next project">→</button>
+            </div>
+            <p class="sr-only" data-gallery-status aria-live="polite"></p>
+          </div>
+        </div>
+      </section>
+      <section class="benefits" id="benefits" aria-labelledby="benefits-title" lang="en">
+        <div class="benefits__intro">
+          <div class="benefits__decoration" aria-hidden="true">
+            <div class="benefits__axis"><div class="benefits__axis-draw"></div></div>
+            <div class="benefits__rule"></div>
+            <svg class="benefits__star" viewBox="0 0 31 31" fill="currentColor" focusable="false"><path d="M15.5 0 18.0428 12.9572 31 15.5 18.0428 18.0428 15.5 31 12.9572 18.0428 0 15.5 12.9572 12.9572Z"/></svg>
+          </div>
+          <p class="benefits__label"><span><span class="benefits__label-copy">BENEFITS</span></span></p>
+        </div>
+        <div class="benefits__layout">
+          <p class="benefits__eyebrow"><span class="benefits__dot" aria-hidden="true"></span><span class="benefits__eyebrow-copy">DISCOVER WHY CUBE STUDIO</span></p>
+          <h2 class="benefits__heading" id="benefits-title" aria-label="THE BEAUTY IS IN HOW IT’S DONE">
+            <span class="benefits__row" aria-hidden="true"><span class="benefits__line"><span class="benefits__word">THE</span> <span class="benefits__word">BEAUTY</span> <span class="benefits__word">IS</span></span></span>
+            <span class="benefits__row" aria-hidden="true"><span class="benefits__line"><span class="benefits__word">IN</span> <span class="benefits__word">H</span><span class="benefits__word"><svg class="benefits__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg></span><span class="benefits__word">W</span> <span class="benefits__word">IT’S</span></span></span>
+            <span class="benefits__row" aria-hidden="true"><span class="benefits__line"><span class="benefits__word">D</span><span class="benefits__word"><svg class="benefits__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg></span><span class="benefits__word">NE</span></span></span>
+          </h2>
+        </div>
+        <div class="benefits__body">
+          <div class="benefits__visual">
+            <div class="benefits__art-entry">
+              <div class="benefits__pair" role="img" aria-label="푸른 광채와 빛나는 선을 지닌 해마 두 마리가 서로 마주 보며 물결에 천천히 떠 있습니다">
+                <div class="benefits__seahorse benefits__seahorse--left" aria-hidden="true"><div class="benefits__seahorse-rise"><img src="/images/benefits-seahorse-left.png" width="1254" height="1254" alt="" loading="lazy" decoding="async" draggable="false" /></div></div>
+                <div class="benefits__seahorse benefits__seahorse--right" aria-hidden="true"><div class="benefits__seahorse-rise"><img src="/images/benefits-seahorse-right.png" width="1254" height="1254" alt="" loading="lazy" decoding="async" draggable="false" /></div></div>
+              </div>
+            </div>
+          </div>
+          <ol class="benefits__reasons">
+            <li class="benefits__reason">
+              <span class="benefits__number">(01)</span>
+              <div class="benefits__reason-inner">
+                <h3 class="benefits__reason-title"><span>QUALITY, THAT LASTS</span></h3>
+                <p class="benefits__description"><span>WE CHOOSE REFINED, LONG-LASTING MATERIALS — SAFE</span> <span>FOR YOUR GUESTS, GENTLE ON THE SPACE, AND</span> <span>EFFORTLESS TO CARE FOR.</span></p>
+              </div>
+            </li>
+            <li class="benefits__reason">
+              <span class="benefits__number">(02)</span>
+              <div class="benefits__reason-inner">
+                <h3 class="benefits__reason-title"><span>SEAMLESS, LIKE NATURE</span></h3>
+                <p class="benefits__description"><span>ONE MOMENT — AN EMPTY SPACE. THE NEXT — A SCENE IN</span> <span>BLOOM. LIKE A REAL FLOWER OPENING AT FIRST LIGHT, OUR</span> <span>INSTALLATIONS APPEAR SEAMLESSLY.</span></p>
+              </div>
+            </li>
+            <li class="benefits__reason">
+              <span class="benefits__number">(03)</span>
+              <div class="benefits__reason-inner">
+                <h3 class="benefits__reason-title"><span>AS UNIQUE AS EACH</span><span>FLOWER</span></h3>
+                <p class="benefits__description"><span>NO TWO BLOOMS ARE THE SAME — AND NEITHER ARE OUR</span> <span>DESIGNS. WE CRAFT EACH PROJECT WITH SOUL, SHAPED</span> <span>BY YOUR STORY AND BROUGHT TO LIFE WITH CARE.</span></p>
+              </div>
+            </li>
+          </ol>
+        </div>
+      </section>
+      <section class="clients-title" id="clients" aria-labelledby="clients-title" lang="en">
+        <!-- Edit these three rows to change the copy; C and O use the accent face. -->
+        <h2 class="clients-title__heading" id="clients-title">
+          <span class="clients-title__row"><span class="clients-title__accent" data-clients-run>C</span><span data-clients-run>LIENTS</span></span>
+          <span class="clients-title__row"><span data-clients-run>SAY AB</span><span class="clients-title__accent" data-clients-run>O</span><span data-clients-run>UT</span></span>
+          <span class="clients-title__row"><span data-clients-run>CUBE</span></span>
+        </h2>
+        <div class="reviews" role="region" aria-roledescription="carousel" aria-label="Client testimonials">
+          <div class="reviews__stage">
+            <div class="reviews__viewport"></div>
+            <div class="reviews__navigation" aria-label="후기 탐색">
+              <button class="reviews__button" type="button" aria-label="이전 후기">
+                <svg class="reviews__ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49.5" pathLength="100"/></svg>
+                <svg class="reviews__arrow" viewBox="0 0 8 12" aria-hidden="true"><path d="M6.5 1 2 6l4.5 5"/></svg>
+              </button>
+              <button class="reviews__button" type="button" aria-label="다음 후기">
+                <svg class="reviews__ring" viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="49.5" pathLength="100"/></svg>
+                <svg class="reviews__arrow" viewBox="0 0 8 12" aria-hidden="true"><path d="m1.5 1 4.5 5-4.5 5"/></svg>
+              </button>
+            </div>
+          </div>
+          <p class="reviews__status sr-only" role="status" aria-live="polite" aria-atomic="true"></p>
+        </div>
+      </section>
+      <section class="contact-intro" id="contact" aria-labelledby="contact-title" lang="en">
+        <div class="contact-intro__tag-block">
+          <div class="contact-intro__divider" aria-hidden="true">
+            <span class="contact-intro__vertical"><span class="contact-intro__vertical-trace"></span></span>
+            <span class="contact-intro__horizontal"></span>
+            <svg class="contact-intro__spark" width="32" height="32" viewBox="0 0 32 32" fill="currentColor" focusable="false"><path d="M16 1C16.55 13.9 18.1 15.45 31 16C18.1 16.55 16.55 18.1 16 31C15.45 18.1 13.9 16.55 1 16C13.9 15.45 15.45 13.9 16 1Z"/></svg>
+          </div>
+          <p class="contact-intro__label"><span>CONTACT</span></p>
+        </div>
+        <div class="contact-intro__layout">
+          <p class="contact-intro__copy">
+            <span>PLANNING A WEDDING, LAUNCH,</span>
+            <span>OR PRIVATE EVENT? HAVE A VISION,</span>
+            <span>A FEELING, A MOMENT YOU WANT</span>
+            <span>TO MARK? YOU IMAGINE IT.</span>
+            <span>WE BRING IT INTO BLOOM.</span>
+          </p>
+          <h2 class="contact-intro__heading" id="contact-title" aria-label="LET’S CREATE SOMETHING UNFORGETTABLE">
+            <span class="contact-intro__row" aria-hidden="true"><span class="contact-intro__word">LET’S</span> <span class="contact-intro__accent"><span class="contact-intro__word">C</span></span><span class="contact-intro__word">REATE</span></span>
+            <span class="contact-intro__row" aria-hidden="true"><span class="contact-intro__word">S</span><span class="contact-intro__accent"><span class="contact-intro__word">O</span></span><span class="contact-intro__word">METHING</span></span>
+            <span class="contact-intro__row" aria-hidden="true"><span class="contact-intro__word">UNF</span><span class="contact-intro__accent"><span class="contact-intro__word">O</span></span><span class="contact-intro__word">RGETTABLE</span></span>
+          </h2>
+          <form class="contact-form" method="post" aria-label="Project inquiry" data-contact-form>
+            <div class="contact-form__field contact-form__field--name">
+              <label class="sr-only" for="contact-name">NAME</label>
+              <input class="contact-form__control" id="contact-name" name="name" type="text" autocomplete="name" placeholder="NAME" maxlength="120" required />
+              <span class="contact-form__line" aria-hidden="true"><span class="contact-form__line-reveal"><span class="contact-form__line-base"></span><span class="contact-form__line-glint"></span><span class="contact-form__focus-trace"><span></span></span></span></span>
+            </div>
+            <div class="contact-form__field contact-form__field--phone">
+              <label class="sr-only" for="contact-phone">PHONE</label>
+              <input class="contact-form__control" id="contact-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel" placeholder="PHONE" maxlength="40" />
+              <span class="contact-form__line" aria-hidden="true"><span class="contact-form__line-reveal"><span class="contact-form__line-base"></span><span class="contact-form__line-glint"></span><span class="contact-form__focus-trace"><span></span></span></span></span>
+            </div>
+            <div class="contact-form__field contact-form__field--email">
+              <label class="sr-only" for="contact-email">E-MAIL</label>
+              <input class="contact-form__control" id="contact-email" name="email" type="email" inputmode="email" autocomplete="email" autocapitalize="none" spellcheck="false" placeholder="E-MAIL" maxlength="254" required />
+              <span class="contact-form__line" aria-hidden="true"><span class="contact-form__line-reveal"><span class="contact-form__line-base"></span><span class="contact-form__line-glint"></span><span class="contact-form__focus-trace"><span></span></span></span></span>
+            </div>
+            <div class="contact-form__field contact-form__field--message">
+              <label class="sr-only" for="contact-message">HOW CAN WE HELP YOU</label>
+              <textarea class="contact-form__control" id="contact-message" name="message" rows="6" placeholder="HOW CAN WE HELP YOU" maxlength="5000" required></textarea>
+              <span class="contact-form__line" aria-hidden="true"><span class="contact-form__line-reveal"><span class="contact-form__line-base"></span><span class="contact-form__line-glint"></span><span class="contact-form__focus-trace"><span></span></span></span></span>
+            </div>
+            <button class="contact-form__submit" type="submit">
+              <span class="contact-form__button-spacer" aria-hidden="true"></span>
+              <span class="contact-form__button-copy">DISCUSS THE PROJECT</span>
+              <svg class="contact-form__arrow" viewBox="0 0 8 12" fill="none" aria-hidden="true"><path d="M1.93616 11.0245C1.88666 11.1236 1.83914 11.2188 1.79294 11.3101L1.06487 10.8964C1.08048 10.8651 1.09635 10.8332 1.11244 10.8009L1.1175 10.7907C1.49122 10.0402 2.05155 8.91856 2.82816 7.96549C3.78652 6.7894 5.14644 5.74774 7.10039 5.5947V6.44668C5.4615 6.59529 4.31281 7.46888 3.465 8.50931C2.75989 9.37462 2.30768 10.2804 1.94298 11.0108L1.93616 11.0245ZM1.82733 .743952L1.79737 .687395L1.07113 1.10009C1.47071 1.85795 2.08884 3.02295 2.95135 4.04076C3.93204 5.19802 5.28171 6.23907 7.10039 6.4024V5.54938C5.60391 5.39037 4.46167 4.52744 3.5778 3.48444C2.78071 2.54382 2.2355 1.51454 1.83418 .756886L1.82733 .743952Z" stroke="currentColor"/></svg>
+            </button>
+            <p class="contact-form__status" role="status" aria-live="polite" aria-atomic="true" lang="ko" hidden>현재 온라인 문의 접수는 이용할 수 없습니다. 입력한 내용은 전송되지 않았습니다. <a href="tel:+821051577159">전화로 문의하기</a></p>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer" aria-label="연락처 및 저작권" lang="en">
+      <div class="site-footer__layout">
+        <div class="site-footer__brand"><a href="#hero" data-footer-name data-footer-letters aria-label="PARK SEOJIN — 페이지 처음으로">PARK SEOJIN</a></div>
+        <div class="site-footer__main">
+          <address class="site-footer__contacts">
+            <a class="site-footer__contact-item" href="tel:+821051577159" data-footer-phone><span data-footer-phone-copy>+82 10 5157 7159</span><span class="site-footer__underline" aria-hidden="true"><span></span></span></a>
+            <span class="site-footer__contact-item site-footer__email site-footer__placeholder" data-footer-email aria-label="이메일 주소 등록 예정" title="이메일 주소 등록 예정"><span>E-MAIL ADDRESS</span><span class="site-footer__underline" aria-hidden="true"><span></span></span></span>
+          </address>
+          <p class="site-footer__caption"><span>UI/UX · WEB</span> <span>VISUAL ·</span> <span>CREATIVE</span></p>
+        </div>
+        <div class="site-footer__socials" role="group" aria-label="SNS 링크 — 주소 등록 예정">
+          <button class="site-footer__social" type="button" data-footer-social="whatsapp" aria-label="WhatsApp 링크 등록 예정" title="WhatsApp 링크 등록 예정" disabled><span class="site-footer__icon" style="--footer-icon: url('/icons/footer-whatsapp.svg')" aria-hidden="true"></span></button>
+          <button class="site-footer__social" type="button" data-footer-social="instagram" aria-label="Instagram 링크 등록 예정" title="Instagram 링크 등록 예정" disabled><span class="site-footer__icon" style="--footer-icon: url('/icons/footer-instagram.svg')" aria-hidden="true"></span></button>
+          <button class="site-footer__social" type="button" data-footer-social="linkedin" aria-label="LinkedIn 링크 등록 예정" title="LinkedIn 링크 등록 예정" disabled><span class="site-footer__icon" style="--footer-icon: url('/icons/footer-linkedin.svg')" aria-hidden="true"></span></button>
+        </div>
+        <div class="site-footer__bottom">
+          <div class="site-footer__copyright"><p>© <span data-footer-year>2026</span></p><p>ALL RIGHTS RESERVED.</p></div>
+          <div class="site-footer__credits">
+            <div class="site-footer__credit"><p>DESIGNED BY</p><span data-footer-design data-footer-letters>PARK SEOJIN</span></div>
+            <div class="site-footer__credit"><p>WEBSITE BY</p><span data-footer-development data-footer-letters>PARK SEOJIN</span></div>
+          </div>
+        </div>
+      </div>
+    </footer>
+
+    <dialog class="portfolio-menu" id="portfolio-menu" aria-labelledby="menu-title">
+      <div class="portfolio-menu__panel">
+        <div class="portfolio-menu__top">
+          <p class="portfolio-menu__identity" id="menu-title" lang="en">PARK SEOJIN <span>PERSONAL PORTFOLIO</span></p>
+          <button class="icon-control portfolio-menu__close" type="button" data-menu-close aria-label="메뉴 닫기" autofocus>
+            <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m5 5 14 14M19 5 5 19"/></svg>
+          </button>
+        </div>
+        <nav class="portfolio-menu__navigation" aria-label="포트폴리오 메뉴">
+          <a class="portfolio-menu__link" href="#hero" data-menu-home><span class="portfolio-menu__number">01</span><span lang="en">THE SURFACE</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
+          <a class="portfolio-menu__link" href="/images/hero_edit.png" target="_blank" rel="noopener"><span class="portfolio-menu__number">02</span><span lang="en">GALLERY</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
+          <a class="portfolio-menu__link" href="tel:+821051577159"><span class="portfolio-menu__number">03</span><span lang="en">LET’S TALK</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
+        </nav>
+        <div class="portfolio-menu__bottom"><p lang="en">UI/UX · WEB · VISUAL · CREATIVE</p><a href="tel:+821051577159">+82 10 5157 7159</a></div>
+      </div>
+    </dialog>
+    <p class="sr-only" id="hero-status" role="status" aria-live="polite"></p>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
+

@@ -1,0 +1,142 @@
+.contact-intro {
+  --contact-divider-height: 1.6vw;
+  --contact-spark-size: min(1.6vw, 32px);
+  --contact-line-color: color-mix(in srgb, var(--insight-color-text) 14%, transparent);
+  --contact-label-gap: 3.5vw;
+  position: relative;
+  z-index: 3;
+  /* The reviews section already supplies 15.625vw of the source's 20vw gap. */
+  padding-top: 4.375vw;
+  padding-bottom: 15.625vw;
+  color: var(--insight-color-text);
+  background: var(--insight-color-bg);
+  font-family: 'Reviews Helvetica', 'Helvetica Neue', Arial, sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+}
+.contact-intro__tag-block {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--contact-label-gap);
+}
+.contact-intro__divider {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: var(--contact-divider-height);
+  pointer-events: none;
+}
+.contact-intro__spark {
+  position: relative;
+  z-index: 1;
+  display: block;
+  /* The path paints 30px inside this 32px box at the reference viewport.
+     Only this SVG has a scale reveal; neither line nor parent scales it. */
+  width: var(--contact-spark-size);
+  height: var(--contact-spark-size);
+  max-width: var(--contact-spark-size);
+  max-height: var(--contact-spark-size);
+  color: var(--introduction-color-star);
+  opacity: .9;
+  transform-origin: center;
+}
+.contact-intro__horizontal {
+  position: absolute;
+  width: 100%;
+  height: max(1px, .07vw);
+  background: radial-gradient(circle, var(--contact-line-color) 60%, transparent);
+}
+.contact-intro__vertical {
+  position: absolute;
+  bottom: calc(-1 * var(--contact-label-gap));
+  width: max(1px, .055vw);
+  height: 18.8vw;
+}
+.contact-intro__vertical-trace {
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(circle at 50% 60%, var(--contact-line-color) 32%, transparent);
+}
+.contact-intro__label {
+  position: relative;
+  display: flex;
+  align-items: baseline;
+  justify-content: center;
+  min-width: 9.73vw;
+  margin: 0;
+  padding: 1.45vw 2.18vw 1.43vw;
+  border: .08vw solid color-mix(in srgb, currentColor 12%, transparent);
+  border-radius: 1.9vw;
+  font-size: .73vw;
+  line-height: 1.1;
+  white-space: nowrap;
+}
+.contact-intro__label > span { display: block; }
+.contact-intro__layout {
+  position: relative;
+  display: grid;
+  grid-template-columns: 28.43vw minmax(0, 1fr);
+  row-gap: 6.8vw;
+  margin: 15.625vw 3.125vw 0;
+}
+.contact-intro__copy {
+  margin: 0;
+  font-size: .73vw;
+  line-height: 1.1;
+}
+.contact-intro__copy > span { display: block; }
+.contact-intro__heading {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  margin: -.2vw 0 0;
+  padding-right: 1.7vw;
+  font-size: 7.3vw;
+  font-weight: 100;
+  line-height: .8;
+  letter-spacing: normal;
+}
+.contact-intro__row {
+  display: block;
+  position: relative;
+  margin-bottom: -.9vw;
+  padding-top: .9vw;
+  white-space: nowrap;
+}
+.contact-intro__row:first-child { text-align: right; }
+.contact-intro__accent {
+  display: inline-block;
+  position: relative;
+  font-family: 'Clients Carl', serif;
+}
+.contact-intro__word { display: inline-block; transform-origin: center; }
+@media (max-width: 991px) {
+  .contact-intro {
+    --contact-divider-height: 5.3vw;
+    --contact-spark-size: min(5.3vw, 32px);
+    --contact-label-gap: 17vw;
+    /* Reuse the preceding 32vw inset for the reference's 45vw pause. */
+    padding-top: 13vw;
+    padding-bottom: 21vw;
+  }
+  .contact-intro__vertical { width: max(1px, .26vw); height: 48.5333vw; }
+  .contact-intro__horizontal {
+    height: max(1px, .2vw);
+    background: radial-gradient(circle, color-mix(in srgb, currentColor 50%, transparent), transparent);
+  }
+  .contact-intro__label {
+    min-width: 37.8vw;
+    padding: 5.75vw 7.2vw 5.5vw;
+    border-width: .26vw;
+    border-color: color-mix(in srgb, currentColor 25%, transparent);
+    border-radius: 8vw;
+    font-size: 3.2vw;
+  }
+  .contact-intro__layout { grid-template-columns: minmax(0, 1fr); row-gap: 21.33vw; margin: 32vw 4.8vw 0; }
+  .contact-intro__copy { display: none; }
+  .contact-intro__heading { padding-right: .5vw; font-size: 10.66vw; }
+}

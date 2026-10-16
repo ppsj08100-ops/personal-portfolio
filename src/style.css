@@ -1,0 +1,588 @@
+﻿@font-face {
+  font-family: 'Hero Roboto';
+  src: url('/fonts/hero-roboto-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 100 400;
+  font-display: swap;
+}
+
+/* Preserve the supplied artwork; cover crops it to the viewport without distortion. */
+:root {
+  color-scheme: dark;
+  --hero-sky: #000b2f;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { background: var(--hero-sky); }
+[hidden] { display: none; }
+body {
+  margin: 0;
+  color: var(--color-text);
+  background: var(--hero-sky);
+  font-family: var(--font-family-body);
+  -webkit-font-smoothing: antialiased;
+}
+/* The page shell must not inherit a centered Vite demo container. */
+body, #app {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  display: block;
+}
+#app {
+  /* Measure one total transition from the fading water to the heading.
+     The HERO and existing scroll orbit keep their independent geometry. */
+  --ocean-artwork-unit: max(calc(100vw / 1672), calc(100svh / 941));
+  --ocean-silhouette-bottom: calc(50svh + var(--ocean-artwork-unit) * 206.5);
+  --ocean-entry-start: max(
+    calc(100svh * (1 - var(--hero-fade-ratio))),
+    calc(var(--ocean-silhouette-bottom) + var(--hero-fade-clearance))
+  );
+  --ocean-orbit-diameter: min(
+    var(--scroll-orbit-size),
+    max(13.5rem, calc((100svh - var(--ocean-silhouette-bottom) - var(--scroll-orbit-clearance)) * 2))
+  );
+  --ocean-orbit-top: max(
+    calc(100svh - var(--ocean-orbit-diameter) * .5),
+    calc(var(--ocean-silhouette-bottom) + var(--scroll-orbit-clearance))
+  );
+  --ocean-orbit-overhang: max(0px, calc(var(--ocean-orbit-top) + var(--ocean-orbit-diameter) * var(--scroll-orbit-fade-end) - 100svh));
+  --ocean-surface-end: calc(var(--ocean-entry-start) + (100svh - var(--ocean-entry-start)) * var(--hero-surface-end-ratio));
+  --ocean-message-inset: max(
+    calc(var(--ocean-orbit-overhang) + var(--insight-transition-gap)),
+    calc(var(--ocean-surface-end) + var(--ocean-transition-distance) - 100svh)
+  );
+}
+button, a { -webkit-tap-highlight-color: transparent; }
+button { font: inherit; color: inherit; }
+a { color: inherit; }
+button, a, [tabindex] { touch-action: manipulation; }
+:where(a, button, [tabindex]):focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-ring-offset);
+}
+::selection { background: var(--color-selection-bg); color: var(--color-selection-text); }
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  z-index: var(--z-skip-link);
+  top: var(--space-4);
+  left: var(--space-4);
+  padding: var(--space-3) var(--space-4);
+  background: var(--color-surface);
+  border-radius: var(--radius-sm);
+  transform: translateY(-200%);
+  text-decoration: none;
+}
+.skip-link:focus { transform: none; }
+
+.hero {
+  --hero-font-family: "Helvetica Neue", "Hero Roboto", Arial, sans-serif;
+  --hero-artwork-unit: max(calc(100vw / 1672), calc(100svh / 941));
+  /* Reserve the source silhouette through y=677 plus a clear-water margin.
+     On short screens the fade starts later to keep the mermaid untouched. */
+  --hero-fade-start: var(--ocean-entry-start);
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding: 0;
+  height: 100vh;
+  height: 100svh;
+  position: relative;
+  display: block;
+  /* Let the single decorative orbit bridge the following section. */
+  overflow: visible;
+  z-index: var(--z-content);
+  isolation: isolate;
+  /* Only the empty lower water can expose this surface-to-depth backing. */
+  background: linear-gradient(180deg, var(--hero-sky) var(--ocean-entry-start), var(--section-bridge-color) 100%);
+}
+.hero__frame {
+  /* Resolve the source-image arc mask against the actual cover crop. */
+  container-type: size;
+  position: absolute;
+  /* Keep the fade below the sibling scroll label and orbit in all motion modes. */
+  z-index: 0;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  /* Clip artwork and its repair layer, without clipping the orbit sibling. */
+  overflow: hidden;
+  /* Release the real water texture into the shared background. No coloured
+     overlay, blur or synthetic light is placed on top of the raster. */
+  --hero-fade-height: calc(100svh - var(--hero-fade-start));
+  --hero-water-mask: linear-gradient(
+    180deg,
+    #000 0%,
+    #000 var(--hero-fade-start),
+    #000 calc(var(--hero-fade-start) + var(--hero-fade-height) * .18),
+    rgba(0, 0, 0, .96) calc(var(--hero-fade-start) + var(--hero-fade-height) * .30),
+    rgba(0, 0, 0, .78) calc(var(--hero-fade-start) + var(--hero-fade-height) * .48),
+    rgba(0, 0, 0, .44) var(--ocean-surface-end),
+    rgba(0, 0, 0, .13) calc(var(--hero-fade-start) + var(--hero-fade-height) * .85),
+    transparent 100%
+  );
+  -webkit-mask-image: var(--hero-water-mask);
+  mask-image: var(--hero-water-mask);
+}
+.hero__ring-repair {
+  /* Original 1672 × 941 artwork: embedded arc centre (834, 1035.5), r ≈ 234.
+     Cover its stroke only; the base image and its cover crop stay untouched. */
+  --artwork-unit: max(calc(100cqw / 1672), calc(100cqh / 941));
+  --baked-ring-radius: calc(var(--artwork-unit) * 234);
+  --baked-ring-mask: radial-gradient(
+    circle at calc(50% - var(--artwork-unit) * 2) calc(50% + var(--artwork-unit) * 565),
+    transparent calc(var(--baked-ring-radius) - var(--artwork-unit) * 4),
+    #000 calc(var(--baked-ring-radius) - var(--artwork-unit) * 3),
+    #000 calc(var(--baked-ring-radius) + var(--artwork-unit) * 3),
+    transparent calc(var(--baked-ring-radius) + var(--artwork-unit) * 4)
+  );
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  -webkit-mask-image: var(--baked-ring-mask);
+  mask-image: var(--baked-ring-mask);
+}
+.hero__ring-repair::before {
+  /* Only the narrow masked arc exposes this nearby-artwork repair layer.
+     Scaling around the source arc's centre moves its raster line out of the
+     mask, preserving the rest of the artwork and its original cover crop. */
+  content: "";
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  --artwork-unit: max(calc(100cqw / 1672), calc(100cqh / 941));
+  background: center / cover no-repeat image-set(
+    url('/images/hero_edit.webp') type('image/webp'),
+    url('/images/hero_edit-background.png') type('image/png')
+  );
+  transform-origin: calc(50% - var(--artwork-unit) * 2) calc(50% + var(--artwork-unit) * 565);
+  transform: scale(.96);
+}
+.hero.has-image-error .hero__ring-repair { display: none; }
+.ocean-transition {
+  /* Sit behind the real water's mask, then cross the seam as one texture.
+     The HERO's isolation keeps this negative layer above its own backing. */
+  position: absolute;
+  z-index: -1;
+  top: var(--ocean-entry-start);
+  inset-inline: 0;
+  /* The 2:1 image plane extends 16% above this window: its duplicate shoreline
+     stays behind the HERO's existing surface. Only the submerged rays emerge.
+     On narrow screens, cover crops around the upper centre without stretching. */
+  height: max(
+    42vw,
+    calc(100svh - var(--ocean-entry-start) + var(--ocean-message-inset) + var(--insight-font-size) * var(--insight-line-height) * 1.4)
+  );
+  overflow: hidden;
+  pointer-events: none;
+  --ocean-depth-mask: linear-gradient(180deg, transparent, #000 12%, #000 66%, rgba(0, 0, 0, .8) 80%, transparent 100%);
+  -webkit-mask-image: var(--ocean-depth-mask);
+  mask-image: var(--ocean-depth-mask);
+}
+.ocean-transition__texture {
+  /* A single raster, with no repeat, filter or additional water surface.
+     The HERO's water mask hides the new surface's edge before the rays emerge. */
+  display: block;
+  position: absolute;
+  inset: auto 0 0;
+  width: 100%;
+  height: calc(100% * 25 / 21);
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 0%;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.hero__picture { display: contents; }
+.hero__artwork {
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  object-fit: cover;
+  object-position: 50% 50%;
+  image-rendering: auto;
+  user-select: none;
+  -webkit-user-drag: none;
+}
+.hero__title {
+  position: absolute;
+  z-index: 1;
+  top: max(6.8svh, calc(var(--space-4) + var(--tap-target-min)));
+  inset-inline: var(--container-gutter);
+  margin: 0;
+  color: var(--color-text);
+  font-family: var(--hero-font-family);
+  font-size: clamp(2rem, 5.5vw, 13.25rem);
+  font-weight: 100;
+  font-synthesis: none;
+  line-height: var(--line-height-hero);
+  letter-spacing: .01em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0 0 6px rgba(230, 233, 255, .12);
+}
+.hero__title span { display: block; white-space: nowrap; }
+.hero__header {
+  position: absolute;
+  z-index: var(--z-header);
+  top: max(var(--space-4), calc(5.6svh - var(--tap-target-min) / 2), env(safe-area-inset-top));
+  inset-inline: var(--container-gutter);
+}
+.hero__navigation, .hero__nav-group {
+  display: flex;
+  align-items: center;
+}
+.hero__navigation { justify-content: space-between; gap: var(--space-4); }
+.hero__nav-group { gap: var(--space-8); }
+.hero__control {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  min-height: var(--tap-target-min);
+  min-width: var(--tap-target-min);
+  padding: 0;
+  border: 0;
+  border-radius: 2px;
+  background: transparent;
+  color: var(--color-text);
+  font-family: var(--hero-font-family);
+  font-size: clamp(.75rem, .84vw, 2rem);
+  font-weight: 400;
+  line-height: var(--line-height-ui);
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  transition: box-shadow var(--duration-hover) var(--ease-out);
+}
+.hero__control svg { stroke: currentColor; stroke-width: 1; }
+.hero__sound-wave { width: 1.8em; height: .8em; }
+.hero__menu-icon { width: .8em; height: .8em; }
+.hero__sound-dot {
+  position: absolute;
+  left: 65%;
+  bottom: var(--space-1);
+  width: 3px;
+  height: 3px;
+  border-radius: var(--radius-circle);
+  background: var(--color-accent);
+  opacity: 0;
+  transition: opacity var(--duration-hover) var(--ease-out);
+}
+.hero__control--sound[aria-pressed="true"] .hero__sound-dot { opacity: 1; }
+.hero__scroll-orbit {
+  /* One quiet centreline links the small label, straight arrow and fading arc. */
+  --scroll-cue-label-size: clamp(.625rem, .6vw, .75rem);
+  --scroll-cue-arrow-height: 2.625rem;
+  --scroll-cue-height: calc(var(--scroll-cue-label-size) * 1.35 + var(--space-3) + var(--scroll-cue-arrow-height) + var(--space-4));
+  --scroll-cue-blue: #9cbfdb;
+  --scroll-cue-highlight: #eaf5ff;
+  position: absolute;
+  z-index: var(--z-content);
+  top: min(
+    max(
+      calc(84svh),
+      calc(var(--ocean-surface-end) - var(--space-12)),
+      calc(var(--ocean-silhouette-bottom) + var(--scroll-orbit-clearance))
+    ),
+    calc(100svh + var(--ocean-message-inset) - var(--scroll-cue-height) - var(--space-6))
+  );
+  left: 50%;
+  width: max-content;
+  max-width: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero__scroll-orbit::after {
+  /* Reuse the existing orbit scale, showing only a quiet upper arc below the tip. */
+  content: '';
+  position: absolute;
+  z-index: -1;
+  top: calc(100% + var(--space-3));
+  left: 50%;
+  width: var(--scroll-orbit-size);
+  aspect-ratio: 1;
+  border: 1px solid var(--color-scroll-orbit);
+  border-radius: 50%;
+  opacity: .65;
+  transform: translateX(-50%);
+  --scroll-cue-arc-mask: linear-gradient(180deg, #000, rgba(0, 0, 0, .6) 14%, transparent 32%);
+  -webkit-mask-image: var(--scroll-cue-arc-mask);
+  mask-image: var(--scroll-cue-arc-mask);
+  pointer-events: none;
+}
+.hero__scroll-cue {
+  display: grid;
+  justify-items: center;
+  gap: var(--space-3);
+  min-width: var(--tap-target-min);
+  min-height: var(--tap-target-min);
+  margin: 0;
+  padding: var(--space-2) var(--space-5);
+  border: 0;
+  background: transparent;
+  color: var(--insight-color-text);
+  font-family: var(--hero-font-family);
+  font-size: var(--scroll-cue-label-size);
+  font-weight: 300;
+  font-synthesis: none;
+  line-height: 1.35;
+  letter-spacing: .22em;
+  text-indent: .22em;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.hero__scroll-label {
+  display: block;
+  color: var(--insight-color-text);
+}
+.hero__scroll-arrow-light {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+}
+.hero__scroll-arrow {
+  position: relative;
+  display: block;
+  width: calc(var(--scroll-cue-arrow-height) * .25);
+  height: var(--scroll-cue-arrow-height);
+}
+.hero__scroll-arrow svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+.hero__scroll-arrow path {
+  stroke: currentColor;
+  stroke-width: .9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
+}
+.hero__scroll-arrow-base { opacity: .65; }
+.hero__scroll-arrow-tail,
+.hero__scroll-arrow-tint,
+.hero__scroll-arrow-core {
+  position: absolute;
+  inset: 0;
+  /* The band starts just above the curve and clears the tip before repeating. */
+  mask-size: 100% 300%;
+  mask-position: 50% 50%;
+  mask-repeat: no-repeat;
+}
+.hero__scroll-arrow-tail {
+  color: var(--scroll-cue-blue);
+  mask-image: linear-gradient(180deg,
+    transparent 25%,
+    rgba(0, 0, 0, .08) 26.5%,
+    rgba(0, 0, 0, .28) 29%,
+    rgba(0, 0, 0, .55) 30%,
+    transparent 31.5%);
+}
+.hero__scroll-arrow-tint {
+  color: var(--scroll-cue-blue);
+  /* Blue on both sides of the white core, then a soft transparent leading edge. */
+  mask-image: linear-gradient(180deg,
+    transparent 28.5%,
+    rgba(0, 0, 0, .75) 30%,
+    #000 30.75%,
+    transparent 31.4%,
+    transparent 32%,
+    #000 32.65%,
+    transparent 33.333%);
+}
+.hero__scroll-arrow-core {
+  color: var(--scroll-cue-highlight);
+  /* The white reflection uses the same 0.9px contour; it never becomes a dot. */
+  mask-image: linear-gradient(180deg,
+    transparent 30.5%,
+    rgba(0, 0, 0, .65) 31.05%,
+    #000 31.4%,
+    #000 32%,
+    rgba(0, 0, 0, .65) 32.35%,
+    transparent 32.9%);
+}
+.hero__scroll-cue:focus-visible { outline: none; }
+/* Accessible static fallback before JS, or in browsers without Web Animations. */
+.hero__scroll-cue:not(.is-scroll-motion-ready):focus-visible .hero__scroll-arrow-light { opacity: 1; }
+.hero__scroll-cue:not(.is-scroll-motion-ready):focus-visible :is(.hero__scroll-arrow-tail, .hero__scroll-arrow-tint, .hero__scroll-arrow-core) { mask-position: 50% 25%; }
+@media (hover: hover) and (pointer: fine) {
+  .hero__scroll-cue:not(.is-scroll-motion-ready):hover .hero__scroll-arrow-light { opacity: 1; }
+  .hero__scroll-cue:not(.is-scroll-motion-ready):hover :is(.hero__scroll-arrow-tail, .hero__scroll-arrow-tint, .hero__scroll-arrow-core) { mask-position: 50% 25%; }
+}
+.hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) { opacity: 0; }
+.hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) {
+  animation: hero-reveal var(--duration-title) var(--ease-out) both;
+}
+@keyframes hero-reveal { from { opacity: 0; } to { opacity: 1; } }
+
+.icon-control {
+  min-width: var(--tap-target-min);
+  min-height: var(--tap-target-min);
+  display: inline-grid;
+  place-items: center;
+  padding: var(--space-2);
+  border: 0;
+  border-radius: var(--radius-circle);
+  background: transparent;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background var(--duration-hover) var(--ease-out), color var(--duration-hover) var(--ease-out);
+}
+.icon-control svg { width: 22px; height: 22px; stroke: currentColor; stroke-width: 1.2; }
+.icon-control[aria-pressed="true"] { color: var(--color-accent); }
+.icon-control[aria-pressed="true"] .sound-muted-mark { display: none; }
+.hero__error {
+  position: absolute;
+  inset-inline: var(--container-gutter);
+  top: 55%;
+  text-align: center;
+  font-size: var(--font-size-body);
+  line-height: var(--line-height-body);
+}
+.portfolio-menu {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  max-width: none;
+  height: 100vh;
+  height: 100svh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  color: var(--color-text);
+  background: rgba(0, 11, 47, .97);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+.portfolio-menu::backdrop {
+  background: var(--color-overlay);
+  backdrop-filter: blur(var(--blur-header));
+}
+.portfolio-menu.is-opening {
+  animation: menu-reveal var(--duration-page) var(--ease-out) both;
+}
+.portfolio-menu.is-closing {
+  animation: menu-dismiss var(--duration-page) var(--ease-in-out) both;
+}
+@keyframes menu-reveal { from { opacity: 0; } to { opacity: 1; } }
+@keyframes menu-dismiss { from { opacity: 1; } to { opacity: 0; } }
+body.has-menu-open { overflow: hidden; }
+.portfolio-menu__panel {
+  width: var(--container-width);
+  min-height: 100%;
+  margin-inline: auto;
+  padding-block: var(--space-8);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: var(--space-content);
+}
+.portfolio-menu__top, .portfolio-menu__bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-6);
+}
+.portfolio-menu__identity {
+  margin: 0;
+  font-size: var(--font-size-ui);
+  font-weight: var(--font-weight-ui);
+  letter-spacing: var(--letter-spacing-label);
+  line-height: var(--line-height-ui);
+}
+.portfolio-menu__identity span {
+  display: block;
+  margin-top: var(--space-2);
+  color: var(--color-muted);
+  font-weight: var(--font-weight-body);
+  font-size: .75rem;
+}
+.portfolio-menu__navigation { margin-block: var(--space-8); }
+.portfolio-menu__link {
+  display: grid;
+  grid-template-columns: 2rem minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: var(--space-6);
+  padding-block: var(--space-6);
+  border-bottom: var(--border-decorative);
+  font-family: var(--font-family-display);
+  font-size: clamp(2rem, 5.5vw, 6rem);
+  font-weight: var(--font-weight-display);
+  letter-spacing: var(--letter-spacing-section);
+  line-height: 1.1;
+  text-decoration: none;
+  transition: color var(--duration-hover) var(--ease-out);
+}
+.portfolio-menu__number {
+  color: var(--color-muted);
+  font-family: var(--font-family-ui);
+  font-size: var(--font-size-meta);
+  letter-spacing: var(--letter-spacing-ui);
+}
+.portfolio-menu__arrow {
+  font-size: .5em;
+  transition: transform var(--duration-hover) var(--ease-out);
+}
+.portfolio-menu__bottom { color: var(--color-muted); font-size: var(--font-size-ui); line-height: var(--line-height-ui); }
+.portfolio-menu__bottom p { margin: 0; }
+.portfolio-menu__bottom a { text-underline-offset: .3em; }
+
+@media (hover: hover) and (pointer: fine) {
+  .hero__control:hover { box-shadow: inset 0 -1px 0 var(--color-line-decorative); }
+  .icon-control:hover { background: var(--color-surface-hover); }
+  .portfolio-menu__link:hover { color: var(--color-accent); }
+  .portfolio-menu__link:hover .portfolio-menu__arrow { transform: translate(var(--motion-hover-offset), calc(-1 * var(--motion-hover-offset))); }
+}
+
+@media (max-width: 991px) {
+  .portfolio-menu__panel { padding-block: var(--space-5); }
+  .portfolio-menu__link { gap: var(--space-3); padding-block: var(--space-6); }
+  .portfolio-menu__bottom { align-items: flex-start; flex-direction: column; gap: var(--space-3); }
+}
+
+/* Keep HTML lettering inside the viewport independently of the cover crop. */
+@media (max-width: 767px) {
+  .hero__nav-group { flex-direction: column; align-items: flex-start; gap: 0; }
+  .hero__nav-group--right { align-items: flex-end; }
+  .hero__title {
+    top: max(12svh, calc(env(safe-area-inset-top) + var(--space-4) + var(--tap-target-min) * 2 + var(--space-6)));
+    font-size: clamp(2rem, 9vw, 4rem);
+  }
+}
+@media (max-height: 500px) and (min-width: 768px) {
+  .hero__title { font-size: min(5.5vw, 12svh); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) { opacity: 1; }
+  .hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition),
+  .hero__scroll-arrow,
+  .portfolio-menu.is-opening,
+  .portfolio-menu.is-closing { animation: none; }
+}
+
+
+

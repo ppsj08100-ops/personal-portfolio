@@ -1,0 +1,111 @@
+/* Four centred lines share the former THAT MOVES type scale.
+   The O forms use authored vector contours rather than commercial font files. */
+.insight-section {
+  --insight-top-inset: var(--ocean-message-inset);
+  position: relative;
+  /* Let the title and object paint in front of the shared underwater texture. */
+  isolation: auto;
+  display: grid;
+  /* Fit the message and object to their content instead of a spare viewport. */
+  grid-template-rows: auto auto;
+  place-items: center;
+  padding: var(--space-section) var(--container-gutter);
+  padding-block-start: var(--insight-top-inset);
+  color: var(--insight-color-text);
+  /* Match the existing HERO edge, then reduce light through the whole section. */
+  background-color: var(--insight-color-bg);
+  background-image: linear-gradient(
+    180deg,
+    var(--insight-color-transition) 0%,
+    var(--ocean-color-mid) calc(var(--insight-top-inset) * .45),
+    var(--insight-color-navy) var(--insight-top-inset),
+    var(--insight-color-depth) calc(var(--insight-top-inset) + var(--insight-font-size) * 2),
+    var(--insight-color-bg) 100%
+  );
+  scroll-margin-top: 0;
+}
+
+.insight-section__title {
+  position: relative;
+  z-index: var(--z-content);
+  width: 100%;
+  margin: 0;
+  color: inherit;
+  font-family: var(--insight-font-family);
+  font-size: var(--insight-font-size);
+  font-weight: var(--insight-font-weight);
+  font-synthesis: none;
+  line-height: var(--insight-line-height);
+  letter-spacing: var(--insight-letter-spacing);
+  word-spacing: -.06em;
+  text-align: center;
+  text-transform: uppercase;
+  scroll-margin-top: var(--anchor-scroll-margin);
+}
+.insight-section__line { display: block; white-space: nowrap; }
+.insight-section__word { display: inline-block; }
+
+.insight-section__still-life {
+  --still-life-size: min(100%, var(--insight-object-width));
+  /* The supplied cutout's top shell contour is 5.75% below its image edge.
+     Compensate for that alpha inset so the drawing, not its box, overlaps. */
+  --still-life-image-inset: calc(var(--still-life-size) * .0575);
+  position: relative;
+  z-index: calc(var(--z-content) + 1);
+  grid-row: 2;
+  align-self: start;
+  width: var(--still-life-size);
+  margin: calc(-1 * (var(--still-life-image-inset) + var(--insight-object-overlap))) 0 0;
+  pointer-events: none;
+}
+.insight-section__still-life img {
+  display: block;
+  width: 100%;
+  height: auto;
+  /* Submerge the cutout's edges without changing the section's background. */
+  --still-life-mask: linear-gradient(180deg, transparent 0%, #000 13%, #000 82%, transparent 100%);
+  -webkit-mask-image: var(--still-life-mask);
+  mask-image: var(--still-life-mask);
+  user-select: none;
+}
+
+.insight-section__symbol {
+  /* Roboto cap-height = .71em. The contours occupy 184/200 of the viewBox.
+     Compensate for the viewBox inset to align both cap-height and baseline. */
+  display: inline-block;
+  width: .772em;
+  height: .772em;
+  vertical-align: -.031em;
+  overflow: visible;
+}
+.insight-section__crescent { fill: currentColor; }
+.insight-section__curve {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: .85;
+  stroke-linecap: round;
+}
+
+/* Readable text remains the default without JavaScript. */
+.insight-section.is-motion-ready:not(.is-revealed) .insight-section__line {
+  opacity: 0;
+  transform: translateY(var(--space-3));
+}
+.insight-section.is-motion-ready.is-revealed .insight-section__line {
+  animation: insight-line-reveal var(--duration-reveal) var(--ease-out) both;
+}
+.insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(2) { animation-delay: var(--delay-stagger); }
+.insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(3) { animation-delay: calc(var(--delay-stagger) * 2); }
+.insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(4) { animation-delay: calc(var(--delay-stagger) * 3); }
+@keyframes insight-line-reveal {
+  from { opacity: 0; transform: translateY(var(--space-3)); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .insight-section .insight-section__line {
+    animation: none !important;
+    opacity: 1 !important;
+    filter: none !important;
+    transform: none !important;
+  }
+}
