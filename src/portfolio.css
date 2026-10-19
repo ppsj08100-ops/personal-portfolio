@@ -86,21 +86,20 @@
 }
 
 .portfolio__work {
-  /* The introduction's counter-scroll is a transform. Reserve that distance in
-     flow before the next content, without intercepting the cards above it. */
-  padding-top: calc(var(--portfolio-contact-runway, 0px) + 9.375vw);
+  padding-top: calc(var(--portfolio-contact-runway, 0px) + clamp(80px, 8vw, 144px));
   padding-bottom: 3.125vw;
   pointer-events: none;
   overflow: clip;
 }
 .portfolio__glyphs { position: absolute; }
 .portfolio__heading {
-  margin: 0 3.125vw -.9vw;
-  padding-top: .9vw;
-  font-size: 7.3vw;
+  margin: 0 var(--container-gutter);
+  font-family: 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(48px, 7.3vw, 144px);
   font-weight: 100;
-  line-height: .8;
-  letter-spacing: normal;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
   text-align: center;
 }
 .portfolio__title-line { display: block; width: max-content; margin-inline: auto; transform-origin: center; white-space: nowrap; }
@@ -108,7 +107,7 @@
 .portfolio__o { display: inline-block; width: .751em; height: .75em; vertical-align: -.04em; fill: currentColor; }
 .portfolio__gallery {
   position: relative;
-  margin-top: 9.375vw;
+  margin-top: clamp(48px, 6vw, 112px);
   outline: none;
   pointer-events: auto;
   touch-action: auto;
@@ -132,7 +131,8 @@
 .portfolio__projects::-webkit-scrollbar { display: none; }
 .portfolio__project { flex: 0 0 79.2vw; scroll-snap-align: start; }
 .portfolio__project figure { margin: 0; }
-.portfolio__placeholder { width: 100%; aspect-ratio: 4 / 5; border-radius: 6.4vw; background: #888; background-size: cover; background-position: center; }
+.portfolio__placeholder { width: 100%; aspect-ratio: 4 / 5; border-radius: 6.4vw; overflow: hidden; background: #10243a; background-size: cover; background-position: var(--photo-focus, center); }
+.portfolio__placeholder img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: var(--photo-focus, center); }
 .portfolio__project figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 5.33vw; font-size: 3.2vw; font-weight: 400; line-height: 1.1; }
 .portfolio__gallery-controls { display: flex; justify-content: center; gap: 12px; margin-top: 5.33vw; }
 .portfolio__gallery-controls button { display: grid; place-items: center; width: var(--tap-target-min); height: var(--tap-target-min); padding: 0; border: var(--border-decorative); border-radius: 50%; color: inherit; background: transparent; font: inherit; cursor: pointer; }
@@ -162,9 +162,9 @@
   .portfolio__title-line + .portfolio__title-line { margin-top: .2083vw; }
 }
 @media (max-width: 991px) {
-  .portfolio__work { padding-top: calc(var(--portfolio-contact-runway, 0px) + 32vw); padding-bottom: 32vw; }
-  .portfolio__heading { margin-inline: 4.8vw; font-size: 10.66vw; }
-  .portfolio__gallery { margin-top: 21.33vw; }
+  .portfolio__work { padding-top: calc(var(--portfolio-contact-runway, 0px) + clamp(64px, 12vw, 104px)); padding-bottom: 20vw; }
+  .portfolio__heading { margin-inline: var(--container-gutter); font-size: clamp(30px, 8.4vw, 84px); }
+  .portfolio__gallery { margin-top: clamp(40px, 8vw, 80px); }
   .portfolio__gallery-controls { gap: 0; margin-top: 10.66vw; }
   .portfolio__gallery-controls button { width: 20vw; height: 20vw; margin-inline: -2vw; font-size: 3.2vw; }
   .portfolio__drag-cursor { display: none; }

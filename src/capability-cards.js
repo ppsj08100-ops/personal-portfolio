@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { initAboutFish } from './about-fish.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -23,7 +24,8 @@ export function initCapabilityCards(section) {
   if (!section) return () => {}
   const scene = section.closest('.capability-scene')
   const viewport = scene?.querySelector('.capability-scene__viewport')
-  const background = scene?.querySelector('.capabilities')
+  const artwork = scene?.querySelector('.capabilities')
+  const background = scene?.querySelector('.capability-scene__background') || artwork
   const veil = scene?.querySelector('.capability-scene__veil')
   const header = section.querySelector('.capability-cards__header')
   const stage = section.querySelector('.capability-cards__stage')
@@ -105,8 +107,7 @@ export function initCapabilityCards(section) {
       step.classList.toggle('is-active', i === index)
       step.inert = stack && i !== index
       if (stack && i !== index) {
-        const details = step.querySelector('details')
-        if (details) details.open = false
+        step.querySelectorAll('details').forEach(details => { details.open = false })
       }
     })
     if (current) current.textContent = String(Math.max(0, index) + 1).padStart(2, '0')
@@ -135,7 +136,9 @@ export function initCapabilityCards(section) {
     if (!context.conditions.motion || !context.conditions.tall || !context.conditions.fits) return
     if (!scene || !viewport || !background || !veil || !steps.length) return
     scene.classList.add('is-immersive')
-    const pixelsPerUnit = () => (innerHeight * 11 - background.offsetHeight) / sourceDuration
+    const fish = initAboutFish(section)
+    // The added typography precedes this deck; keep its original card pacing.
+    const pixelsPerUnit = () => (innerHeight * 11 - artwork.offsetHeight) / sourceDuration
     const contactDistance = () => pixelsPerUnit() * (referenceCards[0].gone - portfolioEntry.start)
     const contact = prepareContact(contactDistance)
     gsap.set(portfolioIntro, { y: 0, autoAlpha: 0, '--portfolio-entry-y': () => `${innerHeight * .18}px` })
@@ -149,7 +152,6 @@ export function initCapabilityCards(section) {
     }
     timeline = gsap.timeline({ paused: true, defaults: { ease: 'none' } })
     const at = percent => percent - 7
-    gsap.set(background, { transformOrigin: '50% 50%' })
     gsap.set(veil, { opacity: 0 })
     gsap.set(header, { autoAlpha: 0, y: 8 })
     gsap.set(steps, { autoAlpha: 0 })
@@ -165,19 +167,10 @@ export function initCapabilityCards(section) {
     }))
     contents.forEach(content => gsap.set(content, { opacity: 1 }))
 
-    // Reference landmarks move UP with document scroll as the sticky card moves
-    // down. Its 1100vh block plus the viewport maps each source point to 12vh.
-    // Recreate that flow inside this pinned background plane, without changing
-    // the approach pacing or the original artwork's small parallax.
-    timeline.to(background, {
-      y: () => -innerHeight * 1.32, duration: 11,
-    }, 0)
-    // Keep the landmarks legible while they begin moving. Defocus and dimming
-    // support their exit instead of concealing a nearly stationary background.
-    timeline.to(background, { opacity: .72, filter: 'blur(3px)', duration: 4 }, at(9))
+    // The mirror and complete voyage have already scrolled past. Keep their
+    // native sticky scenes outside this pin, preserving the card choreography.
     timeline.to(veil, { opacity: .12, duration: 4 }, at(9))
     timeline.to(header, { autoAlpha: 1, y: 0, duration: 2 }, at(9))
-    timeline.to(background, { opacity: 0, filter: 'blur(6px)', duration: 5 }, at(13))
     timeline.to(veil, { opacity: .3, duration: 5 }, at(13))
 
     referenceCards.forEach((card, index) => {
@@ -240,21 +233,20 @@ export function initCapabilityCards(section) {
         (context.conditions.phone && referenceCards.some(card => percent >= card.exit && percent < card.gone + .25))
       background.inert = percent > 7.2
       contact.occlude()
+      fish.render((percent - 7) / sourceDuration)
     }
     timeline.eventCallback('onUpdate', syncState)
     trigger = ScrollTrigger.create({
       id: 'capability-depth', trigger: viewport,
-      // The viewport's reading inset lets the original lower copy/button scroll
-      // higher before pinning. Both the background and first card then start at 0.
-      // Keep the original pixels per timeline unit, including the reading inset.
-      // Extending the exit phase preserves the original approach speed and start.
+      // Pin the deck only after the project has finished its own sticky scene.
+      // Keep the existing pixels per timeline unit and card departure timing.
       start: 'bottom bottom',
       end: () => `+=${pixelsPerUnit() * timeline.duration()}`,
       pin: viewport, pinSpacing: true, anticipatePin: 1,
       animation: timeline, scrub: .35, invalidateOnRefresh: true,
-      onRefreshInit: contact.align,
+      onRefreshInit: () => { contact.align(); fish.measure() },
       onUpdate: holdContactPoint,
-      onRefresh: holdContactPoint,
+      onRefresh: self => { holdContactPoint(self); fish.measure() },
     })
     activeIndex = -2
     syncState()
@@ -262,6 +254,7 @@ export function initCapabilityCards(section) {
       trigger = undefined
       timeline = undefined
       scene.classList.remove('is-immersive')
+      fish.destroy()
       contact.revert()
       background.inert = false
       header.inert = false
@@ -274,13 +267,15 @@ export function initCapabilityCards(section) {
   previous?.addEventListener('click', () => navigate(activeIndex - 1), { signal })
   next?.addEventListener('click', () => navigate(activeIndex + 1), { signal })
   section.addEventListener('keydown', event => {
-    if (!trigger || event.target.closest('summary, .capability-card__expanded')) return
+    if (!trigger || event.target.closest('summary, .capability-card__expanded, .capability-card__qa')) return
     const target = { ArrowRight: activeIndex + 1, ArrowLeft: activeIndex - 1, Home: 0, End: steps.length - 1 }[event.key]
     if (target === undefined) return
     event.preventDefault()
     navigate(target)
   }, { signal })
   steps.forEach(step => {
+    // ABOUT uses explicit question controls; its blank card surface is not a toggle.
+    if (step.querySelector('.capability-card__qa')) return
     const details = step.querySelector('details')
     if (!details) return
     step.addEventListener('click', event => {
@@ -289,7 +284,7 @@ export function initCapabilityCards(section) {
     }, { signal })
   })
   document.fonts.ready.then(() => { if (!destroyed) ScrollTrigger.refresh() })
-  const image = background?.querySelector('img')
+  const image = artwork?.querySelector('img')
   // A lazy image can finish loading during the HERO's native smooth scroll.
   // Defer measurement until scrolling settles so it cannot interrupt the dive.
   image?.addEventListener('load', () => ScrollTrigger.refresh(true), { once: true, signal })

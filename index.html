@@ -6,34 +6,33 @@
     <meta name="theme-color" content="#000b2f" />
     <meta name="description" content="박서진의 UI/UX, 웹디자인, 비주얼 디자인과 크리에이티브 프로젝트를 위한 퍼스널 포트폴리오." />
     <link rel="icon" type="image/svg+xml" href="/portfolio-mark.svg" />
-    <link rel="preload" as="image" type="image/webp" href="/images/hero_edit.webp" fetchpriority="high" />
+    <link rel="preload" as="font" type="font/woff2" href="/fonts/julius-sans-one-regular-latin.woff2" crossorigin />
+    <link rel="preload" as="image" type="image/png" href="/images/hero-mermaid-background.png" fetchpriority="high" />
     <title>BEYOND THE SURFACE — 박서진 Portfolio</title>
   </head>
   <body>
     <a class="skip-link" href="#hero">메인 비주얼로 바로가기</a>
     <main id="app">
       <section class="hero" id="hero" aria-labelledby="hero-title" tabindex="-1">
-        <!-- The existing text-free artwork stays intact. CSS masks its baked-in
-             lower arc; the centred scroll cue below is HTML/SVG. -->
+        <!-- Text-free edition of the supplied HERO; title, navigation and
+             scroll cue remain real, responsive HTML controls. -->
         <div class="hero__frame">
           <picture class="hero__picture">
-            <source type="image/webp" srcset="/images/hero_edit.webp" />
-            <img class="hero__artwork" src="/images/hero_edit-background.png" width="1672" height="941" alt="네이비 밤하늘과 푸른 산, 호수 위에 누운 인어를 흰색 라인으로 그린 일러스트. 인어와 풍경이 수면에 은은하게 반사됩니다." fetchpriority="high" decoding="async" draggable="false" />
+            <img class="hero__artwork" src="/images/hero-mermaid-background.png" width="1672" height="941" alt="별빛이 비치는 딥네이비 바다와 산, 수면에 누운 인어와 양옆의 산호를 섬세한 은백색 윤곽선으로 그린 일러스트." fetchpriority="high" decoding="async" draggable="false" />
           </picture>
-          <div class="hero__ring-repair" aria-hidden="true"></div>
         </div>
 
-        <!-- Full-width underwater background. Its paint layer crosses the seam
-             without adding height or changing the surrounding composition. -->
+        <!-- The supplied post-HERO current crosses the section seam. Its pale
+             ribbon meets the actual D stem; lettering and cue stay in HTML. -->
         <div class="ocean-transition" aria-hidden="true">
-          <img class="ocean-transition__texture" src="/images/underwater-scene-2048.png" srcset="/images/underwater-scene-2048.png 2048w, /images/underwater-scene.png 3840w" sizes="100vw" width="3840" height="1920" alt="" decoding="async" draggable="false" />
+          <img class="ocean-transition__texture" src="/images/post_hero.png" width="2011" height="782" alt="" decoding="async" draggable="false" />
         </div>
 
         <h1 class="hero__title" id="hero-title" lang="en"><span>BEYOND</span><span>THE SURFACE</span></h1>
         <header class="hero__header">
           <nav class="hero__navigation" aria-label="주요 메뉴">
             <div class="hero__nav-group">
-              <a class="hero__control" href="/images/hero_edit.png" target="_blank" rel="noopener" aria-label="GALLERY: 원본 일러스트 보기 (새 탭)" lang="en">GALLERY</a>
+              <a class="hero__control" href="/images/hero-mermaid-original.png" target="_blank" rel="noopener" aria-label="GALLERY: 원본 일러스트 보기 (새 탭)" lang="en">GALLERY</a>
               <a class="hero__control" href="tel:+821051577159" aria-label="전화하기: +82 10 5157 7159">+82 10 5157 7159</a>
             </div>
             <div class="hero__nav-group hero__nav-group--right">
@@ -47,32 +46,88 @@
             </div>
           </nav>
         </header>
-        <div class="hero__scroll-orbit">
-          <a class="hero__scroll-cue" href="#insight-to-experience" data-scroll-next aria-label="SCROLL DOWN: 다음 타이포그래피 섹션으로 이동" lang="en">
-            <span class="hero__scroll-label">SCROLL DOWN</span>
-            <span class="hero__scroll-arrow" aria-hidden="true">
-              <svg class="hero__scroll-arrow-base" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
-              <span class="hero__scroll-arrow-light">
-                <svg class="hero__scroll-arrow-tail" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
-                <svg class="hero__scroll-arrow-tint" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
-                <svg class="hero__scroll-arrow-core" viewBox="0 0 12 48" fill="none" focusable="false"><path d="M6 3V43M2 39l4 4 4-4" /></svg>
-              </span>
-            </span>
+        <div class="hero__scroll-dock">
+          <a class="hero__scroll-cue" href="#insight-to-experience" data-scroll-next aria-label="DIVE DEEPER: 아래로 스크롤하여 다음 섹션 탐색" lang="en">
+            <span class="hero__scroll-label">DIVE DEEPER</span>
+            <svg class="hero__dive-mark" viewBox="0 0 64 48" fill="none" aria-hidden="true" focusable="false">
+              <g class="hero__dive-bubble hero__dive-bubble--near">
+                <ellipse class="hero__bubble-body" cx="27" cy="32" rx="2.1" ry="2.5" />
+                <path class="hero__bubble-reflection" d="M25.9 31.7c0-.7.3-1.1.8-1.3" />
+              </g>
+              <g class="hero__dive-bubble hero__dive-bubble--far">
+                <ellipse class="hero__bubble-body" cx="39" cy="26" rx="1.35" ry="1.6" />
+                <path class="hero__bubble-reflection" d="M38.4 25.8c0-.4.2-.7.5-.8" />
+              </g>
+              <g class="hero__dive-bubble hero__dive-bubble--small">
+                <ellipse class="hero__bubble-body" cx="31" cy="20" rx=".8" ry=".95" />
+              </g>
+            </svg>
           </a>
         </div>
         <p class="hero__error" hidden>이미지를 불러오지 못했습니다. 페이지를 다시 열어 주세요.</p>
       </section>
-      <!-- The HERO owns the only header, scroll cue and underwater background.
-           The existing typography and pearl composition follow unchanged. -->
+      <!-- The HERO owns the shared water plane. DESIGN remains real type,
+           with its D attached to the current above. -->
       <section class="insight-section" id="insight-to-experience" aria-labelledby="insight-title" tabindex="-1">
         <h2 class="insight-section__title" id="insight-title" lang="en" aria-label="DESIGN THAT TURNS INSIGHT INTO FORM" tabindex="-1">
-          <span class="insight-section__line"><span class="insight-section__word">DESIGN</span></span>
+          <span class="insight-section__line insight-section__line--connected"><span class="insight-section__word"><span data-current-letter>D</span>ESIGN</span></span>
           <span class="insight-section__line"><span class="insight-section__word">THAT</span> <span class="insight-section__word">TURNS</span></span>
           <span class="insight-section__line"><span class="insight-section__word">INSIGHT</span></span>
           <span class="insight-section__line"><span class="insight-section__word">INT<span class="sr-only">O</span><svg class="insight-section__symbol" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><path class="insight-section__crescent" fill-rule="evenodd" d="M71.57 12.5A92 92 0 0 0 128.43 187.5A92 92 0 0 0 71.57 12.5Z M72.19 14.40C30.34 28.00 19 69 29 111C39 153 85.96 199.20 127.81 185.60C169.66 172.00 181 119 169 75C158 33 114.04 .80 72.19 14.40Z" /><path class="insight-section__curve" d="M158.5 29C180 70 154 103 108 105C67 106 43 136 57 179" /></svg></span> <span class="insight-section__word">F<span class="sr-only">O</span><svg class="insight-section__symbol" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false"><path class="insight-section__crescent" fill-rule="evenodd" d="M71.57 12.5A92 92 0 0 0 128.43 187.5A92 92 0 0 0 71.57 12.5Z M72.19 14.40C30.34 28.00 19 69 29 111C39 153 85.96 199.20 127.81 185.60C169.66 172.00 181 119 169 75C158 33 114.04 .80 72.19 14.40Z" /><path class="insight-section__curve" d="M158.5 29C180 70 154 103 108 105C67 106 43 136 57 179" /></svg>RM</span></span>
         </h2>
         <figure class="insight-section__still-life" aria-hidden="true">
-          <img src="/images/pearl-shell-attached.png" width="1600" height="1600" alt="" loading="lazy" decoding="async" draggable="false" />
+          <div class="insight-clam">
+            <div class="insight-clam__layer insight-clam__base">
+              <svg viewBox="0 0 1600 1600" focusable="false">
+                <defs>
+                  <mask id="insight-clam-base-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1600" style="mask-type: luminance">
+                    <rect y="1008" width="1600" height="592" fill="white" />
+                    <circle cx="800" cy="1010" r="161" fill="black" />
+                  </mask>
+                </defs>
+                <image href="/images/pearl-shell-ivory.png" width="1600" height="1600" mask="url(#insight-clam-base-mask)" />
+              </svg>
+            </div>
+            <div class="insight-clam__layer insight-clam__pearl">
+              <svg viewBox="0 0 1600 1600" focusable="false">
+                <defs>
+                  <clipPath id="insight-clam-pearl-clip"><circle cx="800" cy="1010" r="161" /></clipPath>
+                  <radialGradient id="insight-clam-nacre-light">
+                    <stop stop-color="#fffef7" stop-opacity=".98" />
+                    <stop offset=".3" stop-color="#fffdf2" stop-opacity=".9" />
+                    <stop offset=".65" stop-color="#fbe9e8" stop-opacity=".3" />
+                    <stop offset="1" stop-color="#e6f3ff" stop-opacity="0" />
+                  </radialGradient>
+                </defs>
+                <image href="/images/pearl-shell-luminous.png" width="1600" height="1600" clip-path="url(#insight-clam-pearl-clip)" />
+                <g clip-path="url(#insight-clam-pearl-clip)">
+                  <ellipse class="insight-clam__luster" cx="751" cy="946" rx="64" ry="44" transform="rotate(-38 751 946)" fill="url(#insight-clam-nacre-light)" />
+                </g>
+              </svg>
+            </div>
+            <div class="insight-clam__layer insight-clam__lid">
+              <svg viewBox="0 0 1600 1600" focusable="false">
+                <defs>
+                  <mask id="insight-clam-lid-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="1600" height="1600" style="mask-type: luminance">
+                    <rect width="1600" height="1008" fill="white" />
+                    <circle cx="800" cy="1010" r="161" fill="black" />
+                  </mask>
+                  <clipPath id="insight-clam-inner-hinge-clip"><rect width="1600" height="1008" /></clipPath>
+                </defs>
+                <g clip-path="url(#insight-clam-inner-hinge-clip)" fill="none" stroke="#215ba6" stroke-width="2">
+                  <circle cx="800" cy="1010" r="164" fill="#05214d" stroke="none" />
+                  <path d="M800 1010 645 950M800 1010 675 900M800 1010 720 865M800 1010 760 847M800 1010 800 846M800 1010 840 847M800 1010 880 865M800 1010 925 900M800 1010 955 950" />
+                </g>
+                <image href="/images/pearl-shell-ivory.png" width="1600" height="1600" mask="url(#insight-clam-lid-mask)" />
+              </svg>
+            </div>
+            <div class="insight-clam__layer insight-clam__outer">
+              <svg viewBox="0 0 1600 1600" focusable="false">
+                <image href="/images/clam-upper-valve-closed.png" x="64" y="548" width="1472" height="880" preserveAspectRatio="none" />
+              </svg>
+            </div>
+            <span class="insight-clam__trigger"></span>
+          </div>
         </figure>
       </section>
       <section class="introduction" id="introduction" aria-labelledby="introduction-title" lang="en">
@@ -93,22 +148,128 @@
           <button class="introduction__button" type="button" data-selected-works-pending disabled>VIEW SELECTED WORKS</button>
         </div>
       </section>
+      <section class="design-process" id="design-process" aria-labelledby="design-process-title">
+        <div class="design-process__inner">
+          <header class="design-process__header">
+            <div>
+              <p class="design-process__eyebrow" lang="en">MY APPROACH</p>
+              <h2 class="design-process__statement" id="design-process-title">깊이 바라보고,<br>섬세하게 완성합니다.</h2>
+            </div>
+          </header>
+          <div class="design-process__garden">
+            <ol class="design-process__groups">
+              <li class="design-process__group design-process__group--concept" id="approach-concept">
+                <article class="design-process__specimen" aria-labelledby="approach-concept-title">
+                  <figure class="design-process__art" aria-hidden="true">
+                    <img src="/images/approach-coral-concept.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" draggable="false" />
+                  </figure>
+                  <div class="design-process__inscription">
+                    <span class="design-process__number" aria-hidden="true">01</span>
+                    <h3 class="design-process__title" id="approach-concept-title" lang="en">CONCEPT</h3>
+                    <div class="design-process__copy" lang="ko">
+                      <p class="design-process__lead">이야기를 시각적인 경험으로 풀어냅니다.</p>
+                      <p>콘텐츠의 분위기와 의미를 이미지, 색감, 타이포그래피로 표현합니다.</p>
+                    </div>
+                  </div>
+                </article>
+              </li>
+              <li class="design-process__group design-process__group--detail" id="approach-detail">
+                <article class="design-process__specimen" aria-labelledby="approach-detail-title">
+                  <figure class="design-process__art" aria-hidden="true">
+                    <img src="/images/approach-coral-fan.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" draggable="false" />
+                  </figure>
+                  <div class="design-process__inscription">
+                    <span class="design-process__number" aria-hidden="true">02</span>
+                    <h3 class="design-process__title" id="approach-detail-title" lang="en">DETAIL</h3>
+                    <div class="design-process__copy" lang="ko">
+                      <p class="design-process__lead">작은 차이를 살피며 전체의 조화를 맞춥니다.</p>
+                      <p>선과 여백부터 움직임까지 세밀하게 조율해 일관된 화면을 만듭니다.</p>
+                    </div>
+                  </div>
+                </article>
+              </li>
+              <li class="design-process__group design-process__group--refine" id="approach-refine">
+                <article class="design-process__specimen" aria-labelledby="approach-refine-title">
+                  <figure class="design-process__art" aria-hidden="true">
+                    <img src="/images/approach-coral-refine.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" draggable="false" />
+                  </figure>
+                  <div class="design-process__inscription">
+                    <span class="design-process__number" aria-hidden="true">03</span>
+                    <h3 class="design-process__title" id="approach-refine-title" lang="en">REFINE</h3>
+                    <div class="design-process__copy" lang="ko">
+                      <p class="design-process__lead">구현된 화면을 확인하고 더 나은 방향으로 다듬습니다.</p>
+                      <p>어색한 부분을 발견하고 반복적으로 개선하며 완성도를 높입니다.</p>
+                    </div>
+                  </div>
+                </article>
+              </li>
+            </ol>
+            <figure class="design-process__reef-rock" aria-hidden="true">
+              <img src="/images/approach-reef-rock.png" alt="" loading="lazy" decoding="async" draggable="false" />
+            </figure>
+            <button class="design-process__open" type="button" aria-haspopup="dialog" aria-controls="approach-dialog" aria-label="CONCEPT, DETAIL, REFINE: 세 가지 디자인 과정 자세히 보기">
+              <span class="design-process__open-label" lang="en">EXPLORE MY APPROACH <span aria-hidden="true">+</span></span>
+            </button>
+            <svg class="design-process__seabed" viewBox="0 0 1440 140" fill="none" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <path d="M-40 80C210 19 342 125 570 78S976 26 1480 72" />
+              <path d="M-40 109C199 70 393 134 622 105S1056 72 1480 112" />
+              <path d="M-40 133C236 107 408 148 718 129S1188 114 1480 137" />
+            </svg>
+          </div>
+        </div>
+        <dialog class="design-process-dialog" id="approach-dialog" aria-labelledby="approach-dialog-title">
+          <div class="design-process-dialog__sheet">
+            <header class="design-process-dialog__header">
+              <div>
+                <p class="design-process__eyebrow" lang="en">MY APPROACH / 01—03</p>
+                <h2 id="approach-dialog-title">생각에서 완성까지.</h2>
+              </div>
+              <button class="design-process-dialog__close" type="button" aria-label="디자인 과정 닫기" autofocus><svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18" /></svg></button>
+            </header>
+            <ol class="design-process-dialog__corals" aria-label="세 가지 디자인 과정" tabindex="0" data-approach-details></ol>
+            <footer class="design-process-dialog__footer"><span lang="en">CONCEPT — DETAIL — REFINE</span><span class="design-process-dialog__swipe">옆으로 넘겨 살펴보세요</span></footer>
+          </div>
+        </dialog>
+      </section>
       <div class="capability-scene">
-      <div class="capability-scene__viewport">
       <section class="capabilities" id="capabilities" aria-labelledby="capabilities-title" lang="en">
-        <h2 class="capabilities__title" id="capabilities-title" aria-label="HOW I THINK DESIGN AND BUILD">
-          <span class="capabilities__line" data-capabilities-reveal>HOW I THINK</span>
-          <span class="capabilities__line" data-capabilities-reveal>DESIGN</span>
-          <span class="capabilities__line" data-capabilities-reveal>AND BUILD</span>
+        <h2 class="capabilities__title" id="capabilities-title" aria-label="Let’s bring your ideas to life.">
+          <span class="capabilities__line" data-capabilities-reveal>Let’s bring</span>
+          <span class="capabilities__line" data-capabilities-reveal>y<span class="capabilities__accent">o</span>ur ideas</span>
+          <span class="capabilities__line" data-capabilities-reveal>t<span class="capabilities__accent">o</span> life.</span>
         </h2>
         <figure class="capabilities__artwork" aria-hidden="true" data-capabilities-reveal>
-          <img class="capabilities__arch" src="/images/underwater-arch.png" width="1122" height="1402" alt="" loading="lazy" decoding="async" draggable="false" />
+          <div class="capabilities__mirror">
+            <svg class="capabilities__mirror-defs" width="0" height="0" focusable="false">
+              <defs>
+                <!-- Follow the PNG opening so a future portrait stays beneath its rim. -->
+                <clipPath id="mermaid-mirror-opening" clipPathUnits="objectBoundingBox"><path d="M0.498 0.118C0.473333 0.118 0.4395 0.123 0.424 0.125C0.4085 0.127 0.416025 0.125768 0.405 0.13C0.393975 0.134232 0.370918 0.143737 0.357852 0.150391C0.344786 0.157045 0.336042 0.163412 0.326602 0.169922C0.317162 0.176432 0.308861 0.182834 0.301211 0.189453C0.293561 0.196072 0.286888 0.203016 0.280703 0.209635C0.274518 0.216254 0.26931 0.222657 0.264102 0.229167C0.258894 0.235678 0.25401 0.242188 0.249453 0.248698C0.244896 0.255208 0.240664 0.261719 0.236758 0.268229C0.232852 0.274739 0.229271 0.28125 0.226016 0.28776C0.222761 0.29427 0.219994 0.300673 0.217227 0.307292C0.21446 0.313911 0.211693 0.320855 0.209414 0.327474C0.207135 0.334093 0.205345 0.340495 0.203555 0.347005C0.201765 0.353515 0.200137 0.360025 0.198672 0.366536C0.197207 0.373046 0.195905 0.379557 0.194766 0.386068C0.193627 0.392579 0.192487 0.399089 0.191836 0.405599C0.191185 0.412109 0.191185 0.418511 0.190859 0.42513C0.190533 0.431749 0.190046 0.438694 0.189883 0.445313C0.18972 0.451932 0.18972 0.458334 0.189883 0.464844C0.190046 0.471354 0.190533 0.477865 0.190859 0.484375C0.191185 0.490885 0.191185 0.497395 0.191836 0.503906C0.192487 0.510416 0.193627 0.516927 0.194766 0.523438C0.195905 0.529948 0.19737 0.536459 0.198672 0.542969C0.199974 0.549479 0.20095 0.555881 0.202578 0.5625C0.204206 0.569119 0.206322 0.576063 0.208438 0.582682C0.210554 0.589301 0.212832 0.595704 0.215273 0.602214C0.217714 0.608725 0.220319 0.615235 0.223086 0.621745C0.225853 0.628255 0.228457 0.634766 0.231875 0.641276C0.235293 0.647786 0.239525 0.654297 0.243594 0.660807C0.247663 0.667318 0.251244 0.67372 0.256289 0.680339C0.261334 0.686958 0.267845 0.693902 0.273867 0.700521C0.279889 0.70714 0.285423 0.713542 0.292422 0.720052C0.299421 0.726562 0.307395 0.733181 0.315859 0.739583C0.324323 0.745985 0.334679 0.753394 0.343203 0.758464C0.351726 0.763534 0.359367 0.766411 0.367 0.77C0.374633 0.773589 0.379833 0.776667 0.389 0.78C0.398167 0.783333 0.404667 0.786833 0.422 0.79C0.439333 0.793167 0.469167 0.799 0.493 0.799C0.516833 0.799 0.547 0.793167 0.565 0.79C0.583 0.786833 0.5915 0.783333 0.601 0.78C0.6105 0.776667 0.614979 0.773589 0.622 0.77C0.629021 0.766411 0.635047 0.763534 0.643125 0.758464C0.651203 0.753394 0.662168 0.745985 0.670469 0.739583C0.67877 0.733181 0.685931 0.726562 0.69293 0.720052C0.699929 0.713542 0.706276 0.70714 0.712461 0.700521C0.718646 0.693902 0.724831 0.686958 0.730039 0.680339C0.735247 0.67372 0.739479 0.667318 0.743711 0.660807C0.747943 0.654297 0.751849 0.647786 0.75543 0.641276C0.759011 0.634766 0.762103 0.628255 0.765195 0.621745C0.768287 0.615235 0.77138 0.608725 0.773984 0.602214C0.776588 0.595704 0.778541 0.589301 0.78082 0.582682C0.783099 0.576063 0.785703 0.569119 0.787656 0.5625C0.789609 0.555881 0.791237 0.549479 0.792539 0.542969C0.793841 0.536459 0.794493 0.529948 0.795469 0.523438C0.796445 0.516927 0.797584 0.510416 0.798398 0.503906C0.799212 0.497395 0.799864 0.490885 0.800352 0.484375C0.80084 0.477865 0.801002 0.471354 0.801328 0.464844C0.801653 0.458334 0.802305 0.451932 0.802305 0.445313C0.802305 0.438694 0.801653 0.431749 0.801328 0.42513C0.801002 0.418511 0.80084 0.412109 0.800352 0.405599C0.799864 0.399089 0.799375 0.392579 0.798398 0.386068C0.797421 0.379557 0.795794 0.373046 0.794492 0.366536C0.79319 0.360025 0.792213 0.353515 0.790586 0.347005C0.788958 0.340495 0.786843 0.334093 0.784727 0.327474C0.782611 0.320855 0.780495 0.313911 0.777891 0.307292C0.775287 0.300673 0.772357 0.29427 0.769102 0.28776C0.765847 0.28125 0.762102 0.274739 0.758359 0.268229C0.754615 0.261719 0.751035 0.255208 0.746641 0.248698C0.742247 0.242188 0.7372 0.235678 0.731992 0.229167C0.726784 0.222657 0.721739 0.216254 0.715391 0.209635C0.709043 0.203016 0.701718 0.196072 0.693906 0.189453C0.686093 0.182834 0.677956 0.176432 0.668516 0.169922C0.659076 0.163412 0.650185 0.157045 0.637266 0.150391C0.624347 0.143737 0.601878 0.134232 0.591 0.13C0.580122 0.125768 0.5875 0.127 0.572 0.125C0.5565 0.123 0.522667 0.118 0.498 0.118Z" /></clipPath>
+              </defs>
+            </svg>
+            <div class="capabilities__mirror-glass">
+              <div class="capabilities__mirror-content" data-mirror-content>
+                <!-- Future portrait: insert an img here; the glass supplies the oval crop. -->
+              </div>
+              <svg class="capabilities__mirror-reflections" viewBox="0 0 1000 2000" preserveAspectRatio="none" fill="none" focusable="false">
+                <defs>
+                  <linearGradient id="mermaid-mirror-edge-light" x1="150" y1="280" x2="330" y2="1500" gradientUnits="userSpaceOnUse">
+                    <stop stop-color="#d5edff" stop-opacity="0" />
+                    <stop offset=".35" stop-color="#b7dafa" stop-opacity=".14" />
+                    <stop offset="1" stop-color="#7fb3e5" stop-opacity="0" />
+                  </linearGradient>
+                </defs>
+                <path d="M352 316C249 493 200 657 201 917" stroke="url(#mermaid-mirror-edge-light)" stroke-width="4" stroke-linecap="round" />
+                <path d="M789 1010C764 1237 667 1439 570 1528" stroke="#a0c7eb" stroke-opacity=".055" stroke-width="3" stroke-linecap="round" />
+              </svg>
+            </div>
+            <img class="capabilities__mirror-frame" src="/images/mermaid-mirror-reef.png" width="1024" height="1536" alt="" loading="lazy" decoding="async" draggable="false" />
+          </div>
         </figure>
         <div class="capabilities__details">
           <h3 class="capabilities__label" data-capabilities-reveal>CAPABILITIES</h3>
-          <div class="capabilities__copy" data-capabilities-reveal>
-            <p>I WORK ACROSS UX RESEARCH, VISUAL DESIGN, AND FRONT-END DEVELOPMENT.</p>
-            <p>MY APPROACH CONNECTS USER NEEDS, VISUAL THINKING, AND PRACTICAL IMPLEMENTATION.</p>
+          <div class="capabilities__copy" data-capabilities-reveal lang="ko">
+            <p><span>사용자의 입장에서 고민하고,</span> <span>콘텐츠에 어울리는 화면을 디자인합니다.</span></p>
+            <p><span>디자인한 화면을 직접 구현하며,</span> <span>작은 디테일까지 꾸준히 다듬습니다.</span></p>
           </div>
           <div class="capabilities__action" data-capabilities-reveal>
             <!-- Replace with an anchor to the real works section when it is available. -->
@@ -119,73 +280,1259 @@
           </div>
         </div>
       </section>
+        <div class="portfolio__journey">
+      <section class="ocean-type has-sail" id="design-code" aria-labelledby="design-code-title" lang="en">
+        <div class="ocean-type__stage">
+          <div class="ocean-type__opening">
+          <p class="ocean-type__label">DESIGN &amp; DEVELOPMENT</p>
+          <div class="ocean-type__type-window">
+            <h2 class="ocean-type__text" id="design-code-title" aria-label="SELECTED WORKS, TEAM PROJECTS &amp; PERSONAL PROJECTS"><span class="ocean-type__segment">SELECTED WORKS, </span><span class="ocean-type__segment ocean-type__accent">TEAM PROJECTS &amp; PERSONAL PROJECTS</span></h2>
+          </div>
+          <a class="ocean-type__explore" href="#diptyque-project">
+            <span>SCROLL TO EXPLORE</span>
+            <svg viewBox="0 0 24 16" fill="none" aria-hidden="true"><path d="m3 4 9 8 9-8" /></svg>
+          </a>
+          </div>
+      <section class="project-details project-details--voyage" id="diptyque-details" aria-label="딥디크 프로젝트 상세 소개" lang="ko">
+        <div class="project-details__stage">
+        <div class="project-pages">
+          <section class="sail-transition" id="team-projects" aria-labelledby="diptyque-title">
+            <div class="sail-transition__scene ocean-descent" aria-hidden="true">
+              <div class="ocean-descent__water"></div>
+              <div class="ocean-descent__ceiling"><img src="/images/ocean-descent-water-matched.png" width="1774" height="887" alt="" loading="lazy" decoding="async" draggable="false" /></div>
+              <div class="ocean-descent__shade"></div>
+              <canvas class="ocean-descent__particles"></canvas>
+            </div>
+            <article class="sail-project sail-project--seabed" id="diptyque-project" tabindex="-1" aria-labelledby="diptyque-title">
+              <div class="sail-project__environment" aria-hidden="true">
+                <img class="sail-project__seabed" src="/images/diptyque-seabed-hero-style.png" width="1672" height="941" alt="" loading="lazy" decoding="async" draggable="false" />
+                <div class="sail-project__water-light"></div>
+                <div class="sail-project__silt"></div>
+                <div class="sail-project__floor-shadow"></div>
+              </div>
+              <header class="sail-project__header">
+                <p class="sail-project__eyebrow" data-project-reveal="number"><span class="sail-project__large-index">01</span><span class="sail-project__kind">TEAM PROJECT / 2026</span></p>
+                <div class="sail-project__heading-row" data-project-reveal="title">
+                  <h3 class="sail-project__title" id="diptyque-title">DIPTYQUE</h3>
+                  <p class="sail-project__subtitle">Web renewal</p>
+                  <p class="sail-project__discipline">EDITORIAL FRAGRANCE EXPERIENCE</p>
+                </div>
+              </header>
+              <figure class="sail-project__screen">
+                <div class="sail-project__surface">
+                  <div class="sail-project__device">
+                    <div class="sail-project__float">
+                      <img class="sail-project__image" src="/images/project-diptyque-tablet.png" width="768" height="1024" alt="DIPTYQUE PARIS 로고와 흑백 향수 공방 장면을 담은 딥티크 리뉴얼 웹사이트의 실제 태블릿 화면" loading="lazy" decoding="async" draggable="false" />
+                      <span class="sail-project__glass" aria-hidden="true"></span>
+                    </div>
+                  </div>
+                  <div class="sail-project__fragment" aria-hidden="true">
+                    <div class="sail-project__fragment-float"><img src="/images/project-diptyque-collection.png" width="1440" height="1000" alt="" loading="lazy" decoding="async" draggable="false" /></div>
+                  </div>
+                </div>
+              </figure>
+              <div class="sail-project__details">
+                <p class="sail-project__description" data-project-reveal="description" lang="ko">딥디크의 향과 이야기를 에디토리얼 레이아웃과 인터랙션으로 풀어낸 브랜드 웹 리뉴얼.</p>
+                <a class="sail-project__link" data-project-reveal="link" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer"><span>VIEW PROJECT</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — DIPTYQUE (새 탭)</span></a>
+              </div>
+            </article>
+          </section>
+      <section class="project-case" id="diptyque-overview" aria-labelledby="diptyque-overview-title" lang="ko">
+        <div class="project-case__layout">
+          <figure class="project-case__visual">
+            <a class="project-case__preview" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="딥디크 리뉴얼 웹사이트 보기 (새 탭)">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <img src="/images/project-diptyque-desktop.png" width="1600" height="1000" alt="노트북 화면에 담긴 딥디크 웹사이트. DIPTYQUE PARIS 로고와 파리의 향수 공방을 그린 흑백 첫 화면." loading="lazy" decoding="async" draggable="false" />
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </a>
+            <figcaption class="project-case__caption"><span>THE WEBSITE, IN FOCUS</span><span>DESKTOP EXPERIENCE ↗</span></figcaption>
+          </figure>
+
+          <div class="project-case__content">
+            <header class="project-case__header">
+              <p class="project-case__index" lang="en"><span>01</span><span>/ TEAM PROJECT</span></p>
+              <p class="project-case__kicker">딥디크 웹사이트 리뉴얼</p>
+              <div class="project-case__heading" lang="en">
+                <h2 id="diptyque-overview-title">DIPTYQUE</h2>
+                <p>web renewal</p>
+              </div>
+              <div class="project-case__actions">
+                <a class="project-case__website" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer"><span lang="en">WEBSITE</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 딥디크 웹사이트 (새 탭)</span></a>
+                <a class="project-case__website" href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3208-5234" target="_blank" rel="noopener noreferrer"><span lang="en">PROPOSAL</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 딥디크 프로젝트 기획서 (새 탭)</span></a>
+              </div>
+            </header>
+
+            <dl class="project-case__meta">
+              <div><dt lang="en">DURATION</dt><dd><time datetime="2026-09-01">2026.09.01</time> — <time datetime="2026-09-30">2026.09.30</time></dd></div>
+              <div><dt lang="en">TEAM</dt><dd>4인 팀 프로젝트</dd></div>
+            </dl>
+
+            <div class="project-case__brief">
+              <h3 lang="en">PROJECT BRIEF</h3>
+              <p>제품을 찾는 경험을 넘어, <strong>딥디크의 향과 이야기를 경험하는 온라인 공간</strong>을 제안한 팀 프로젝트입니다. 브랜드 스토리와 시각적 장면을 통해 향을 이해하고, 탐색에서 제품 선택까지 자연스럽게 이어지도록 구성했습니다.</p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+      <section class="project-story" id="diptyque-experience" aria-labelledby="diptyque-experience-title" lang="ko">
+        <div class="project-story__layout">
+          <figure class="project-story__visual" aria-label="딥디크의 제품 목록, 리추얼 콘텐츠, 첫 화면을 겹쳐 보여주는 웹사이트 목업">
+            <div class="project-story__window project-story__window--collection"><img src="/images/project-diptyque-collection.png" width="1440" height="1000" alt="딥디크 향수 컬렉션의 제품 탐색 화면" loading="lazy" decoding="async" draggable="false" /></div>
+            <div class="project-story__window project-story__window--ritual"><img src="/images/project-diptyque-ritual.png" width="1440" height="1000" alt="딥디크 모닝 리추얼을 소개하는 에디토리얼 화면" loading="lazy" decoding="async" draggable="false" /></div>
+            <div class="project-story__device" data-project-preview="딥디크 브랜드 경험 목업">
+            <a class="project-story__preview project-case__preview" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="딥디크 리뉴얼 웹사이트 보기 (새 탭)">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <video class="project-story__video" width="1280" height="800" poster="/images/project-diptyque-desktop.png" preload="none" muted loop playsinline disablepictureinpicture aria-hidden="true">
+                    <source src="/videos/diptyque-website-scroll.webm" type="video/webm" />
+                  </video>
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </a>
+            <button class="project-story__playback" type="button" data-state="paused" aria-label="딥디크 목업 자동 스크롤 재생" aria-pressed="false" hidden>
+              <svg class="project-story__play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" /></svg>
+              <svg class="project-story__pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+            </button>
+            </div>
+          </figure>
+          <div class="project-story__content">
+            <p class="project-story__eyebrow" lang="en">DIPTYQUE / BRAND EXPERIENCE</p>
+            <h2 class="project-story__title" id="diptyque-experience-title" lang="en">CRAFTING <em>the</em><br />SCENT <em>experience</em></h2>
+            <p class="project-story__statement" lang="en">From discovering a product<br />to experiencing a world of scent.</p>
+            <p class="project-story__description" lang="ko">보이지 않는 향을 장면과 이야기로 전달하기 위해,<br class="project-story__desktop-break" /> 딥디크의 역사와 향의 영감, 컬렉션 탐색이<br class="project-story__desktop-break" /> 하나의 흐름으로 이어지도록 사용자 여정을 구성했습니다.</p>
+            <ul class="project-story__themes" aria-label="딥디크의 브랜드 경험">
+              <li><span lang="en">01 / STORY</span><p>향에 담긴 기억과 영감</p></li>
+              <li><span lang="en">02 / RITUAL</span><p>모닝·이브닝 리추얼</p></li>
+              <li><span lang="en">03 / DISCOVERY</span><p>컬렉션과 갤러리 탐색</p></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="project-typography" id="diptyque-typography" aria-labelledby="diptyque-typography-title" lang="ko">
+        <div class="project-typography__layout project-story__layout">
+          <figure class="project-typography__visual">
+            <div class="project-typography__device" data-project-preview="딥디크 타이포그래피 목업">
+              <a class="project-typography__preview project-case__preview" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="딥디크 타이포그래피 인터랙션이 담긴 리뉴얼 웹사이트 보기 (새 탭)">
+                <div class="project-typography__monitor">
+                  <div class="project-typography__display project-case__display">
+                    <video class="project-typography__video" width="1280" height="800" poster="/images/project-diptyque-typography.png" preload="none" muted loop playsinline disablepictureinpicture aria-hidden="true">
+                      <source src="/videos/diptyque-typography-scroll.webm" type="video/webm" />
+                    </video>
+                    <span class="project-typography__camera" aria-hidden="true"></span>
+                  </div>
+                  <div class="project-typography__chin" aria-hidden="true"><span>DIPTYQUE</span></div>
+                  <div class="project-typography__stand" aria-hidden="true"></div>
+                </div>
+              </a>
+              <button class="project-story__playback project-typography__playback" type="button" data-state="paused" aria-label="딥디크 타이포그래피 목업 자동 스크롤 재생" aria-pressed="false" hidden>
+                <svg class="project-story__play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" /></svg>
+                <svg class="project-story__pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+              </button>
+            </div>
+            <figcaption class="project-typography__caption" lang="en">WORDS, GIVEN A SENSE OF SCENT.</figcaption>
+          </figure>
+          <div class="project-typography__content">
+            <p class="project-story__eyebrow" lang="en">DIPTYQUE / TYPE &amp; MOTION</p>
+            <h2 class="project-typography__title project-story__title" id="diptyque-typography-title" lang="en"><span>TYPOGRAPHY</span> <em>interaction</em></h2>
+            <p class="project-story__statement" lang="en">Words unfold into memories.<br />Scroll into the world of Diptyque.</p>
+            <p class="project-story__description">섬세한 세리프 타이포그래피로 향에 담긴 기억을 전하고,<br class="project-story__desktop-break" /> 스크롤에 따라 문장이 차분히 선명해지도록 구성했습니다.<br class="project-story__desktop-break" /> 식물 드로잉과 여백을 연결해 딥디크의 이야기에 몰입하도록 했습니다.</p>
+            <ul class="project-typography__themes project-story__themes" aria-label="딥디크 타이포그래피와 인터랙션의 특징">
+              <li><span lang="en">01 / SERIF TYPE</span><p>향의 이야기를 담는 서체</p></li>
+              <li><span lang="en">02 / SCROLL REVEAL</span><p>스크롤로 읽어가는 문장</p></li>
+            </ul>
+          </div>
+        </div>
+      </section>
+      <section class="project-renewal" id="diptyque-renewal" aria-labelledby="diptyque-renewal-title" lang="ko">
+        <div class="project-renewal__layout project-story__layout">
+          <figure class="project-renewal__visual">
+            <a class="project-renewal__preview project-case__preview" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer" aria-label="태블릿 목업에 담긴 딥디크 리뉴얼 웹사이트 보기 (새 탭)">
+              <div class="project-renewal__tablet">
+                <span class="project-renewal__camera" aria-hidden="true"></span>
+                <div class="project-renewal__screen">
+                  <img src="/images/project-diptyque-tablet.png" width="768" height="1024" alt="딥디크 리뉴얼 사이트의 실제 태블릿 화면. 향수 공방의 흑백 장면 위로 DIPTYQUE PARIS 로고가 보입니다." loading="lazy" decoding="async" draggable="false" />
+                </div>
+                <span class="project-renewal__home" aria-hidden="true"></span>
+              </div>
+            </a>
+            <figcaption class="project-renewal__caption" lang="en">DIPTYQUE / THE RENEWED EXPERIENCE ↗</figcaption>
+          </figure>
+          <div class="project-renewal__content">
+            <p class="project-story__eyebrow" lang="en">DIPTYQUE / RENEWAL DIRECTION</p>
+            <h2 class="project-renewal__title project-story__title" id="diptyque-renewal-title" lang="en">BEFORE <em>&amp;</em> AFTER</h2>
+            <p class="project-renewal__statement project-story__statement" lang="en">A renewed journey brings<br class="project-story__desktop-break" /> Diptyque’s scents into focus,<br class="project-story__desktop-break" /> connecting fragrance stories<br class="project-story__desktop-break" /> with collection discovery.</p>
+            <p class="project-story__description">향의 영감과 브랜드 스토리를 에디토리얼 화면으로 풀어내고,<br class="project-story__desktop-break" /> 모닝·이브닝 리추얼에서 컬렉션 탐색까지<br class="project-story__desktop-break" /> 자연스럽게 이어지는 딥디크만의 경험을 구성했습니다.</p>
+            <div class="project-renewal__direction" aria-label="딥디크 프로젝트의 리뉴얼 방향">
+              <div><span lang="en">FROM / PRODUCT</span><p>제품을 찾는 탐색</p></div>
+              <svg viewBox="0 0 32 16" fill="none" aria-hidden="true"><path d="M1 8h28M23 2l6 6-6 6" /></svg>
+              <div><span lang="en">TO / EXPERIENCE</span><p>향의 이야기를 경험하는 탐색</p></div>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="project-editorial" id="diptyque-editorial" aria-labelledby="diptyque-editorial-title" lang="ko">
+        <div class="project-editorial__layout project-story__layout">
+          <figure class="project-editorial__visual">
+            <a class="project-editorial__preview project-case__preview" href="https://mbc-teamproject-alpha.vercel.app/about/fragrances-story" target="_blank" rel="noopener noreferrer" aria-label="직접 구현한 딥디크 향수 이야기 페이지 보기 (새 탭)">
+              <div class="project-editorial__tablet project-renewal__tablet">
+                <span class="project-editorial__camera project-renewal__camera" aria-hidden="true"></span>
+                <div class="project-editorial__screen project-renewal__screen">
+                  <img src="/images/project-diptyque-fragrances-story.png" width="1440" height="1000" alt="딥디크 향수 이야기의 첫 번째 챕터, Fleur de Peau. 에로스와 프시케의 빈티지 콜라주 옆에 세리프 제목과 향의 이야기를 배치한 실제 화면" loading="lazy" decoding="async" draggable="false" />
+                </div>
+                <span class="project-editorial__home project-renewal__home" aria-hidden="true"></span>
+              </div>
+            </a>
+            <figcaption class="project-renewal__caption" lang="en">DIPTYQUE / FRAGRANCES STORY ↗</figcaption>
+          </figure>
+          <div class="project-editorial__content">
+            <p class="project-story__eyebrow" lang="en">DIPTYQUE / FRAGRANCES STORY</p>
+            <h2 class="project-editorial__title project-story__title" id="diptyque-editorial-title" lang="en"><span>EDITORIAL</span> <em>design</em></h2>
+            <p class="project-story__statement" lang="en">Diptyque’s fragrances unfold<br class="project-story__desktop-break" /> through myths, places<br class="project-story__desktop-break" /> and memories, chapter by chapter.</p>
+            <p class="project-story__description">플레르 드 뽀·34번가·오르페옹의 향 이야기를<br class="project-story__desktop-break" /> 세 개의 챕터로 구성했습니다. 빈티지 콜라주와 세리프 서체로<br class="project-story__desktop-break" /> 각 향의 영감에서 노트 소개까지 자연스럽게 이어지도록 디자인했습니다.</p>
+          </div>
+        </div>
+      </section>
+      <section class="project-contribution" id="diptyque-contribution" aria-labelledby="diptyque-contribution-title" lang="ko">
+        <div class="project-contribution__layout">
+          <header class="project-contribution__header">
+            <div>
+              <h2 id="diptyque-contribution-title" lang="en">(What I do)</h2>
+              <p>향수 이야기 페이지에서 맡은 역할</p>
+            </div>
+            <span lang="en">DIPTYQUE / FRAGRANCES STORY</span>
+          </header>
+          <div class="project-contribution__grid">
+            <article class="project-contribution__primary" aria-labelledby="diptyque-role-design">
+              <div class="project-contribution__device project-contribution__device--browser" data-project-preview="딥디크 디자인과 화면 구현 목업">
+                <a class="project-contribution__preview" href="https://mbc-teamproject-alpha.vercel.app/about/fragrances-story" target="_blank" rel="noopener noreferrer" aria-label="디자인과 화면 구현을 보여주는 딥디크 향수 이야기 페이지 보기 (새 탭)">
+                  <div class="project-contribution__browser-bar" aria-hidden="true"><span></span><span></span><span></span><p>FRAGRANCES STORY</p></div>
+                  <div class="project-contribution__screen project-contribution__screen--desktop">
+                    <video width="1280" height="800" poster="/images/project-diptyque-role-design.png" preload="none" muted loop playsinline disablepictureinpicture aria-hidden="true"><source src="/videos/diptyque-role-design.webm" type="video/webm" /></video>
+                  </div>
+                </a>
+                <button class="project-story__playback project-contribution__playback" type="button" data-state="paused" aria-label="딥디크 디자인과 화면 구현 목업 자동 스크롤 재생" aria-pressed="false" hidden>
+                  <svg class="project-story__play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" /></svg>
+                  <svg class="project-story__pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                </button>
+              </div>
+              <div class="project-contribution__copy">
+                <h3 id="diptyque-role-design"><span>01</span>디자인과 화면 구현</h3>
+                <p>빈티지 콜라주와 종이 질감, 큰 세리프 제목으로 향의 세계관을 화면에 담았습니다. 이미지와 본문을 비대칭으로 배치해 브랜드 분위기와 읽는 흐름을 함께 살렸습니다.</p>
+                <div class="project-case__actions">
+                  <a class="project-case__website" href="https://mbc-teamproject-alpha.vercel.app/about/fragrances-story" target="_blank" rel="noopener noreferrer"><span lang="en">WEBSITE ↗</span><span class="sr-only"> — 딥디크 향수 이야기 페이지 (새 탭)</span></a>
+                  <a class="project-case__website" href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3208-5234" target="_blank" rel="noopener noreferrer"><span lang="en">PROPOSAL ↗</span><span class="sr-only"> — 딥디크 프로젝트 기획서 (새 탭)</span></a>
+                </div>
+              </div>
+            </article>
+            <div class="project-contribution__secondary">
+              <article class="project-contribution__detail" aria-labelledby="diptyque-role-flow">
+                <div class="project-contribution__device project-contribution__device--tablet" data-project-preview="딥디크 콘텐츠 구성과 탐색 흐름 목업">
+                  <a class="project-contribution__preview" href="https://mbc-teamproject-alpha.vercel.app/about/fragrances-story" target="_blank" rel="noopener noreferrer" aria-label="콘텐츠 구성과 탐색 흐름을 보여주는 딥디크 향수 이야기 페이지 보기 (새 탭)">
+                    <div class="project-contribution__screen project-contribution__screen--tablet">
+                      <video width="1024" height="768" poster="/images/project-diptyque-role-flow.png" preload="none" muted loop playsinline disablepictureinpicture aria-hidden="true"><source src="/videos/diptyque-role-flow.webm" type="video/webm" /></video>
+                    </div>
+                  </a>
+                  <button class="project-story__playback project-contribution__playback" type="button" data-state="paused" aria-label="딥디크 콘텐츠 구성과 탐색 흐름 목업 자동 스크롤 재생" aria-pressed="false" hidden>
+                    <svg class="project-story__play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" /></svg>
+                    <svg class="project-story__pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                  </button>
+                </div>
+                <div class="project-contribution__copy">
+                  <h3 id="diptyque-role-flow"><span>02</span>콘텐츠 구성과 탐색 흐름</h3>
+                  <p>세 향의 이야기를 챕터로 나누고, 이야기 → 장면 카드 → 향 노트 순서로 구성했습니다. 반복되는 구조로 다음 향까지 자연스럽게 읽어가도록 연결했습니다.</p>
+                </div>
+              </article>
+              <article class="project-contribution__detail project-contribution__detail--responsive" aria-labelledby="diptyque-role-responsive">
+                <div class="project-contribution__phone-wrap">
+                  <div class="project-contribution__device project-contribution__device--phone" data-project-preview="딥디크 인터랙션과 반응형 조정 목업">
+                    <a class="project-contribution__preview" href="https://mbc-teamproject-alpha.vercel.app/about/fragrances-story" target="_blank" rel="noopener noreferrer" aria-label="모바일 카드와 향 노트 전환을 보여주는 딥디크 향수 이야기 페이지 보기 (새 탭)">
+                      <div class="project-contribution__screen project-contribution__screen--phone">
+                        <video width="390" height="844" poster="/images/project-diptyque-role-responsive.png" preload="none" muted loop playsinline disablepictureinpicture aria-hidden="true"><source src="/videos/diptyque-role-responsive.webm" type="video/webm" /></video>
+                      </div>
+                    </a>
+                    <button class="project-story__playback project-contribution__playback" type="button" data-state="paused" aria-label="딥디크 인터랙션과 반응형 조정 목업 자동 스크롤 재생" aria-pressed="false" hidden>
+                      <svg class="project-story__play-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="m7 4 9 6-9 6Z" fill="currentColor" /></svg>
+                      <svg class="project-story__pause-icon" viewBox="0 0 20 20" aria-hidden="true"><path d="M7 4v12M13 4v12" fill="none" stroke="currentColor" stroke-width="1.5" /></svg>
+                    </button>
+                  </div>
+                  <span class="project-contribution__mobile-label" lang="en">MOBILE / TOUCH &amp; EXPLORE</span>
+                </div>
+                <div class="project-contribution__copy">
+                  <h3 id="diptyque-role-responsive"><span>03</span>인터랙션과 반응형 조정</h3>
+                  <p>스크롤에 맞춰 콜라주와 제목이 나타나도록 구현했습니다. 모바일에서는 이미지·본문의 배치를 조정하고, 카드와 향 노트를 넘겨보는 조작을 적용했습니다.</p>
+                </div>
+              </article>
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="project-together" id="diptyque-together" aria-labelledby="diptyque-together-title" lang="ko">
+        <div class="project-together__layout">
+          <div class="project-together__visual">
+            <div class="project-together__photo project-together__photo--portrait">
+              <img src="/images/project-diptyque-team-review.png" width="1448" height="1086" alt="딥디크 프로젝트 팀원 네 명이 노트북 앞에 모여 작업 화면을 함께 검토하는 모습" loading="lazy" decoding="async" draggable="false" />
+            </div>
+            <div class="project-together__photo project-together__photo--landscape">
+              <img src="/images/project-diptyque-team-discussion.png" width="1448" height="1086" alt="팀원이 노트북 화면을 가리키며 딥디크 프로젝트의 디자인에 대해 의견을 나누는 모습" loading="lazy" decoding="async" draggable="false" />
+            </div>
+          </div>
+          <div class="project-together__content">
+            <p class="project-story__eyebrow" lang="en">DIPTYQUE / TEAM COLLABORATION</p>
+            <h2 class="project-together__title" id="diptyque-together-title" lang="en"><em>better</em> <span>TOGETHER</span></h2>
+            <p class="project-together__statement project-story__statement" lang="en"><span>Shared ideas, one direction.</span><br />A cohesive Diptyque experience,<br class="project-story__desktop-break" /> shaped together, detail by detail.</p>
+            <p class="project-story__description">향수 이야기 페이지의 디자인과 화면 구현을 맡아,<br class="project-story__desktop-break" /> 빈티지 콜라주와 챕터 구성, 인터랙션을 딥디크의 브랜드 경험으로 연결했습니다.<br class="project-story__desktop-break" /> 각자의 작업이 하나의 흐름으로 이어지는 협업의 가치를 프로젝트에 담았습니다.</p>
+            <div class="project-together__actions project-case__actions">
+              <a class="project-case__website" href="https://mbc-teamproject-alpha.vercel.app/" target="_blank" rel="noopener noreferrer"><span lang="en">WEBSITE</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 딥디크 팀 프로젝트 웹사이트 (새 탭)</span></a>
+              <a class="project-case__website" href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3208-5234" target="_blank" rel="noopener noreferrer"><span lang="en">PROPOSAL</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 딥디크 프로젝트 기획서 (새 탭)</span></a>
+            </div>
+          </div>
+        </div>
+      </section>
+        </div>
+        <nav class="project-pages__navigation" aria-label="딥디크 프로젝트 페이지">
+          <button type="button" class="project-pages__cover" data-project-page="0" aria-label="딥디크 프로젝트 표지" aria-current="page">INTRO</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="1" aria-label="딥디크 프로젝트 개요">01</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="2" aria-label="딥디크 브랜드 경험">02</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="3" aria-label="딥디크 타이포그래피 인터랙션">03</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="4" aria-label="딥디크 비포 앤 애프터와 리뉴얼 방향">04</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="5" aria-label="딥디크 향수 이야기의 에디토리얼 디자인">05</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="6" aria-label="딥디크 향수 이야기에서 맡은 세 가지 역할">06</button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="7" aria-label="딥디크 팀 프로젝트 협업 소개">07</button>
+        </nav>
+        </div>
+      </section>
+          <div class="ocean-type__waves" aria-hidden="true">
+            <div class="ocean-type__layer ocean-type__layer--back">
+              <img src="/images/work-wave-back.png" width="2172" height="724" alt="" loading="lazy" decoding="async" draggable="false" />
+            </div>
+            <div class="ocean-type__layer ocean-type__layer--front">
+              <img src="/images/work-wave-front.png" width="2172" height="724" alt="" loading="lazy" decoding="async" draggable="false" />
+            </div>
+          </div>
+        </div>
+      </section>
+      <section class="project-details project-process" id="diptyque-process" aria-label="딥디크 리뉴얼 기획 과정">
+        <div class="project-details__stage">
+        <div class="project-pages">
+      <section class="project-planning" id="diptyque-planning" aria-labelledby="diptyque-planning-title" lang="ko">
+        <div class="project-planning__layout">
+          <div class="project-planning__visual" aria-label="딥디크 린캔버스와 핵심 사용자, 해결 방향">
+            <div class="project-planning__document" data-planning-reveal>
+              <div class="project-planning__document-heading" lang="en"><span>DIPTYQUE / RENEWAL STRATEGY</span><p>Lean Product Canvas <em>(v3)</em></p></div>
+              <div class="project-planning__canvas-preview" data-lean-preview aria-hidden="true" inert></div>
+              <button class="project-planning__enlarge" type="button" data-lean-open aria-haspopup="dialog" aria-controls="diptyque-canvas-dialog" hidden><span>린캔버스 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 10V4h6M10 16h6v-6M4 4l5 5m7 7-5-5" /></svg></button>
+              <p class="project-planning__document-footer" lang="en">INTUITIVE SCENT DISCOVERY &amp; CONFIDENT CHOICE</p>
+            </div>
+            <article class="project-planning__note project-planning__note--user" data-planning-reveal>
+              <p class="project-planning__note-label" lang="en">03 / USERS</p>
+              <h3>향은 낯설지만,<br />취향은 분명한 사람.</h3>
+              <p>전문 용어보다 장면과 분위기로<br />나에게 맞는 향을 찾고 싶은 사용자</p>
+              <span>이해의 부담은 낮게, 선택의 확신은 높게.</span>
+            </article>
+            <article class="project-planning__note project-planning__note--solution" data-planning-reveal>
+              <p class="project-planning__note-label" lang="en">05 / SOLUTIONS</p>
+              <h3>향을 설명하는 대신,<br />장면을 보여주기.</h3>
+              <ol><li><span>01</span>장면·분위기로 향 이해</li><li><span>02</span>취향 질문과 후보 비교</li><li><span>03</span>제품 상세 탐색으로 연결</li></ol>
+            </article>
+          </div>
+          <div class="project-planning__content">
+            <header data-planning-reveal>
+              <p class="project-story__eyebrow" lang="en">TEAM PROJECT / PROCESS</p>
+              <p class="project-planning__kicker">딥디크 웹사이트 리뉴얼 / UX 기획</p>
+              <h2 class="project-planning__title" id="diptyque-planning-title" lang="en"><span>LEAN CANVAS</span> <em>methodology</em></h2>
+              <div class="project-case__actions project-planning__actions">
+                <a class="project-case__website" href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3208-5234" target="_blank" rel="noopener noreferrer"><span lang="en">REFERENCE</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 딥디크 프로젝트 기획서 (새 탭)</span></a>
+              </div>
+            </header>
+            <div class="project-planning__method" data-planning-reveal>
+              <h3 lang="en">DESIGN METHODOLOGY</h3>
+              <p>온라인에서 향을 이해하고 비교하기 어려운 문제를 출발점으로, 핵심 사용자와 해결 방향, 검증 가설을 한 장에 정리했습니다. 향을 <strong>장면·분위기·감정</strong>으로 풀어내고, 취향 탐색과 후보 비교가 제품 탐색으로 이어지도록 기획했습니다.</p>
+            </div>
+            <div class="project-planning__direction" data-planning-reveal>
+              <h3 lang="en">DIPTYQUE RENEWAL DIRECTION</h3>
+              <dl><div><dt>문제 정의</dt><dd>향을 상상하고 비교하기 어려운 탐색 경험</dd></div><div><dt>핵심 사용자</dt><dd>자신의 취향에 맞는 향을 찾고 싶은 입문자</dd></div><div><dt>핵심 가치</dt><dd>직관적인 향 이해와 선택의 확신</dd></div><div><dt>해결 방향</dt><dd>장면 표현 · 짧은 취향 질문 · 추천 이유 비교</dd></div></dl>
+              <p class="project-planning__source">Lean Product Canvas v3 · 2026.09<br />캔버스의 수치는 프로토타입 검증을 위한 목표입니다.</p>
+            </div>
+            <ul class="project-planning__tags" aria-label="기획 키워드" lang="en" data-planning-reveal><li>SCENT DISCOVERY</li><li>LEAN CANVAS</li><li>UX PLANNING</li></ul>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog" id="diptyque-canvas-dialog" aria-labelledby="diptyque-canvas-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / UX PLANNING</p><h2 id="diptyque-canvas-dialog-title">Lean Product Canvas <span>(v3)</span></h2></div><button type="button" class="project-planning__close" data-lean-close aria-label="린캔버스 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body"><p class="project-planning__dialog-caption">딥디크 리뉴얼의 문제 정의와 해결 방향, 검증 계획입니다. 사용자 수·기간·수치는 프로토타입 검증을 위한 목표입니다.</p><div data-lean-full></div></div>
+        </dialog>
+        <template id="diptyque-canvas-document">
+          <div class="lean-canvas">
+            <header class="lean-canvas__header"><div><h3>Lean Product Canvas (v3)</h3><p>DIPTYQUE KOREA WEBSITE RENEWAL · PROBLEM 03 · INTEGRATED REVIEW</p></div><dl><div><dt>Initiative</dt><dd>DIPTYQUE renewal project</dd></div><div><dt>Focus</dt><dd>Intuitive scent discovery &amp; confident choice</dd></div><div><dt>Date / Iteration</dt><dd>2026.09 / Final integrated</dd></div></dl></header>
+            <article class="lean-canvas__panel lean-canvas__panel--problem"><header><h4>Business Problem</h4><p>현재 해결해야 할 핵심 문제</p><span>1</span></header><div class="lean-canvas__note lean-canvas__note--cream"><h5>온라인에서 향을 직관적으로 이해하고<br />비교하기 어려운 탐색 경험</h5><p>향 노트·원료·전문적인 향 계열 설명만으로는 실제 향의 분위기를 상상하기 어렵습니다. 제품 설명이 비슷하게 느껴지고 차이를 비교하기 어려워 외부 후기 검색이나 오프라인 시향에 의존합니다.</p><p>장면·분위기·감정처럼 익숙한 표현으로 향을 이해하고, 취향에 맞는 후보를 빠르게 비교해 확신 있게 선택하는 경험이 필요합니다.</p></div><p class="lean-canvas__footnote">직관적 이해 → 후보 비교 → 선택 확신 → 제품 탐색</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--outcomes"><header><h4>Business Outcomes</h4><p>향 탐색 효율과 제품 선택 확신 향상</p><span>2</span></header><div class="lean-canvas__columns"><div class="lean-canvas__note lean-canvas__note--blue"><h5>Objective</h5><p>향이 익숙하지 않은 사용자도 향을 직관적으로 이해하고, 자신에게 맞는 향을 빠르고 확신 있게 발견하게 합니다.</p></div><div class="lean-canvas__note lean-canvas__note--lilac"><h5>Key Results · 프로토타입 OKR</h5><ul><li>‘나만의 향 찾기’ 완료율 <b>75% 이상</b></li><li>향 후보 결정 시간 <b>30% 이상 단축</b></li><li>제품 상세로 자발적 이동 <b>40% 이상</b></li><li>향의 분위기·제품 차이 이해도 <b>4.0/5 이상</b></li><li>추천 이유를 자신의 말로 설명 <b>80% 이상</b></li><li>향 선택 확신도 <b>+0.5점 이상</b></li></ul></div></div><p class="lean-canvas__footnote">측정 계획 · 8–10명 표본 / 구매·재방문은 출시 후 지표로 분리</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--users"><header><h4>Users</h4><p>핵심 타깃 사용자와 검증 표본</p><span>3</span></header><div class="lean-canvas__note lean-canvas__note--blue"><h5>최동민 · 31세 · 프론트엔드 엔지니어<br />향을 잘 모르지만 취향에 맞는 향을 찾고 싶은 사용자</h5><p>향 노트와 원료 이름만으로 실제 향을 상상하기 어렵습니다. 유명 제품보다 자신의 분위기와 취향에 맞는 향을 원합니다.</p><h5>Pain Points</h5><ul><li>전문 용어와 비슷한 설명으로 제품 차이를 알기 어려움</li><li>판단을 위해 외부 후기를 반복 검색</li><li>온라인 선택에 확신이 없어 오프라인 시향에 의존</li></ul></div><p class="lean-canvas__footnote">검증 표본 · 향 전문지식이 적은 사용자 8–10명 / 구매 경험 다양화</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--benefits"><header><h4>User Outcomes &amp; Benefits (JTBD)</h4><p>사용자가 이루고 싶은 변화</p><span>4</span></header><div class="lean-canvas__columns"><div class="lean-canvas__note lean-canvas__note--cream"><h5>핵심 JTBD</h5><p>“향을 직접 맡을 수 없는 온라인에서 전문 용어를 공부하지 않고도, 장면과 분위기로 향을 이해해 내 취향의 후보를 빠르게 찾고 싶다.”</p></div><div class="lean-canvas__stack"><div class="lean-canvas__note lean-canvas__note--blue"><h5>사용자 성과</h5><ul><li>향의 분위기를 직관적으로 이해</li><li>비슷한 제품의 차이를 쉽게 비교</li><li>취향에 맞는 후보를 2–3개로 압축</li></ul></div><div class="lean-canvas__note lean-canvas__note--lilac"><h5>사용자 혜택</h5><ul><li>탐색 시간과 피로 감소</li><li>전문 지식 부담 감소</li><li>선택 근거와 확신 강화</li></ul></div></div></div></article>
+            <article class="lean-canvas__panel lean-canvas__panel--solutions"><header><h4>Solutions</h4><p>향의 직관적 이해와 선택을 돕는 기능</p><span>5</span></header><div class="lean-canvas__note lean-canvas__note--pink"><ul><li><b>향을 장면·분위기·감정으로 표현합니다.</b><p>숲·바다·비 오는 거리처럼 쉽게 떠올릴 수 있는 이미지와 장면으로 향의 인상을 전달합니다.</p></li><li><b>향의 특징을 익숙한 감각 언어로 설명합니다.</b><p>포근한·맑은·차분한·쌉싸름한 등 일상 표현을 전문 향 용어와 함께 제공합니다.</p></li><li><b>짧은 취향 탐색 과정을 제공합니다.</b><p>선호 장면·분위기·감정·사용 상황에 관한 질문으로 취향을 간단히 파악합니다.</p></li><li><b>추천 이유와 제품 차이를 함께 보여줍니다.</b><p>추천 근거·분위기·어울리는 상황을 한 화면에서 비교해 선택 기준을 이해하게 합니다.</p></li><li><b>추천 결과를 상세 탐색으로 연결합니다.</b><p>향의 변화·이미지·사용 장면을 확인한 뒤 관심 제품의 상세 페이지로 자연스럽게 이동하게 합니다.</p></li></ul></div><p class="lean-canvas__footnote"><b>SOLUTION PRINCIPLE</b><br />‘향 용어를 해석해야 하는 탐색’에서<br />‘장면을 보고 향을 이해하는 탐색’으로 전환</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--hypotheses"><header><h4>Hypotheses</h4><p>기능별로 분리한 검증 가설</p><span>6</span></header><div class="lean-canvas__note lean-canvas__note--cream"><h5>핵심 가설</h5><p>장면·분위기 표현과 2–3개 향의 추천 이유를 제공하면 향을 더 빠르고 확신 있게 이해하고 선택할 것이다.</p></div><div class="lean-canvas__note lean-canvas__note--blue"><ul><li><b>H1 · 장면·감각 중심 표현</b><br />향 분위기·제품 차이 이해도 평균 4.0/5 이상</li><li><b>H2 · 짧은 취향 질문</b><br />완료율 75% 이상, 후보 결정 시간 30% 단축</li><li><b>H3 · 추천 이유와 비교</b><br />이유 설명 80% 이상, 선택 확신 +0.5점 이상</li><li><b>H4 · 추천 결과–제품 상세 연결</b><br />자발적 제품 상세 이동률 40% 이상</li></ul></div><p class="lean-canvas__footnote">구매 전환·재방문은 후속 운영 가설로 분리</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--learning"><header><h4>What must we learn first?</h4><p>가장 최우선으로 검증할 위험 가설</p><span>7</span></header><div class="lean-canvas__note lean-canvas__note--blue"><h5>“시각적 향 표현이 실제 이해를 돕고, 추천 이유를 설명 가능한 선택으로 만드는가?”</h5></div><div class="lean-canvas__columns"><div class="lean-canvas__note lean-canvas__note--lilac"><p>이미지가 예쁘게 보이는 것만으로는 충분하지 않습니다.</p><p>향의 특징과 제품 차이를 비슷하게 이해하고, 추천 근거를 설명하며 후보를 선택하는지 확인합니다.</p></div><div class="lean-canvas__note lean-canvas__note--cream"><h5>WHY THIS IS RISKY</h5><p>향은 개인마다 다르게 인식됩니다. 실제 향과 다른 기대를 만들면 추천의 신뢰와 선택 확신을 낮출 수 있습니다.</p></div></div><p class="lean-canvas__footnote">핵심 · 이해도 4.0/5 + 이유 설명 80% + 확신 +0.5점</p></article>
+            <article class="lean-canvas__panel lean-canvas__panel--test"><header><h4>Minimum Test</h4><p>최소한의 작업으로 핵심 가설 검증</p><span>8</span></header><div class="lean-canvas__columns"><div class="lean-canvas__stack"><div class="lean-canvas__note lean-canvas__note--blue"><h5>MVP 테스트 · 2주 / 사용자 8–10명</h5><p>장면 선택 → 취향 질문 → 추천 향 2–3개 → 추천 이유·비교 → 제품 상세</p><p>클릭형 프로토타입을 제작하고, 현재 페이지와 순서 교차 방식으로 동일한 향 선택 과업을 비교합니다.</p></div><div class="lean-canvas__note lean-canvas__note--cream"><h5>Objective</h5><p>직관적 표현과 추천 방식이 향 이해도·선택 확신을 높이고 탐색 시간을 줄이는지 행동과 인터뷰로 검증합니다.</p></div></div><div class="lean-canvas__note lean-canvas__note--lilac"><h5>Key Results · 검증 목표</h5><ul><li>향 찾기 완료율 75% 이상</li><li>후보 결정 시간 30% 이상 단축</li><li>이해도 4.0/5 이상, 확신 +0.5점</li><li>추천 이유 설명 80% 이상</li><li>자발적 제품 상세 이동 40% 이상</li></ul></div></div><p class="lean-canvas__footnote">정량 · 성공률·완료 시간·이동률·5점 척도 / 정성 · 향 이해와 추천 이유 설명</p></article>
+          </div>
+        </template>
+      </section>
+      <section class="project-research" id="diptyque-research" aria-labelledby="diptyque-research-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-research__panel" id="diptyque-research-brand-panel" role="tabpanel" aria-labelledby="diptyque-research-brand-tab" tabindex="0">
+              <div class="project-research__paper" data-research-preview="brand" aria-hidden="true" inert></div>
+            </div>
+            <div class="project-research__panel" id="diptyque-research-competition-panel" role="tabpanel" aria-labelledby="diptyque-research-competition-tab" tabindex="0" hidden>
+              <div class="project-research__paper" data-research-preview="competition" aria-hidden="true" inert></div>
+            </div>
+            <div class="project-research__panel" id="diptyque-research-steep-panel" role="tabpanel" aria-labelledby="diptyque-research-steep-tab" tabindex="0" hidden>
+              <div class="project-research__paper project-research__paper--steep" data-research-preview="steep" aria-hidden="true" inert></div>
+            </div>
+            <figcaption class="project-research__caption"><span data-research-caption>자사 분석</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-research-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 01 / BRAND RESEARCH</p>
+            <h2 class="project-research__title" id="diptyque-research-title">시장과 브랜드 조사</h2>
+            <p class="project-research__statement" lang="en"><span>Brand &amp;</span> market research</p>
+            <p class="project-research__description">딥디크 국내 브랜드관과 조말론·르라보·바이레도의 콘텐츠·탐색 구조를 비교하고, STEEP 관점의 시장 환경을 함께 정리했습니다. <strong>브랜드의 향 이야기와 직관적인 향 탐색</strong>을 리뉴얼의 기회로 연결했습니다.</p>
+            <div class="project-research__tabs" role="tablist" aria-label="딥디크 조사 자료">
+              <button type="button" role="tab" id="diptyque-research-brand-tab" aria-controls="diptyque-research-brand-panel" aria-selected="true" tabindex="0" data-research-tab="brand">자사 분석</button>
+              <button type="button" role="tab" id="diptyque-research-competition-tab" aria-controls="diptyque-research-competition-panel" aria-selected="false" tabindex="-1" data-research-tab="competition">경쟁사 분석</button>
+              <button type="button" role="tab" id="diptyque-research-steep-tab" aria-controls="diptyque-research-steep-panel" aria-selected="false" tabindex="-1" data-research-tab="steep">STEEP 분석</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span lang="en" data-research-insight-label>BRAND AUDIT → RENEWAL OPPORTUNITY</span><p data-research-insight>상품 정보에서 한 걸음 더 나아가,<br />향의 기억과 원료, 분위기를 발견하는 경험으로.</p></div>
+            <p class="project-research__source">DIPTYQUE renewal project · 2026.09<br />프로젝트 기획 당시의 자사·경쟁사·STEEP 분석 자료를 바탕으로 정리했습니다.</p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog" id="diptyque-research-dialog" aria-labelledby="diptyque-research-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / BRAND &amp; MARKET RESEARCH</p><h2 id="diptyque-research-dialog-title">딥디크 자사 분석</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="조사 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body"><div data-research-full></div></div>
+        </dialog>
+        <template data-research-document="brand">
+          <article class="research-document research-document--brand">
+            <header class="research-document__header"><div class="research-document__brand" lang="en">DIPTYQUE<span>PARIS</span></div><div><p class="research-document__eyebrow" lang="en">DIPTYQUE RENEWAL / BRAND AUDIT</p><h3>상품 정보 너머, 딥디크만의 브랜드 경험으로.</h3><p>국내 브랜드관의 콘텐츠·UI·비주얼을 살펴보고, 향을 이해하고 선택하는 경험의 개선 방향을 정리했습니다.</p></div></header>
+            <div class="research-audit__body">
+              <aside class="research-audit__target"><p>분석 대상</p><h4>딥디크<br />국내 브랜드관</h4><span lang="en">SHINSEGAE V / DIPTYQUE</span><div class="research-audit__oval" aria-hidden="true"><span>DIPTYQUE</span><i>the art<br />of scent</i><span>PARIS</span></div><p>제품 탐색과 구매를 중심으로 한 브랜드관에서 딥디크의 감성과 향 이야기를 어떻게 확장할 수 있을까?</p><a href="https://www.shinsegaev.com/store/diptyque" target="_blank" rel="noopener noreferrer">분석 대상 사이트 <span aria-hidden="true">↗</span></a><small>프로젝트 기획 당시의 화면을 기준으로 한 정성 분석</small></aside>
+              <div class="research-audit__table">
+                <div class="research-audit__table-heading" aria-hidden="true"><span>분석 기준</span><span>주요 내용과 리뉴얼 기회</span></div>
+                <section class="research-audit__row"><div><span lang="en">01 / CONTENTS</span><h4>브랜드 콘텐츠</h4><ul><li>브랜드의 이야기가 충분한가?</li><li>딥디크만의 콘텐츠가 있는가?</li></ul></div><p>제품 정보와 간단한 브랜드 소개는 있지만, 딥디크를 깊이 이해할 수 있는 콘텐츠는 부족합니다. 자연·여행·예술에서 얻은 영감과 향에 담긴 이야기, 원료에 대한 설명을 확장할 기회가 있습니다.</p></section>
+                <section class="research-audit__row"><div><span lang="en">02 / UI</span><h4>탐색과 비교</h4><ul><li>내비게이션이 효율적인가?</li><li>원하는 향을 비교할 수 있는가?</li></ul></div><p>제품군별 메뉴로 원하는 상품을 찾을 수 있습니다. 향의 계열·원료·분위기에 따라 제품을 찾거나 서로 비교할 수 있는 탐색 방식은 더 보완할 수 있습니다.</p></section>
+                <section class="research-audit__row"><div><span lang="en">03 / VISUAL</span><h4>브랜드의 시각 언어</h4><ul><li>딥디크의 분위기가 드러나는가?</li><li>시선을 이끄는 움직임이 있는가?</li></ul></div><p>깔끔한 쇼핑몰 형식에서 제품 이미지는 잘 보이지만, 딥디크만의 분위기는 충분히 드러나지 않습니다. 핸드 드로잉과 타원형 그래픽, 절제된 움직임으로 브랜드의 인상을 전달할 수 있습니다.</p></section>
+                <section class="research-audit__row"><div><span lang="en">04 / MARKETING</span><h4>제품 선택을 돕는 정보</h4><ul><li>향의 느낌과 사용 상황을 알 수 있는가?</li><li>관심을 이어갈 기능이 있는가?</li></ul></div><p>제품명·가격·용량 같은 기본 정보는 쉽게 확인할 수 있습니다. 향의 느낌과 어울리는 계절·사용 상황, 향 추천과 제품 비교를 더하면 선택을 돕는 탐색으로 이어질 수 있습니다.</p></section>
+                <section class="research-audit__row"><div><span lang="en">05 / THEME &amp; MESSAGE</span><h4>철학과 메시지</h4><ul><li>브랜드의 차별점이 명확한가?</li><li>철학과 감성이 전해지는가?</li></ul></div><p>딥디크 제품을 판매하는 공간이라는 점은 알 수 있지만, 다른 향수 브랜드와의 차이는 뚜렷하지 않습니다. 간단한 헤리티지 소개를 넘어 브랜드의 철학과 감성을 전달할 콘텐츠가 필요합니다.</p></section>
+                <section class="research-audit__row"><div><span lang="en">06 / SUPPORT</span><h4>구매 전후의 안내</h4><ul><li>고객 지원에 쉽게 접근하는가?</li><li>향 선택에 전문적인 도움이 있는가?</li></ul></div><p>주문·배송 조회와 취소·반품, 고객센터 등 기본 쇼핑 지원은 갖추고 있습니다. 향 선택 상담, 제품 비교, 가까운 매장 시향 안내처럼 딥디크 제품에 맞춘 안내를 보완할 수 있습니다.</p></section>
+              </div>
+            </div>
+            <footer class="research-document__footer"><span lang="en">PROJECT RESEARCH / 2026.09</span><span>핵심 기회 · 브랜드 이야기 → 감각적인 향 탐색 → 선택을 돕는 정보</span></footer>
+          </article>
+        </template>
+        <template data-research-document="competition">
+          <article class="research-document research-document--competition">
+            <header class="research-competition__header"><p class="research-document__eyebrow" lang="en">DIPTYQUE RENEWAL / COMPETITIVE RESEARCH</p><h3>세 브랜드의 경험을 비교하고,<br />딥디크의 탐색 방향을 찾다.</h3><p>조말론 · 르라보 · 바이레도 — 메인 화면부터 프로모션까지, 일곱 가지 접점의 강점과 보완점을 정리했습니다.</p></header>
+            <table class="research-competition__table" aria-label="조말론, 르라보, 바이레도의 일곱 가지 사용자 경험 비교">
+              <thead><tr><th scope="col">브랜드</th><th scope="col">메인 화면</th><th scope="col">카드·인터랙션</th><th scope="col">상세·구매</th><th scope="col">스토리·고객지원</th><th scope="col">탐색·검색</th><th scope="col">카테고리</th><th scope="col">프로모션</th></tr></thead>
+              <tbody>
+                <tr>
+                  <th scope="row"><span lang="en">JO MALONE<br /> LONDON</span><small>조말론</small></th>
+                  <td data-label="메인 화면"><p class="research-competition__strength"><b>강점</b>제품군별 메뉴와 기프트 파인더로 원하는 제품을 찾도록 돕습니다. 화면 내 스와이프로 정보를 전환합니다.</p></td>
+                  <td data-label="카드·인터랙션"><p class="research-competition__strength"><b>강점</b>자동 슬라이드 배너로 구매 금액별 증정 혜택을 안내합니다.</p><p class="research-competition__gap"><b>보완점</b>시즌 캠페인 중심으로 베스트셀러의 노출이 뒤로 밀립니다.</p></td>
+                  <td data-label="상세·구매"><p class="research-competition__strength"><b>강점</b>메가 메뉴에서 카테고리 이미지와 추천 상품을 함께 보여줍니다.</p><p class="research-competition__gap"><b>보완점</b>메뉴 단계와 항목이 많아 첫 방문자에게 복잡하게 느껴질 수 있습니다.</p></td>
+                  <td data-label="스토리·고객지원"><p class="research-competition__strength"><b>강점</b>Scent Finder로 취향에 맞는 향을 추천하고, 원료 사전과 Our Stories로 배경을 전합니다.</p><p class="research-competition__gap"><b>보완점</b>원료·스토리 콘텐츠가 하위 메뉴에 있어 접근성이 낮습니다.</p></td>
+                  <td data-label="탐색·검색"><p class="research-competition__strength"><b>강점</b>라이브 챗·상담·주문 조회·FAQ 등 탐색 중 필요한 지원 메뉴를 제공합니다.</p><p class="research-competition__gap"><b>보완점</b>초기 화면에서 리뷰·별점의 노출이 적어 탐색 단계의 신뢰 신호가 부족합니다.</p></td>
+                  <td data-label="카테고리"><p class="research-competition__strength"><b>강점</b>코롱 안에서 베스트셀러·사이즈·컬렉션·센트 패밀리로 제품을 좁혀볼 수 있습니다.</p></td>
+                  <td data-label="프로모션"><p class="research-competition__strength"><b>강점</b>상단 고정 배너에서 구매 금액별 증정 혜택을 안내합니다.</p><p class="research-competition__gap"><b>보완점</b>자동 슬라이드와 짧은 문구만으로는 조건·혜택을 한눈에 비교하기 어렵습니다.</p></td>
+                </tr>
+                <tr>
+                  <th scope="row"><span lang="en">LE LABO</span><small>르라보</small></th>
+                  <td data-label="메인 화면"><p class="research-competition__strength"><b>강점</b>큰 영상과 흰색·회색 배경, 숫자가 포함된 제품명으로 실험실 같은 정체성을 강조합니다.</p><p class="research-competition__gap"><b>보완점</b>이미지와 텍스트만으로 향의 원료·감각을 짐작하기 어렵습니다.</p></td>
+                  <td data-label="카드·인터랙션"><p class="research-competition__strength"><b>강점</b>대분류와 세부 상품을 나눈 메뉴, 도시 한정판·클래식 컬렉션으로 제품 체계를 보여줍니다.</p><p class="research-competition__gap"><b>보완점</b>인기 제품이 검색창을 열어야 보여 발견성이 낮습니다.</p></td>
+                  <td data-label="상세·구매"><p class="research-competition__strength"><b>강점</b>이름·도시·날짜를 담는 라벨 개인화 옵션을 제공하고, Le Journal에서 브랜드 콘텐츠를 전합니다.</p></td>
+                  <td data-label="스토리·고객지원"><p class="research-competition__strength"><b>강점</b>Client Care에서 문의·배송·반품·FAQ를 구분해 지원 항목을 명확하게 안내합니다.</p><p class="research-competition__gap"><b>보완점</b>리뷰·별점 등 후기 기반의 신뢰 정보를 확인하기 어렵습니다.</p></td>
+                  <td data-label="탐색·검색"><p class="research-competition__strength"><b>강점</b>검색창에 인기 검색어와 제품 이미지 카드를 함께 노출합니다.</p><p class="research-competition__gap"><b>보완점</b>SANTAL 33 같은 이름을 모르는 신규 사용자는 검색어를 떠올리기 어렵습니다.</p></td>
+                  <td data-label="카테고리"><p class="research-competition__strength"><b>강점</b>향수·캔들·바디·샘플 세트 등으로 나누고, By Format으로 같은 향의 제품군을 묶어 보여줍니다.</p></td>
+                  <td data-label="프로모션"><p class="research-competition__strength"><b>강점</b>신제품·한정판 소식으로 브랜드의 분위기를 유지하며 방문 이유를 만듭니다.</p><p class="research-competition__gap"><b>보완점</b>가격 혜택과 Discovery Sets의 노출이 적어 발견하기 어렵습니다.</p></td>
+                </tr>
+                <tr>
+                  <th scope="row"><span lang="en">BYREDO</span><small>바이레도</small></th>
+                  <td data-label="메인 화면"><p class="research-competition__strength"><b>강점</b>향수·메이크업·홈·바디·가죽 제품으로 라이프스타일 전반의 세계관을 보여줍니다.</p><p class="research-competition__gap"><b>보완점</b>가격 확인에 클릭이 더 필요하고, 향수 중심의 인상이 분산될 수 있습니다.</p></td>
+                  <td data-label="카드·인터랙션"><p class="research-competition__strength"><b>강점</b>상품 카드에 사이즈 옵션을 표시해 클릭 전에 용량을 알 수 있습니다.</p><p class="research-competition__gap"><b>보완점</b>향의 계열·무드 정보가 적고, 더 보기 방식으로 전체 상품을 가늠하기 어렵습니다.</p></td>
+                  <td data-label="상세·구매"><p class="research-competition__strength"><b>강점</b>디스커버리 세트와 정규 제품 구매 바우처를 연결해 시향에서 구매로 이어줍니다.</p><p class="research-competition__gap"><b>보완점</b>세트 구성과 구매 제한이 향을 처음 고르는 사용자에게 부담이 될 수 있습니다.</p></td>
+                  <td data-label="스토리·고객지원"><p class="research-competition__strength"><b>강점</b>Byredo Services에서 취향에 맞춘 향 큐레이션과 1:1 컨설팅을 소개합니다.</p><p class="research-competition__gap"><b>보완점</b>예약 방식·장소와 초기 리뷰·별점 정보를 바로 파악하기 어렵습니다.</p></td>
+                  <td data-label="탐색·검색"><p class="research-competition__strength"><b>강점</b>전체 제품을 둘러보는 브라우징과 결과 내 재검색을 지원합니다.</p><p class="research-competition__gap"><b>보완점</b>가격대·향 계열 등 세부 조건을 조합해 좁혀 찾기 어렵습니다.</p></td>
+                  <td data-label="카테고리"><p class="research-competition__strength"><b>강점</b>퍼퓸·홈 프레그런스·바디·메이크업·가죽 제품을 폭넓게 보여줍니다.</p><p class="research-competition__gap"><b>보완점</b>향수만 찾는 고객에게는 넓은 카테고리가 분산된 인상을 줄 수 있습니다.</p></td>
+                  <td data-label="프로모션"><p class="research-competition__strength"><b>강점</b>시즌 컬렉션의 감성적 스토리와 디스커버리 세트의 바우처 혜택을 연결합니다.</p><p class="research-competition__gap"><b>보완점</b>직접적인 가격 혜택 안내가 적어 가격에 민감한 고객의 매력이 낮을 수 있습니다.</p></td>
+                </tr>
+              </tbody>
+            </table>
+            <footer class="research-document__footer"><span lang="en">PROJECT RESEARCH / 2026.09</span><span>딥디크에 적용할 방향 · 브랜드 스토리 · 직관적인 향 정보 · 취향 기반 탐색 · 선택을 돕는 신뢰 정보</span></footer>
+          </article>
+        </template>
+        <template data-research-document="steep">
+          <article class="research-document research-document--steep">
+            <header class="research-steep__header"><p class="research-document__eyebrow" lang="en">BACKGROUND / STEEP ANALYSIS</p><p class="research-steep__kicker" lang="en">Background</p><h3>온라인의 향 경험을<br />감성, 기술, 브랜드 가치로 확장하기.</h3><p>국내 향수 시장과 온라인 경험에 영향을 주는 외부 환경을 다섯 가지 관점으로 정리했습니다.</p></header>
+            <div class="research-steep__grid">
+              <section><span class="research-steep__letter" aria-hidden="true">S</span><h4 lang="en">Social</h4><p>향수를 자기표현의 수단으로 바라보는 관점에서, 취향·감정·이미지와 브랜드의 감성·세계관을 함께 전달하는 경험에 주목했습니다.</p><strong>브랜드 스토리 · 감성 경험</strong></section>
+              <section><span class="research-steep__letter" aria-hidden="true">T</span><h4 lang="en">Technology</h4><p>직접 향을 맡기 어려운 온라인의 한계를 보완하기 위해, 이미지·장면·인터랙션으로 향의 분위기를 직관적으로 전달하는 방식을 살펴봤습니다.</p><strong>장면·이미지 기반 향 탐색</strong></section>
+              <section><span class="research-steep__letter" aria-hidden="true">E</span><h4 lang="en">Economy</h4><p>가격과 함께 브랜드의 역사·원료·경험을 고려하는 가치 소비의 관점에서, 프리미엄 향수의 제품 이상의 가치를 전달하고자 했습니다.</p><strong>제품 이상의 가치 전달</strong></section>
+              <section><span class="research-steep__letter" aria-hidden="true">E</span><h4 lang="en">Environment</h4><p>지속가능성을 브랜드 선택의 가치로 바라보고, 리필·재활용·재사용과 책임 있는 원료에 관한 정보를 어떻게 전할지 정리했습니다.</p><strong lang="en">FOR THE PLANET</strong></section>
+              <section><span class="research-steep__letter" aria-hidden="true">P</span><h4 lang="en">Political</h4><p>제품 표시·광고, 개인정보와 소비자 보호를 고려한 명확한 정보·정책 안내를 신뢰할 수 있는 온라인 경험의 기획 요소로 정리했습니다.</p><strong>신뢰할 수 있는 공식 정보</strong></section>
+            </div>
+            <footer class="research-document__footer"><span lang="en">DIPTYQUE RENEWAL / 2026.09</span><span>STEEP 관점의 기획 배경 · 감성에서 탐색으로, 탐색에서 신뢰로</span></footer>
+          </article>
+        </template>
+      </section>
+      <section class="project-research project-interviews" id="diptyque-interviews" aria-labelledby="diptyque-interviews-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-research__panel" id="diptyque-interviews-original-panel" role="tabpanel" aria-labelledby="diptyque-interviews-original-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="original" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-interviews-questions-panel" role="tabpanel" aria-labelledby="diptyque-interviews-questions-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="questions" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-interviews-summary-panel" role="tabpanel" aria-labelledby="diptyque-interviews-summary-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="summary" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-interviews-affinity-panel" role="tabpanel" aria-labelledby="diptyque-interviews-affinity-tab" tabindex="0"><div class="project-research__paper project-interviews__affinity-preview" data-research-preview="affinity" aria-hidden="true" inert></div></div>
+            <figcaption class="project-research__caption"><span data-research-caption>어피니티 다이어그램</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-interviews-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 02 / USER RESEARCH</p>
+            <h2 class="project-research__title" id="diptyque-interviews-title">사용자 인터뷰와 분석</h2>
+            <p class="project-research__statement" lang="en"><span>Listening</span> to users</p>
+            <p class="project-research__description">딥디크의 향을 이해하고 제품을 비교하는 과정에서 나온 의견을 <strong>브랜드 감성·향 정보·탐색·첫 화면·시향 경험</strong>의 다섯 주제로 묶었습니다. 기존 어피니티 자료를 바탕으로 사용자 요구와 화면의 개선 방향을 연결했습니다.</p>
+            <div class="project-research__tabs project-interviews__tabs" role="tablist" aria-label="딥디크 사용자 조사 자료">
+              <button type="button" role="tab" id="diptyque-interviews-original-tab" aria-controls="diptyque-interviews-original-panel" aria-selected="false" tabindex="-1" data-research-tab="original">인터뷰 원문</button>
+              <button type="button" role="tab" id="diptyque-interviews-questions-tab" aria-controls="diptyque-interviews-questions-panel" aria-selected="false" tabindex="-1" data-research-tab="questions">인터뷰 질문</button>
+              <button type="button" role="tab" id="diptyque-interviews-summary-tab" aria-controls="diptyque-interviews-summary-panel" aria-selected="false" tabindex="-1" data-research-tab="summary">응답 요약</button>
+              <button type="button" role="tab" id="diptyque-interviews-affinity-tab" aria-controls="diptyque-interviews-affinity-panel" aria-selected="true" tabindex="0" data-research-tab="affinity">어피니티 다이어그램</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span lang="en" data-research-insight-label>USER VOICES → DESIGN THEMES</span><p data-research-insight>향을 상상하기 쉽게, 비교는 명확하게.<br />온라인에서도 딥디크의 세계를 느끼도록.</p></div>
+            <p class="project-research__source">DIPTYQUE / AFFINITY DIAGRAM<br />기존 어피니티 자료의 의견을 요약했습니다. 인터뷰 원문은 연결 예정이며, 질문은 후속 조사 질문안입니다.</p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog project-interviews__dialog" id="diptyque-interviews-dialog" aria-labelledby="diptyque-interviews-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / USER RESEARCH</p><h2 id="diptyque-interviews-dialog-title">딥디크 어피니티 다이어그램</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="사용자 조사 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body">
+            <div class="project-interviews__image-tools" data-interview-image-tools hidden><div role="group" aria-label="어피니티 다이어그램 배율"><button type="button" data-interview-zoom="fit" aria-pressed="true">전체 보기</button><button type="button" data-interview-zoom="original" aria-pressed="false">원본 크기</button></div><a href="/images/project-diptyque-affinity.svg" target="_blank" rel="noopener noreferrer">원본 SVG 열기 ↗</a><p>원본 크기에서는 좌우로 이동해 내용을 읽을 수 있습니다.</p></div>
+            <div data-research-full></div>
+          </div>
+        </dialog>
+        <template data-research-document="original">
+          <article class="research-document interview-document interview-document--original"><header class="interview-document__header"><p class="research-document__eyebrow" lang="en">DIPTYQUE / INTERVIEW RECORDS</p><h3>인터뷰 원문</h3><p>사용자 발화와 맥락을 함께 확인하는 자료</p></header><div class="interview-records"><span lang="en">SOURCE DOCUMENT</span><h4>원문 자료 연결 예정</h4><p>현재 확인할 수 있는 자료는 사용자 의견을 다섯 주제로 묶은 어피니티 다이어그램입니다. 인터뷰 원문은 원본 자료를 연결한 뒤 확인할 수 있습니다.</p><dl><div><dt>확인된 자료</dt><dd>딥디크 어피니티 다이어그램</dd></div><div><dt>원문에서 확인할 항목</dt><dd>질문 · 사용자 발화 · 응답의 맥락</dd></div></dl></div><footer class="research-document__footer"><span lang="en">DIPTYQUE / USER RESEARCH</span><span>인터뷰 원문 자료 연결 예정</span></footer></article>
+        </template>
+        <template data-research-document="questions">
+          <article class="research-document interview-document interview-document--questions"><header class="interview-document__header"><p class="research-document__eyebrow" lang="en">DIPTYQUE / INTERVIEW GUIDE</p><h3>향을 고르는 과정을 듣기 위한 질문</h3><p>기존 어피니티 자료의 주제를 바탕으로 구성한 후속 조사 질문안</p></header><ol class="interview-questions"><li><span>01 / CHOOSING</span><h4>향수를 고를 때 어떤 정보를 먼저 확인하나요?</h4><p>최근 향수를 찾거나 구입했던 경험과 선택 기준을 들어봅니다.</p></li><li><span>02 / UNDERSTANDING</span><h4>온라인에서 향의 느낌을 어떻게 상상하나요?</h4><p>향 노트·원료·설명·이미지 중 도움이 된 정보와 어려웠던 정보를 확인합니다.</p></li><li><span>03 / COMPARING</span><h4>여러 향을 비교할 때 어떤 점이 편하거나 불편했나요?</h4><p>관심 제품을 찾고 차이를 이해하고 후보를 좁히는 과정을 살펴봅니다.</p></li><li><span>04 / BRAND EXPERIENCE</span><h4>딥디크 웹사이트에서 어떤 분위기와 이야기를 기대하나요?</h4><p>브랜드의 감성과 세계관을 어떤 화면에서 느끼고 싶은지 확인합니다.</p></li><li><span>05 / FIRST IMPRESSION</span><h4>첫 화면에서 가장 먼저 보고 싶은 것은 무엇인가요?</h4><p>브랜드 소개·베스트셀러·향 탐색 등 콘텐츠의 우선순위를 들어봅니다.</p></li><li><span>06 / ONLINE &amp; OFFLINE</span><h4>온라인 설명과 실제 시향 경험은 어떻게 달랐나요?</h4><p>향을 예상하고 매장에서 확인했던 경험과 온라인에서 보완할 정보를 확인합니다.</p></li></ol><footer class="research-document__footer"><span lang="en">INTERVIEW GUIDE / DRAFT</span><span>후속 조사 질문안 · 실제 진행 질문이나 응답 원문이 아닙니다.</span></footer></article>
+        </template>
+        <template data-research-document="summary">
+          <article class="research-document interview-document interview-document--summary"><header class="interview-document__header"><p class="research-document__eyebrow" lang="en">DIPTYQUE / RESPONSE SUMMARY</p><h3>사용자의 의견을, 화면의 방향으로.</h3><p>기존 어피니티 다이어그램의 다섯 주제와 의견을 바탕으로 정리한 요약</p></header><div class="interview-summary"><section><header><span>01</span><h4>브랜드 정체성과 감성</h4></header><div><h5>자료에 담긴 의견</h5><p>제품과 구매 정보에 비해 딥디크의 이야기와 감성이 부족하며, 브랜드의 세계관을 온라인에서도 느끼고 싶다는 의견입니다.</p></div><div><h5>디자인 방향</h5><p>브랜드의 역사와 향의 영감을 장면·이미지·이야기로 연결합니다.</p></div></section><section><header><span>02</span><h4>향 정보의 이해</h4></header><div><h5>자료에 담긴 의견</h5><p>텍스트와 전문 용어 중심의 설명으로 향을 상상하기 어렵고, 예상한 향과 실제 시향한 향에 차이를 느꼈다는 의견입니다.</p></div><div><h5>디자인 방향</h5><p>전문 정보와 함께 장면·분위기·감각 언어로 향의 인상을 전달합니다.</p></div></section><section><header><span>03</span><h4>제품 탐색과 비교</h4></header><div><h5>자료에 담긴 의견</h5><p>관심 제품의 분위기를 이해하거나 여러 제품을 비교하기 어렵고, 베스트셀러를 따로 찾아야 한다는 의견입니다.</p></div><div><h5>디자인 방향</h5><p>주요 제품의 진입점을 분명히 하고, 향의 특징과 차이를 살펴볼 수 있게 합니다.</p></div></section><section><header><span>04</span><h4>메인·랜딩 화면</h4></header><div><h5>자료에 담긴 의견</h5><p>첫 화면에서 브랜드 이미지를 강하게 느끼고 싶고, 베스트셀러의 위치와 메인 화면 구성을 개선해 달라는 의견입니다.</p></div><div><h5>디자인 방향</h5><p>첫 장면의 브랜드 인상과 주요 콘텐츠의 우선순위를 함께 설계합니다.</p></div></section><section><header><span>05</span><h4>온·오프라인 경험</h4></header><div><h5>자료에 담긴 의견</h5><p>온라인의 설명과 매장 시향 경험에 차이가 있고, 매장의 분위기를 사이트에서도 느끼거나 부담 없이 향을 탐색하고 싶다는 의견입니다.</p></div><div><h5>디자인 방향</h5><p>향의 분위기를 상상할 단서를 제공하고, 온라인 탐색과 실제 시향의 접점을 고려합니다.</p></div></section></div><footer class="research-document__footer"><span lang="en">AFFINITY DIAGRAM → DESIGN THEMES</span><span>기존 자료의 의견 요약과 디자인 방향을 구분해 정리했습니다.</span></footer></article>
+        </template>
+        <template data-research-document="affinity"><article class="research-document interview-affinity"><img src="/images/project-diptyque-affinity.svg" width="1900" height="860" alt="딥디크 사용자 의견을 브랜드 정체성, 향 정보, 제품 비교, 메인 화면, 온·오프라인 경험의 다섯 주제로 묶은 어피니티 다이어그램" loading="lazy" decoding="async" draggable="false" /></article></template>
+      </section>
+      <section class="project-research project-definition" id="diptyque-definition" aria-labelledby="diptyque-definition-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-definition__users" role="group" aria-label="기획 자료의 사용자 유형 선택">
+              <button type="button" data-definition-user="1" aria-pressed="false"><span>01</span> 기존 고객형</button>
+              <button type="button" data-definition-user="2" aria-pressed="true"><span>02</span> 브랜드 몰입형</button>
+              <button type="button" data-definition-user="3" aria-pressed="false"><span>03</span> 향 탐색형</button>
+            </div>
+            <div class="project-research__panel" id="diptyque-definition-persona-panel" role="tabpanel" aria-labelledby="diptyque-definition-persona-tab" tabindex="0">
+              <div class="project-research__paper project-definition__paper--persona" data-research-preview="persona" aria-hidden="true" inert></div>
+            </div>
+            <div class="project-research__panel" id="diptyque-definition-journey-panel" role="tabpanel" aria-labelledby="diptyque-definition-journey-tab" tabindex="0" hidden>
+              <div class="project-research__paper project-definition__paper--journey" data-research-preview="journey" aria-hidden="true" inert></div>
+            </div>
+            <div class="project-research__panel" id="diptyque-definition-canvas-panel" role="tabpanel" aria-labelledby="diptyque-definition-canvas-tab" tabindex="0" hidden>
+              <div class="project-research__paper project-definition__paper--canvas" data-research-preview="canvas" aria-hidden="true" inert></div>
+            </div>
+            <figcaption class="project-research__caption"><span data-research-caption>박지은 · 브랜드 몰입형 / 퍼소나</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-definition-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 03 / UX STRATEGY</p>
+            <h2 class="project-research__title" id="diptyque-definition-title">문제 정의와 기획</h2>
+            <p class="project-research__statement" lang="en"><span>Defining</span> the direction</p>
+            <p class="project-research__description">퍼소나와 저니맵으로 <strong>정보 탐색·브랜드 경험·향 탐색</strong>의 어려움을 구체화하고, 린캔버스로 사용자 문제와 핵심 가치, 해결 가설을 연결했습니다.</p>
+            <div class="project-research__tabs" role="tablist" aria-label="문제 정의와 기획 자료">
+              <button id="diptyque-definition-persona-tab" type="button" role="tab" aria-selected="true" aria-controls="diptyque-definition-persona-panel" data-research-tab="persona">퍼소나</button>
+              <button id="diptyque-definition-journey-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-definition-journey-panel" data-research-tab="journey" tabindex="-1">저니맵</button>
+              <button id="diptyque-definition-canvas-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-definition-canvas-panel" data-research-tab="canvas" tabindex="-1">린캔버스</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span data-research-insight-label>02 / PRIMARY PERSONA · 박지은</span><p data-research-insight>브랜드의 분위기와 향의 이야기를 깊이 경험하고 싶은 사용자.<br />이야기에서 관심 제품을 발견하는 흐름을 설계했습니다.</p></div>
+            <p class="project-research__source project-definition__source">딥디크 리뉴얼 원본 장표 · <a href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3208-5234" target="_blank" rel="noopener noreferrer">Figma 기획서 ↗<span class="sr-only"> (새 탭)</span></a><span data-definition-canvas-note hidden>린캔버스에 기재된 수치는 프로토타입 검증을 위한 목표입니다.</span></p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog project-definition__dialog" id="diptyque-definition-dialog" aria-labelledby="diptyque-definition-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / UX STRATEGY</p><h2 id="diptyque-definition-dialog-title">딥디크 퍼소나</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="기획 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body">
+            <div class="project-definition__image-tools"><div role="group" aria-label="장표 확대 크기"><button type="button" data-definition-zoom="fit" aria-pressed="true">화면에 맞춤</button><button type="button" data-definition-zoom="original" aria-pressed="false">원본 크기</button></div><a href="/images/project-diptyque-persona-2.jpg" data-definition-original target="_blank" rel="noopener noreferrer">원본 이미지 열기 ↗<span class="sr-only"> (새 탭)</span></a><p>원본 크기에서는 스크롤하거나 방향키로 장표를 살펴볼 수 있습니다.</p></div>
+            <div data-research-full></div>
+          </div>
+        </dialog>
+        <template data-research-document="persona">
+          <article class="research-document definition-document" style="--definition-document-width: 1600px; --definition-document-height: 1000px">
+            <img data-definition-image="1" src="/images/project-diptyque-persona-1.jpg" width="1600" height="1000" alt="이수진, 37세 마케팅 직장인. 공식 제품 정보와 브랜드 소식을 한 흐름에서 탐색하고 관심 제품을 다시 찾고 싶은 기존 고객형 퍼소나" loading="lazy" decoding="async" draggable="false" hidden />
+            <img data-definition-image="2" src="/images/project-diptyque-persona-2.jpg" width="1600" height="1000" alt="박지은, 25세 대학생. 브랜드의 분위기와 세계관, 향의 배경과 영감을 온라인에서도 경험하고 싶은 브랜드 몰입형 핵심 퍼소나" loading="lazy" decoding="async" draggable="false" />
+            <img data-definition-image="3" src="/images/project-diptyque-persona-3.jpg" width="1600" height="1000" alt="최동민, 31세 프론트엔드 엔지니어. 전문적인 향 지식 없이 장면과 분위기로 취향에 맞는 향을 발견하고 싶은 향 탐색형 퍼소나" loading="lazy" decoding="async" draggable="false" hidden />
+          </article>
+        </template>
+        <template data-research-document="journey">
+          <article class="research-document definition-document" style="--definition-document-width: 1920px; --definition-document-height: 1080px">
+            <img data-definition-image="1" src="/images/project-diptyque-journey-1.jpg" width="1920" height="1080" alt="기존 고객형 저니맵. 브랜드 정보 확인부터 신제품 발견, 제품 상세 확인, 관심 제품 관리, 구매와 재구매까지의 행동·감정·문제·해결 방향" loading="lazy" decoding="async" draggable="false" hidden />
+            <img data-definition-image="2" src="/images/project-diptyque-journey-2.png" width="1920" height="1080" alt="브랜드 몰입형 저니맵. 사이트 진입, 브랜드와 향의 이야기 탐색, 관련 제품 발견, 상세 경험, 구매 판단을 잇는 행동·감정·문제·해결 방향" loading="lazy" decoding="async" draggable="false" />
+            <img data-definition-image="3" src="/images/project-diptyque-journey-3.jpg" width="1920" height="1080" alt="향 탐색형 저니맵. 향 찾기 시작, 장면과 분위기 선택, 취향 결과 확인, 추천 향 탐색, 선택 판단의 행동·감정·문제·해결 방향" loading="lazy" decoding="async" draggable="false" hidden />
+          </article>
+        </template>
+        <template data-research-document="canvas">
+          <article class="research-document definition-document" style="--definition-document-width: 2200px; --definition-document-height: 1650px">
+            <img data-definition-image="1" src="/images/project-diptyque-canvas-1.jpg" width="2200" height="1650" alt="Lean Product Canvas v3 문제 01. 독립적인 공식 채널과 지속적인 고객 관계를 위한 문제·사용자·해결안·검증 가설과 목표" loading="lazy" decoding="async" draggable="false" hidden />
+            <img data-definition-image="2" src="/images/project-diptyque-canvas-2.jpg" width="2200" height="1650" alt="Lean Product Canvas v3 문제 02. 온라인 브랜드 몰입과 정체성, 브랜드 이야기에서 관련 제품 탐색으로 이어지는 해결안과 검증 목표" loading="lazy" decoding="async" draggable="false" />
+            <img data-definition-image="3" src="/images/project-diptyque-canvas-3.jpg" width="2200" height="1650" alt="Lean Product Canvas v3 문제 03. 직관적인 향 이해와 선택의 확신을 위한 취향 질문·추천 이유·제품 비교와 프로토타입 검증 목표" loading="lazy" decoding="async" draggable="false" hidden />
+          </article>
+        </template>
+      </section>
+      <section class="project-research project-structure" id="diptyque-structure" aria-labelledby="diptyque-structure-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-structure__archive-label" lang="en"><span>DIPTYQUE / PROJECT ARCHIVE</span><span><b data-structure-document-number>02</b> / 04</span></div>
+            <div class="project-research__panel" id="diptyque-structure-meeting-panel" role="tabpanel" aria-labelledby="diptyque-structure-meeting-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="meeting" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-structure-menu-panel" role="tabpanel" aria-labelledby="diptyque-structure-menu-tab" tabindex="0"><div class="project-research__paper" data-research-preview="menu" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-structure-flow-panel" role="tabpanel" aria-labelledby="diptyque-structure-flow-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="flow" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-structure-requirements-panel" role="tabpanel" aria-labelledby="diptyque-structure-requirements-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="requirements" aria-hidden="true" inert></div></div>
+            <figcaption class="project-research__caption"><span data-research-caption>메뉴트리 · GNB / 최대 3Depth</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-structure-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 04 / COLLABORATIVE PLANNING</p>
+            <h2 class="project-research__title" id="diptyque-structure-title">팀 논의와 구조 설계</h2>
+            <p class="project-research__statement" lang="en"><span>Planning</span> together</p>
+            <p class="project-research__description">메뉴트리와 세 퍼소나의 사용자 흐름을 맞춰보며, <strong>브랜드 이야기에서 향과 제품으로 이어지는 구조</strong>를 설계했습니다. 회의록과 요구사항 정의서에 페이지 연결과 필요한 기능을 함께 정리했습니다.</p>
+            <div class="project-research__tabs" role="tablist" aria-label="팀 논의와 구조 설계 자료">
+              <button id="diptyque-structure-meeting-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-structure-meeting-panel" data-research-tab="meeting" tabindex="-1">회의록</button>
+              <button id="diptyque-structure-menu-tab" type="button" role="tab" aria-selected="true" aria-controls="diptyque-structure-menu-panel" data-research-tab="menu">메뉴트리</button>
+              <button id="diptyque-structure-flow-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-structure-flow-panel" data-research-tab="flow" tabindex="-1">사용자 플로우차트</button>
+              <button id="diptyque-structure-requirements-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-structure-requirements-panel" data-research-tab="requirements" tabindex="-1">요구사항 정의서</button>
+            </div>
+            <div class="project-structure__flows" data-structure-flows role="group" aria-label="플로우차트의 사용자 유형 선택" hidden>
+              <button type="button" data-structure-flow="1" aria-pressed="false"><span>01</span> 기존 고객형</button>
+              <button type="button" data-structure-flow="2" aria-pressed="true"><span>02</span> 브랜드 몰입형</button>
+              <button type="button" data-structure-flow="3" aria-pressed="false"><span>03</span> 향 탐색형</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span data-research-insight-label>02 / INFORMATION ARCHITECTURE</span><p data-research-insight>상품 탐색·브랜드 이야기·향의 발견을 구분하고,<br />최대 세 단계 안에서 각 화면으로 이어지도록 구성했습니다.</p></div>
+            <p class="project-research__source project-structure__source"><span data-structure-source-caption>장표 페이지 · Information Structure Diagram</span><a data-structure-source href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3675-9424" target="_blank" rel="noopener noreferrer">Figma 원본 장표 ↗<span class="sr-only"> (새 탭)</span></a></p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog project-structure__dialog" id="diptyque-structure-dialog" aria-labelledby="diptyque-structure-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / PROJECT ARCHIVE</p><h2 id="diptyque-structure-dialog-title">딥디크 메뉴트리</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="구조 설계 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body">
+            <div class="project-structure__image-tools"><div role="group" aria-label="장표 확대 크기"><button type="button" data-structure-zoom="fit" aria-pressed="true">화면에 맞춤</button><button type="button" data-structure-zoom="original" aria-pressed="false">원본 크기</button></div><a href="/images/project-diptyque-structure-menu.png" data-structure-original target="_blank" rel="noopener noreferrer">원본 이미지 열기 ↗<span class="sr-only"> (새 탭)</span></a><p>원본 크기에서 스크롤하거나 방향키로 문서의 세부 내용을 확인할 수 있습니다.</p></div>
+            <div data-research-full></div>
+          </div>
+        </dialog>
+        <template data-research-document="meeting"><article class="research-document structure-document"><img src="/images/project-diptyque-structure-meeting.png" style="--structure-original-width: 3060px" width="3060" height="3805" alt="2026년 9월 3일 향수병동팀 프로젝트 회의록 원본. 정보구조와 메뉴 카테고리, 회원·비회원 구매 분기, 무드보드와 린캔버스 OKR 검증을 논의한 기록" loading="lazy" decoding="async" draggable="false" /></article></template>
+        <template data-research-document="menu"><article class="research-document structure-document structure-document--menu"><img src="/images/project-diptyque-structure-menu.png" style="--structure-original-width: 1920px" width="1920" height="1080" alt="딥디크 정보구조도 원본. HOME, SHOP, ABOUT, GALERIE, CONTACT US, MY PAGE의 여섯 GNB 메뉴와 최대 세 단계의 하위 메뉴. ABOUT에는 역사, 향 이야기, 지속 가능한 경영을 배치" loading="lazy" decoding="async" draggable="false" /></article></template>
+        <template data-research-document="flow"><article class="research-document structure-document">
+          <img data-structure-flow-image="1" src="/images/project-diptyque-structure-flow-1.png" style="--structure-original-width: 2554px" width="2554" height="3648" alt="기존 고객형 이수진의 Full Site Flow 원본. 공식 정보 탐색부터 관심 제품 저장, 이전 주문 확인과 재구매까지 연결한 사용자 플로우차트" loading="lazy" decoding="async" draggable="false" hidden />
+          <img data-structure-flow-image="2" src="/images/project-diptyque-structure-flow-2.png" style="--structure-original-width: 2180px" width="2180" height="3426" alt="브랜드 몰입형 박지은의 Immersive Flow 원본. ABOUT, Diptyque History, Fragrances Story의 세 향수 이야기에서 SHOP과 제품 상세, 회원·비회원 구매로 이어지는 플로우차트" loading="lazy" decoding="async" draggable="false" />
+          <img data-structure-flow-image="3" src="/images/project-diptyque-structure-flow-3.jpeg" style="--structure-original-width: 2200px" width="2200" height="3200" alt="향 탐색형 최동민의 GALERIE Flow 원본. 향의 비주얼 카드 선택과 비교, 향 시각화 상세, 관심 향 저장, 관련 제품 상세 탐색을 연결한 플로우차트" loading="lazy" decoding="async" draggable="false" hidden />
+        </article></template>
+        <template data-research-document="requirements"><article class="research-document structure-document"><img src="/images/project-diptyque-structure-requirements.png" style="--structure-original-width: 2420px" width="2420" height="3957" alt="9월 22일 수정된 딥디크 웹사이트 요구사항 정의서 원본 58개 항목. HOME, SHOP, PRODUCT DETAIL, GALERIE, ABOUT, 로그인, 장바구니, 주문, MY PAGE와 접근성·반응형 공통 요구사항을 정리" loading="lazy" decoding="async" draggable="false" /></article></template>
+      </section>
+      <section class="project-research project-visual" id="diptyque-visual" aria-labelledby="diptyque-visual-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-visual__archive-label" lang="en"><span>DIPTYQUE / VISUAL DIRECTION</span><span><b data-visual-document-number>01</b> / 02</span></div>
+            <div class="project-research__panel" id="diptyque-visual-moodboard-panel" role="tabpanel" aria-labelledby="diptyque-visual-moodboard-tab" tabindex="0"><div class="project-research__paper" data-research-preview="moodboard" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-visual-mindmap-panel" role="tabpanel" aria-labelledby="diptyque-visual-mindmap-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="mindmap" aria-hidden="true" inert></div></div>
+            <figcaption class="project-research__caption"><span data-research-caption>무드보드 · 향과 장면, 이야기를 하나의 무드로</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-visual-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 05 / VISUAL DIRECTION</p>
+            <h2 class="project-research__title" id="diptyque-visual-title">디자인 방향 설정</h2>
+            <p class="project-research__statement" lang="en"><span>Shaping</span> the visual language</p>
+            <p class="project-research__description">딥디크의 <strong>자연·여행·예술과 향의 이야기</strong>를 시각 키워드로 확장했습니다. 펜드로잉과 종이 질감, 식물 모티프와 아카이브 이미지를 모아 브랜드의 분위기를 전하는 비주얼 방향을 정했습니다.</p>
+            <div class="project-research__tabs" role="tablist" aria-label="디자인 방향 설정 자료">
+              <button id="diptyque-visual-moodboard-tab" type="button" role="tab" aria-selected="true" aria-controls="diptyque-visual-moodboard-panel" data-research-tab="moodboard">무드보드</button>
+              <button id="diptyque-visual-mindmap-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-visual-mindmap-panel" data-research-tab="mindmap" tabindex="-1">디자인 마인드맵</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span data-research-insight-label>01 / VISUAL MOOD</span><p data-research-insight>펜드로잉과 종이 콜라주, 식물 모티프를 중심으로<br />향의 이야기와 아카이브의 분위기를 하나의 화면 언어로 모았습니다.</p></div>
+            <ul class="project-visual__keywords" data-visual-keywords aria-label="선택한 자료의 디자인 키워드" lang="en"><li>PEN DRAWING</li><li>PAPER COLLAGE</li><li>BOTANICAL</li><li>ARCHIVE</li><li>VINTAGE TEXTURE</li></ul>
+            <p class="project-research__source project-visual__source"><span data-visual-source-caption>딥디크 리뉴얼 · Design Mood Board</span><a data-visual-source href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3823-5795" target="_blank" rel="noopener noreferrer">Figma 관련 장표 ↗<span class="sr-only"> (새 탭)</span></a></p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog project-visual__dialog" id="diptyque-visual-dialog" aria-labelledby="diptyque-visual-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / VISUAL DIRECTION</p><h2 id="diptyque-visual-dialog-title">딥디크 디자인 무드보드</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="디자인 방향 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body">
+            <div class="project-visual__image-tools"><div role="group" aria-label="장표 확대 크기"><button type="button" data-visual-zoom="fit" aria-pressed="true">화면에 맞춤</button><button type="button" data-visual-zoom="original" aria-pressed="false">원본 크기</button></div><a href="/images/project-diptyque-design-moodboard.png" data-visual-original target="_blank" rel="noopener noreferrer">원본 이미지 열기 ↗<span class="sr-only"> (새 탭)</span></a><p>원본 크기에서 스크롤하거나 방향키로 이미지와 키워드를 자세히 살펴볼 수 있습니다.</p></div>
+            <div data-research-full></div>
+          </div>
+        </dialog>
+        <template data-research-document="moodboard"><article class="research-document visual-document"><img src="/images/project-diptyque-design-moodboard.png" style="--visual-original-width: 1920px" width="1920" height="1300" alt="퍼스널포폴 폴더의 딥디크 디자인 무드보드 원본. 펜드로잉, 종이 콜라주, 식물과 창립자, 파리의 풍경, 향수병과 빈티지 아카이브를 모아 향과 장면, 이야기를 하나의 무드로 정리한 장표" loading="lazy" decoding="async" draggable="false" /></article></template>
+        <template data-research-document="mindmap"><article class="research-document visual-document visual-document--mindmap"><img src="/images/project-diptyque-design-mindmap.png" style="--visual-original-width: 1254px" width="1254" height="1254" alt="딥디크 디자인 마인드맵 원본. 자연, 향수, 파리, 창립자, 예술, 여행, 기억의 일곱 주제에서 꽃과 원료, 생제르맹 거리, 드로잉과 패턴, 장소와 감정 등 세부 키워드를 확장한 구성" loading="lazy" decoding="async" draggable="false" /></article></template>
+      </section>
+      <section class="project-research project-screens" id="diptyque-screens" aria-labelledby="diptyque-screens-title" lang="ko">
+        <div class="project-research__layout">
+          <figure class="project-research__visual">
+            <div class="project-screens__archive-label" lang="en"><span>DIPTYQUE / SCREEN DESIGN</span><span><b data-screens-document-number>01</b> / 03</span></div>
+            <div class="project-research__panel" id="diptyque-screens-wireframe-panel" role="tabpanel" aria-labelledby="diptyque-screens-wireframe-tab" tabindex="0"><div class="project-research__paper" data-research-preview="wireframe" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-screens-system-panel" role="tabpanel" aria-labelledby="diptyque-screens-system-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="system" aria-hidden="true" inert></div></div>
+            <div class="project-research__panel" id="diptyque-screens-components-panel" role="tabpanel" aria-labelledby="diptyque-screens-components-tab" tabindex="0" hidden><div class="project-research__paper" data-research-preview="components" aria-hidden="true" inert></div></div>
+            <figcaption class="project-research__caption"><span data-research-caption>와이어프레임 · 정보의 순서를 화면의 흐름으로</span><button type="button" data-research-open aria-haspopup="dialog" aria-controls="diptyque-screens-dialog" hidden><span>클릭하여 크게 보기</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg></button></figcaption>
+          </figure>
+          <div class="project-research__content">
+            <p class="project-story__eyebrow" lang="en">PROCESS 06 / SCREEN DESIGN</p>
+            <h2 class="project-research__title" id="diptyque-screens-title">화면 설계와 구체화</h2>
+            <p class="project-research__statement" lang="en"><span>From structure</span> to screens</p>
+            <p class="project-research__description">와이어프레임으로 <strong>이야기와 콘텐츠의 순서</strong>를 정하고, 딥디크의 색과 타이포그래피를 공통 기준으로 정리했습니다. 내비게이션과 탐색 요소를 컴포넌트로 구성해 화면 전반에 일관된 인상을 이어갑니다.</p>
+            <div class="project-research__tabs" role="tablist" aria-label="화면 설계와 구체화 자료">
+              <button id="diptyque-screens-wireframe-tab" type="button" role="tab" aria-selected="true" aria-controls="diptyque-screens-wireframe-panel" data-research-tab="wireframe">와이어프레임</button>
+              <button id="diptyque-screens-system-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-screens-system-panel" data-research-tab="system" tabindex="-1">디자인 시스템</button>
+              <button id="diptyque-screens-components-tab" type="button" role="tab" aria-selected="false" aria-controls="diptyque-screens-components-panel" data-research-tab="components" tabindex="-1">컴포넌트</button>
+            </div>
+            <div class="project-research__insight" aria-live="polite" aria-atomic="true"><span data-research-insight-label>01 / WIREFRAME</span><p data-research-insight>브랜드의 이야기에서 향의 발견으로 이어지도록<br />영상·이미지·텍스트의 비중과 주요 화면의 레이아웃을 구체화했습니다.</p></div>
+            <ul class="project-screens__keywords" data-screens-keywords aria-label="선택한 자료의 화면 설계 키워드" lang="en"><li>CONTENT HIERARCHY</li><li>SCREEN FLOW</li><li>LAYOUT</li></ul>
+            <p class="project-research__source project-screens__source"><span data-screens-source-caption>딥디크 리뉴얼 · Wireframe</span><a data-screens-source href="https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-?node-id=3823-5803" target="_blank" rel="noopener noreferrer">Figma 관련 자료 ↗<span class="sr-only"> (새 탭)</span></a></p>
+          </div>
+        </div>
+        <dialog class="project-planning__dialog project-research__dialog project-screens__dialog" id="diptyque-screens-dialog" aria-labelledby="diptyque-screens-dialog-title">
+          <div class="project-planning__dialog-header"><div><p lang="en">DIPTYQUE / SCREEN DESIGN</p><h2 id="diptyque-screens-dialog-title">딥디크 와이어프레임</h2></div><button type="button" class="project-planning__close" data-research-close aria-label="화면 설계 자료 닫기" autofocus><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="m5 5 10 10M15 5 5 15" /></svg></button></div>
+          <div class="project-planning__dialog-body">
+            <div class="project-screens__image-tools"><div role="group" aria-label="자료 확대 크기"><button type="button" data-screens-zoom="fit" aria-pressed="true">화면에 맞춤</button><button type="button" data-screens-zoom="original" aria-pressed="false">크게 보기</button></div><a href="/images/project-diptyque-screens-wireframe.png" data-screens-original target="_blank" rel="noopener noreferrer"><span>원본 이미지 열기 ↗</span><span class="sr-only"> (새 탭)</span></a><p>크게 보기에서 스크롤하거나 방향키로 자료의 세부 내용을 확인할 수 있습니다.</p></div>
+            <div data-research-full aria-label="확대한 화면 설계 자료 — 방향키 또는 스크롤로 이동"></div>
+          </div>
+        </dialog>
+        <template data-research-document="wireframe"><article class="research-document screens-document"><img src="/images/project-diptyque-screens-wireframe.png" width="1920" height="1080" alt="딥디크 와이어프레임 원본. 정보구조를 바탕으로 히어로와 브랜드 역사, 모닝·이브닝 리추얼, 향수 컬렉션과 하단 콘텐츠의 흐름 및 레이아웃을 구체화한 장표" loading="lazy" decoding="async" draggable="false" /></article></template>
+        <template data-research-document="system"><article class="research-document screens-document"><img src="/images/project-diptyque-screens-system.png" width="1920" height="1080" alt="딥디크 디자인 시스템 원본. 흑백 로고, 아이보리·잉크 블랙·세이지·앰버 컬러와 EB Garamond 영문 제목, KoPub 바탕 한글 제목, KoPubWorldDotum 본문 서체 및 굵기를 정리한 장표" loading="lazy" decoding="async" draggable="false" /></article></template>
+        <template data-research-document="components"><article class="research-document screens-document screens-components">
+          <header class="screens-components__header"><h3 lang="en">Common interface</h3><p lang="en">DIPTYQUE / UI COMPONENTS</p></header>
+          <figure class="screens-components__item screens-components__item--navigation"><figcaption lang="en">01 / NAVIGATION · LOGIN &amp; LOGOUT</figcaption><div class="screens-components__navigation-samples"><img src="/images/project-diptyque-screens-navigation-login.png" width="1920" height="70" alt="딥디크 Figma 내비게이션 첫 번째 상태 원본. HOME, SHOP, ABOUT, GALERIE, CONTACT US 메뉴와 마이페이지·검색·장바구니 아이콘" loading="lazy" decoding="async" draggable="false" /><img src="/images/project-diptyque-screens-navigation-logout.png" width="1920" height="70" alt="딥디크 Figma 내비게이션 두 번째 상태 원본. 공통 메뉴와 아이콘에 로그아웃 아이콘을 추가한 변형" loading="lazy" decoding="async" draggable="false" /></div></figure>
+          <figure class="screens-components__item screens-components__item--category"><figcaption lang="en">02 / CATEGORY · FRAGRANCES</figcaption><img src="/images/project-diptyque-screens-category.png" width="919" height="600" alt="딥디크 Figma 향수 카테고리 컴포넌트 원본. 식물과 향수병을 담은 아치형 이미지, FRAGRANCES 제목과 설명, View More 링크 구성" loading="lazy" decoding="async" draggable="false" /></figure>
+          <figure class="screens-components__item screens-components__item--button"><figcaption lang="en">03 / ACTION · DEFAULT &amp; ACTIVE</figcaption><div class="screens-components__button-sample"><div><span lang="en">DEFAULT</span><img src="/images/project-diptyque-screens-button-default.png" width="143" height="24" alt="딥디크 Figma Primary button의 기본 상태 원본. 가는 글자와 옅은 화살표로 표현한 View More 버튼" loading="lazy" decoding="async" draggable="false" /></div><div><span lang="en">ACTIVE</span><img src="/images/project-diptyque-screens-button-active.png" width="143" height="24" alt="딥디크 Figma Primary button의 활성 상태 원본. 글자와 화살표를 짙게 표현한 View More 버튼" loading="lazy" decoding="async" draggable="false" /></div></div><p>동일한 탐색 요소와 상태 표현으로<br />화면 사이의 일관성을 유지합니다.</p></figure>
+        </article></template>
+      </section>
+        </div>
+        <nav class="project-pages__navigation project-process__navigation" aria-label="딥디크 기획 과정 페이지">
+          <button type="button" data-project-page="0" aria-label="린캔버스 페이지로 이동" aria-current="page"><b>01</b><em>/ CANVAS</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="1" aria-label="시장과 브랜드 조사 페이지로 이동"><b>02</b><em>/ RESEARCH</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="2" aria-label="사용자 인터뷰와 분석 페이지로 이동"><b>03</b><em>/ USERS</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="3" aria-label="문제 정의와 기획 페이지로 이동"><b>04</b><em>/ DEFINE</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="4" aria-label="팀 논의와 구조 설계 페이지로 이동"><b>05</b><em>/ PLAN</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="5" aria-label="디자인 방향 설정 페이지로 이동"><b>06</b><em>/ VISUAL</em></button>
+          <span aria-hidden="true"></span>
+          <button type="button" data-project-page="6" aria-label="화면 설계와 구체화 페이지로 이동"><b>07</b><em>/ SCREENS →</em></button>
+        </nav>
+        </div>
+      </section>
+
+      <section class="project-details personal-journey" id="diesel-project" aria-label="디젤 개인 작업 소개">
+        <div class="project-details__stage">
+          <div class="project-pages">
+      <section class="personal-works personal-works--chapter" id="personal-projects" aria-labelledby="personal-works-title" lang="ko">
+        <h2 class="personal-works__title" id="personal-works-title" data-personal-reveal lang="en">
+          <span>PERSONAL BRANDS,</span>
+          <em>a bold direction.</em>
+        </h2>
+        <div class="personal-works__lead" data-personal-reveal>
+          <p>디젤의 대담한 브랜드 감성을 메인 화면으로 표현합니다.</p>
+          <p>개인 작업 2개 · 메인 페이지 디자인</p>
+        </div>
+
+        <article class="personal-works__project" aria-labelledby="personal-diesel-title">
+          <a class="personal-works__cover" data-personal-reveal href="https://www.figma.com/design/6GPeNKxLjIVbw8NeE8h3xO/?node-id=923-2692" target="_blank" rel="noopener noreferrer" aria-label="디젤 개인 작업 Figma 디자인 보기 (새 탭)">
+            <img class="personal-works__image" src="/images/personal-diesel-hero.png" width="1672" height="941" alt="디젤 메인 페이지 디자인에 사용한 흑백 모델 이미지. 인물의 옆모습과 벽 위의 그림자가 대비되는 비주얼." loading="lazy" decoding="async" />
+            <span class="personal-works__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M5 19 19 5M6 5h13v13" /></svg></span>
+            <div class="personal-works__cover-copy" aria-hidden="true" lang="en">
+              <p>DIESEL / BRAND WEBSITE</p>
+              <span>For successful<br /><em>living.</em></span>
+            </div>
+          </a>
+          <div class="personal-works__details" data-personal-reveal>
+            <div class="personal-works__description">
+              <p class="personal-works__eyebrow" lang="en">PERSONAL / 01</p>
+              <h3 id="personal-diesel-title"><span lang="en">DIESEL</span> — 브랜드 웹사이트 리디자인</h3>
+              <p>흑백 이미지와 대담한 타이포그래피로 디젤의 브랜드 정체성을 표현한 메인 페이지 디자인.</p>
+            </div>
+            <ul class="personal-works__tags" aria-label="프로젝트 유형" lang="en"><li>MAIN PAGE DESIGN</li><li>FIGMA</li></ul>
+          </div>
+        </article>
+      </section>
+      <section class="personal-case diesel-case" id="diesel-overview" aria-labelledby="diesel-overview-title" lang="ko">
+        <div class="personal-case__layout">
+          <figure class="personal-case__visual">
+            <a class="personal-case__preview project-case__preview" href="https://www.figma.com/design/6GPeNKxLjIVbw8NeE8h3xO/?node-id=923-2692" target="_blank" rel="noopener noreferrer" aria-label="디젤 메인 페이지 Figma 디자인 보기 (새 탭)">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <img src="/images/personal-diesel-desktop.png" width="1920" height="1080" alt="노트북 목업에 담긴 디젤 메인 페이지 디자인. 흑백 모델과 그림자 위에 큰 DIESEL 타이포그래피와 상단 메뉴를 배치한 화면." loading="lazy" decoding="async" draggable="false" />
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </a>
+            <figcaption class="personal-case__caption" lang="en"><span>DESIGN PREVIEW</span><span>DIESEL / MAIN PAGE</span></figcaption>
+          </figure>
+          <div class="personal-case__content">
+            <header class="personal-case__header">
+              <p class="personal-case__index" lang="en"><span>02</span><span>/ PERSONAL PROJECT</span></p>
+              <p class="personal-case__kicker">패션 브랜드 메인 페이지 리디자인</p>
+              <div class="personal-case__heading" lang="en"><h2 id="diesel-overview-title">DIESEL</h2><p>brand website</p></div>
+              <a class="personal-case__design-link" href="https://www.figma.com/design/6GPeNKxLjIVbw8NeE8h3xO/?node-id=923-2692" target="_blank" rel="noopener noreferrer"><span lang="en">VIEW DESIGN</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 디젤 Figma 디자인 (새 탭)</span></a>
+            </header>
+            <div class="personal-case__brief">
+              <h3 lang="en">PROJECT BRIEF</h3>
+              <p>디젤의 자유롭고 대담한 브랜드 정체성을 흑백 비주얼과 대형 타이포그래피로 재해석한 메인 페이지 디자인입니다.</p>
+              <p>브랜드 철학에서 가방과 컬렉션으로 이어지는 흐름을 정리해, 디젤만의 태도와 제품을 함께 경험하도록 구성했습니다.</p>
+            </div>
+            <div class="personal-case__role">
+              <h3 lang="en">WHAT I DID</h3>
+              <ul><li>브랜드 비주얼 콘셉트 정리</li><li>메인 페이지 정보 구조 설계</li><li>흑백 이미지와 대형 타이포그래피 구성</li><li>가방·컬렉션 콘텐츠 레이아웃 디자인</li><li>Figma 기반 메인 화면 디자인</li></ul>
+            </div>
+            <p class="personal-case__scope">제작 범위: 메인 페이지 UI 디자인 · Figma</p>
+            <ul class="personal-case__tags" aria-label="디젤 프로젝트 유형" lang="en"><li>PERSONAL</li><li>MAIN PAGE</li><li>FIGMA</li></ul>
+          </div>
+        </div>
+      </section>
+      <section class="personal-story diesel-story" id="diesel-design-overview" aria-labelledby="diesel-story-title" lang="ko">
+        <div class="personal-story__layout">
+          <p class="personal-story__label" lang="en">PERSONAL PROJECT <span>02</span></p>
+          <figure class="personal-story__visual" aria-label="디젤 메인 페이지의 히어로, 브랜드 철학, 가방 디자인 화면">
+            <div class="personal-story__window personal-story__window--hero">
+              <img src="/images/personal-diesel-desktop.png" width="1920" height="1080" alt="디젤의 흑백 모델 비주얼과 대형 타이포그래피로 구성한 첫 화면" loading="lazy" decoding="async" draggable="false" />
+            </div>
+            <div class="personal-story__window personal-story__window--philosophy">
+              <img src="/images/personal-diesel-philosophy.png" width="1920" height="1080" alt="검은 배경과 여백, 중앙 타이포그래피로 브랜드 철학을 소개하는 디젤 화면" loading="lazy" decoding="async" draggable="false" />
+            </div>
+            <div class="personal-story__device">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <img src="/images/personal-diesel-bags.png" width="1920" height="1080" alt="디젤과 멜리사의 실버 가방을 중앙에 배치한 제품 소개 디자인의 정적인 화면" loading="lazy" decoding="async" draggable="false" />
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </div>
+            <figcaption class="sr-only">디젤 Figma 메인 페이지 디자인의 주요 화면</figcaption>
+          </figure>
+          <div class="personal-story__content">
+            <p class="personal-story__eyebrow" lang="en">MAIN PAGE DESIGN</p>
+            <h2 class="personal-story__title" id="diesel-story-title" lang="en"><span>DIESEL</span> <em>web renewal</em></h2>
+            <div class="personal-story__overview">
+              <h3 lang="en">OVERVIEW</h3>
+              <p>흑백 비주얼과 대형 타이포그래피로<br class="personal-story__desktop-break" /> 디젤의 자유롭고 대담한 태도를 표현했습니다.</p>
+              <p>브랜드 철학에서 가방과 컬렉션까지 이어지는 콘텐츠로, 제품과 브랜드의 개성을 함께 경험하는 메인 페이지를 디자인했습니다.</p>
+            </div>
+            <a class="personal-case__design-link personal-story__design-link" href="https://www.figma.com/design/6GPeNKxLjIVbw8NeE8h3xO/?node-id=923-2692" target="_blank" rel="noopener noreferrer"><span lang="en">VIEW DESIGN</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 디젤 Figma 디자인 (새 탭)</span></a>
+          </div>
+        </div>
+      </section>
+          </div>
+          <nav class="project-pages__navigation" aria-label="디젤 프로젝트 페이지">
+            <button class="project-pages__cover" type="button" data-project-page="0" aria-label="디젤 프로젝트 표지" aria-current="page">INTRO</button>
+            <span aria-hidden="true"></span>
+            <button type="button" data-project-page="1" aria-label="디젤 프로젝트 상세 소개">01</button>
+            <span aria-hidden="true"></span>
+            <button type="button" data-project-page="2" aria-label="디젤 메인 페이지 디자인 개요">02</button>
+          </nav>
+        </div>
+      </section>
+
+      <section class="project-details personal-journey repetto-journey" id="repetto-project" aria-label="레페토 개인 작업 소개">
+        <div class="project-details__stage">
+          <div class="project-pages">
+      <section class="personal-works personal-works--chapter personal-works--repetto" id="repetto-cover" aria-labelledby="repetto-works-title" lang="ko">
+        <h2 class="personal-works__title" id="repetto-works-title" data-personal-reveal lang="en">
+          <span>PERSONAL BRANDS,</span>
+          <em>a graceful direction.</em>
+        </h2>
+        <div class="personal-works__lead" data-personal-reveal>
+          <p>발레의 움직임과 레페토의 우아한 감성을 메인 화면으로 표현합니다.</p>
+          <p>개인 작업 02 · 메인 페이지 디자인</p>
+        </div>
+        <article class="personal-works__project" aria-labelledby="personal-repetto-title">
+          <a class="personal-works__cover" data-personal-reveal href="https://www.figma.com/design/Xp7ykV2Wn7lnueIo1fhhMl/?node-id=475-804" target="_blank" rel="noopener noreferrer" aria-label="레페토 개인 작업 Figma 디자인 보기 (새 탭)">
+            <img class="personal-works__image" src="/images/personal-repetto-hero.png" width="994" height="1582" alt="레페토 Figma 메인 화면의 원본 모델 이미지. 부드러운 핑크 배경에서 레이스 의상과 핑크 슈즈를 착용한 모델." loading="lazy" decoding="async" draggable="false" />
+            <span class="personal-works__arrow" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" focusable="false"><path d="M5 19 19 5M6 5h13v13" /></svg></span>
+            <div class="personal-works__cover-copy" aria-hidden="true" lang="en">
+              <p>REPETTO / BRAND WEBSITE</p>
+              <span>Beyond the<br /><em>stage.</em></span>
+            </div>
+          </a>
+          <div class="personal-works__details" data-personal-reveal>
+            <div class="personal-works__description">
+              <p class="personal-works__eyebrow" lang="en">PERSONAL / 02</p>
+              <h3 id="personal-repetto-title"><span lang="en">REPETTO</span> — 브랜드 웹사이트 리디자인</h3>
+              <p>부드러운 핑크와 아이보리, 우아한 세리프 타이포그래피로 레페토의 발레 감성과 슈즈 컬렉션을 담은 메인 페이지 디자인.</p>
+            </div>
+            <ul class="personal-works__tags" aria-label="레페토 프로젝트 유형" lang="en"><li>MAIN PAGE DESIGN</li><li>FIGMA</li></ul>
+          </div>
+        </article>
+      </section>
+      <section class="personal-case repetto-case" id="repetto-overview" aria-labelledby="repetto-overview-title" lang="ko">
+        <div class="personal-case__layout">
+          <figure class="personal-case__visual">
+            <a class="personal-case__preview project-case__preview" href="https://www.figma.com/design/Xp7ykV2Wn7lnueIo1fhhMl/?node-id=475-804" target="_blank" rel="noopener noreferrer" aria-label="레페토 메인 페이지 Figma 디자인 보기 (새 탭)">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <div class="repetto-screen" role="img" aria-label="레페토 Figma 메인 화면의 정적 미리보기. 아이보리 메뉴 아래 핑크 톤의 모델 이미지와 세로 REPETTO 타이포그래피를 배치한 구성.">
+                    <div class="repetto-screen__header" aria-hidden="true" lang="en"><b>REPETTO</b><span>POP UP SHOP<br />NEWS</span><span>MAISON REPETTO<br />BALLET STUDIO</span><span>BALLETWEAR<br />ESSENTIAL</span><span>ABOUT<br />SAVOIR FAIRE</span><span>● MENU</span></div>
+                    <div class="repetto-screen__hero" aria-hidden="true"><img src="/images/personal-repetto-hero.png" width="994" height="1582" alt="" loading="lazy" decoding="async" draggable="false" /><span lang="en">REPETTO</span></div>
+                  </div>
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </a>
+            <figcaption class="personal-case__caption" lang="en"><span>DESIGN PREVIEW</span><span>REPETTO / MAIN PAGE</span></figcaption>
+          </figure>
+          <div class="personal-case__content">
+            <header class="personal-case__header">
+              <p class="personal-case__index" lang="en"><span>02</span><span>/ PERSONAL PROJECT</span></p>
+              <p class="personal-case__kicker">발레·슈즈 브랜드 메인 페이지 리디자인</p>
+              <div class="personal-case__heading" lang="en"><h2 id="repetto-overview-title">REPETTO</h2><p>brand website</p></div>
+              <a class="personal-case__design-link" href="https://www.figma.com/design/Xp7ykV2Wn7lnueIo1fhhMl/?node-id=475-804" target="_blank" rel="noopener noreferrer"><span lang="en">VIEW DESIGN</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 레페토 Figma 디자인 (새 탭)</span></a>
+            </header>
+            <div class="personal-case__brief">
+              <h3 lang="en">PROJECT BRIEF</h3>
+              <p>레페토의 발레에서 비롯된 우아한 움직임을 부드러운 핑크와 아이보리, 세리프 타이포그래피로 재해석한 메인 페이지 디자인입니다.</p>
+              <p>브랜드 이야기부터 슈즈·발레웨어 컬렉션까지, 이미지와 여백의 흐름으로 자연스럽게 이어지도록 구성했습니다.</p>
+            </div>
+            <div class="personal-case__role">
+              <h3 lang="en">WHAT I DID</h3>
+              <ul><li>브랜드 비주얼 콘셉트 정리</li><li>메인 페이지 정보 구조 설계</li><li>핑크·아이보리 컬러와 타이포그래피 구성</li><li>슈즈·발레웨어 콘텐츠 레이아웃 디자인</li><li>Figma 기반 메인 화면 디자인</li></ul>
+            </div>
+            <p class="personal-case__scope">제작 범위: 메인 페이지 UI 디자인 · Figma</p>
+            <ul class="personal-case__tags" aria-label="레페토 프로젝트 유형" lang="en"><li>PERSONAL</li><li>MAIN PAGE</li><li>FIGMA</li></ul>
+          </div>
+        </div>
+      </section>
+      <section class="personal-story repetto-story" id="repetto-design-overview" aria-labelledby="repetto-story-title" lang="ko">
+        <div class="personal-story__layout">
+          <p class="personal-story__label" lang="en">PERSONAL PROJECT <span>02</span></p>
+          <figure class="personal-story__visual" aria-label="레페토의 메인 비주얼, 브랜드 소개, 에센셜 컬렉션 디자인 화면">
+            <div class="personal-story__window personal-story__window--hero">
+              <div class="repetto-screen" role="img" aria-label="핑크 톤의 모델 비주얼과 세로 브랜드명을 담은 레페토 첫 화면의 정적 미리보기">
+                <div class="repetto-screen__header" aria-hidden="true" lang="en"><b>REPETTO</b><span>POP UP SHOP<br />NEWS</span><span>MAISON REPETTO<br />BALLET STUDIO</span><span>BALLETWEAR<br />ESSENTIAL</span><span>ABOUT<br />SAVOIR FAIRE</span><span>● MENU</span></div>
+                <div class="repetto-screen__hero" aria-hidden="true"><img src="/images/personal-repetto-hero.png" width="994" height="1582" alt="" loading="lazy" decoding="async" draggable="false" /><span lang="en">REPETTO</span></div>
+              </div>
+            </div>
+            <div class="personal-story__window personal-story__window--philosophy repetto-page-crop">
+              <img src="/images/personal-repetto-about.png" width="1920" height="3077" alt="레페토 Figma의 About 화면. 아이보리 바탕과 세리프 제목, 발레 의상으로 구성한 브랜드 소개." loading="lazy" decoding="async" draggable="false" />
+            </div>
+            <div class="personal-story__device">
+              <div class="project-case__laptop">
+                <div class="project-case__display">
+                  <div class="repetto-page-crop"><img src="/images/personal-repetto-essential.png" width="1921" height="3080" alt="레페토 Figma의 Essential 컬렉션 화면. 큰 세리프 제목과 핑크 발레 슈즈 이미지를 겹친 정적인 디자인." loading="lazy" decoding="async" draggable="false" /></div>
+                  <span class="project-case__camera" aria-hidden="true"></span>
+                </div>
+                <div class="project-case__base" aria-hidden="true"></div>
+              </div>
+            </div>
+            <figcaption class="sr-only">레페토 Figma 메인 페이지 디자인의 주요 화면</figcaption>
+          </figure>
+          <div class="personal-story__content">
+            <p class="personal-story__eyebrow" lang="en">MAIN PAGE DESIGN</p>
+            <h2 class="personal-story__title" id="repetto-story-title" lang="en"><span>REPETTO</span> <em>web renewal</em></h2>
+            <div class="personal-story__overview">
+              <h3 lang="en">OVERVIEW</h3>
+              <p>발레의 섬세한 움직임을<br class="personal-story__desktop-break" /> 부드러운 색감과 여백으로 담았습니다.</p>
+              <p>브랜드 이야기와 슈즈·발레웨어 컬렉션을 연결하고, 큰 세리프 타이포그래피와 이미지 중심의 구성으로 레페토의 우아한 분위기를 표현했습니다.</p>
+            </div>
+            <a class="personal-case__design-link personal-story__design-link" href="https://www.figma.com/design/Xp7ykV2Wn7lnueIo1fhhMl/?node-id=475-804" target="_blank" rel="noopener noreferrer"><span lang="en">VIEW DESIGN</span><svg viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M4 16 16 4M4 4h12v12" /></svg><span class="sr-only"> — 레페토 Figma 디자인 (새 탭)</span></a>
+          </div>
+        </div>
+      </section>
+          </div>
+          <nav class="project-pages__navigation" aria-label="레페토 프로젝트 페이지">
+            <button class="project-pages__cover" type="button" data-project-page="0" aria-label="레페토 프로젝트 표지" aria-current="page">INTRO</button>
+            <span aria-hidden="true"></span>
+            <button type="button" data-project-page="1" aria-label="레페토 프로젝트 상세 소개">01</button>
+            <span aria-hidden="true"></span>
+            <button type="button" data-project-page="2" aria-label="레페토 메인 페이지 디자인 개요">02</button>
+          </nav>
+        </div>
+      </section>
+      <section class="short-form" id="short-form-contents" aria-labelledby="short-form-title" lang="ko">
+        <div class="short-form__inner">
+          <header class="short-form__header">
+            <div>
+              <p class="short-form__eyebrow" lang="en">03 / SELECTED FILMS</p>
+              <h2 class="short-form__heading" id="short-form-title" lang="en"><span>SHORT-FORM</span> <em>CONTENTS</em></h2>
+            </div>
+            <p class="short-form__count" lang="en"><b data-short-current>01</b> / 03</p>
+          </header>
+          <div class="short-form__stage">
+            <article class="short-form__film" id="short-film-01" role="tabpanel" aria-labelledby="short-tab-01" data-short-film style="--film-ratio: 0.6712328767">
+              <div class="short-form__backdrop" aria-hidden="true" lang="en">FLAVOUR</div>
+              <figure class="short-form__screen">
+                <video src="/videos/short-form/film-01.mp4" poster="/images/short-form-film-01.jpg" width="784" height="1168" preload="none" controls muted loop playsinline aria-label="성경김 곱창김 숏폼 영상">
+                  <a href="/videos/short-form/film-01.mp4">성경김 곱창김 영상 보기</a>
+                </video>
+              </figure>
+              <div class="short-form__info">
+                <div class="short-form__caption">
+                  <p class="short-form__kind" lang="en">01 / CHARACTER &amp; PRODUCT</p>
+                  <h3 class="short-form__title">성경김 곱창김</h3>
+                  <p class="short-form__description">캐릭터로 전하는 제품의 매력.</p>
+                </div>
+                <dl class="short-form__meta">
+                  <div><dt lang="en">DURATION</dt><dd lang="en">15 SEC</dd></div>
+                  <div><dt lang="en">FORMAT</dt><dd>세로형</dd></div>
+                </dl>
+              </div>
+            </article>
+            <article class="short-form__film" id="short-film-02" role="tabpanel" aria-labelledby="short-tab-02" data-short-film style="--film-ratio: 0.6712328767" hidden>
+              <div class="short-form__backdrop" aria-hidden="true" lang="en">MOONLIGHT</div>
+              <figure class="short-form__screen short-form__screen--portrait-fill">
+                <video src="/videos/short-form/film-02.mp4" poster="/images/short-form-film-02.jpg" width="960" height="960" preload="none" controls muted loop playsinline aria-label="시슬리 SOIR DE LUNE 향수 숏폼 영상">
+                  <a href="/videos/short-form/film-02.mp4">시슬리 SOIR DE LUNE 영상 보기</a>
+                </video>
+              </figure>
+              <div class="short-form__info">
+                <div class="short-form__caption">
+                  <p class="short-form__kind" lang="en">02 / FRAGRANCE VISUAL</p>
+                  <h3 class="short-form__title" lang="en">SOIR DE LUNE</h3>
+                  <p class="short-form__description">달빛과 꽃으로 풀어낸 향의 분위기.</p>
+                </div>
+                <dl class="short-form__meta">
+                  <div><dt lang="en">DURATION</dt><dd lang="en">15 SEC</dd></div>
+                  <div><dt lang="en">FORMAT</dt><dd>세로형</dd></div>
+                </dl>
+              </div>
+            </article>
+            <article class="short-form__film short-form__film--wide" id="short-film-03" role="tabpanel" aria-labelledby="short-tab-03" data-short-film data-short-layout="wide" hidden>
+              <div class="short-form__backdrop" aria-hidden="true" lang="en">DIESEL</div>
+              <h3 class="sr-only" lang="en">DIESEL · WEBSITE HERO</h3>
+              <figure class="short-form__screen">
+                <video src="/videos/short-form/film-03.mp4" poster="/images/short-form-film-03.jpg" width="1280" height="720" preload="none" controls muted loop playsinline aria-label="디젤 아이웨어 웹사이트 히어로 영상">
+                  <a href="/videos/short-form/film-03.mp4">디젤 히어로 영상 보기</a>
+                </video>
+              </figure>
+            </article>
+            <button class="short-form__arrow short-form__arrow--previous" type="button" data-short-previous aria-label="이전 영상"><svg viewBox="0 0 40 20" aria-hidden="true"><path d="M2 10h34M27 2l9 8-9 8" /></svg></button>
+            <button class="short-form__arrow short-form__arrow--next" type="button" data-short-next aria-label="다음 영상"><svg viewBox="0 0 40 20" aria-hidden="true"><path d="M2 10h34M27 2l9 8-9 8" /></svg></button>
+          </div>
+          <div class="short-form__rail" role="tablist" aria-label="숏폼 영상 선택">
+            <button class="short-form__tab" id="short-tab-01" type="button" role="tab" aria-controls="short-film-01" aria-selected="true" data-short-tab>
+              <span class="short-form__tab-number">01</span>
+              <img src="/images/short-form-film-01.jpg" width="784" height="1168" alt="" loading="lazy" />
+              <span class="short-form__tab-copy"><b>성경김 곱창김</b><small lang="en">CHARACTER FILM</small></span>
+            </button>
+            <button class="short-form__tab" id="short-tab-02" type="button" role="tab" aria-controls="short-film-02" aria-selected="false" tabindex="-1" data-short-tab>
+              <span class="short-form__tab-number">02</span>
+              <img src="/images/short-form-film-02.jpg" width="960" height="960" alt="" loading="lazy" />
+              <span class="short-form__tab-copy"><b lang="en">SOIR DE LUNE</b><small lang="en">FRAGRANCE FILM</small></span>
+            </button>
+            <button class="short-form__tab" id="short-tab-03" type="button" role="tab" aria-controls="short-film-03 diesel-film-brief" aria-selected="false" tabindex="-1" data-short-tab>
+              <span class="short-form__tab-number">03</span>
+              <img src="/images/short-form-film-03.jpg" width="1280" height="720" alt="" loading="lazy" />
+              <span class="short-form__tab-copy"><b lang="en">DIESEL</b><small lang="en">WEBSITE HERO</small></span>
+            </button>
+          </div>
+          <details class="short-form__explanation" id="diesel-film-brief" data-short-detail="2" hidden>
+            <summary class="short-form__explanation-toggle">
+              <span>영상 설명</span>
+              <svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8h10" /><path class="short-form__explanation-plus" d="M8 3v10" /></svg>
+            </summary>
+            <section class="short-form__brief" aria-labelledby="diesel-film-brief-title">
+            <header class="short-form__brief-header">
+              <p class="short-form__brief-eyebrow" lang="en">FILM 03 / 03 · DIESEL</p>
+              <h3 class="short-form__brief-title" id="diesel-film-brief-title" lang="en">WEBSITE HERO</h3>
+              <p class="short-form__brief-tagline" lang="en">A bold point of view.</p>
+            </header>
+            <dl class="short-form__brief-rows">
+              <div>
+                <dt>기획 의도</dt>
+                <dd>인물의 시선과 메탈릭 아이웨어의 질감을 클로즈업으로 연결해, 웹사이트 첫 화면에서 디젤의 대담한 브랜드 분위기를 전달하는 히어로 영상 콘셉트입니다.</dd>
+              </div>
+              <div>
+                <dt>타깃</dt>
+                <dd>개성 있는 스타일과 패션 아이웨어에 관심이 있고, 강렬한 브랜드 비주얼을 선호하는 웹사이트 방문자.</dd>
+              </div>
+              <div>
+                <dt>제작 과정</dt>
+                <dd>히어로 콘셉트와 장면 흐름 기획 → Grok 활용 영상 제작 → 인물·아이웨어 장면 연결 → 브랜드 로고로 마무리.</dd>
+              </div>
+              <div>
+                <dt>편집 포인트</dt>
+                <dd>얼굴과 선글라스의 반사·물방울 디테일을 크게 보여주고, 장면이 겹쳐지는 전환으로 시선의 흐름을 연결했습니다. 마지막은 검은 배경의 DIESEL 로고로 정리했습니다.</dd>
+              </div>
+              <div>
+                <dt>사용 도구</dt>
+                <dd lang="en">Grok</dd>
+              </div>
+              <div>
+                <dt>포맷</dt>
+                <dd>브랜드 웹사이트 히어로 영상 · 가로형 16:9 · 약 15초</dd>
+              </div>
+            </dl>
+            </section>
+          </details>
+          <p class="sr-only" aria-live="polite" aria-atomic="true" data-short-status></p>
+        </div>
+      </section>
+        </div>
+
+      <section class="tools-skills" id="tools-skills" aria-labelledby="tools-skills-title">
+        <div class="tools-skills__environment" aria-hidden="true"></div>
+        <div class="tools-skills__title-voyage" data-tools-title-voyage>
+          <header class="tools-skills__intro" data-tools-title-stage>
+            <div class="tools-skills__title-tide" data-tools-title-tide aria-hidden="true"></div>
+            <p class="tools-skills__eyebrow" lang="en"><span>BEHIND THE WORK</span><span>DESIGN · CODE · MOTION</span></p>
+            <h2 class="tools-skills__title" id="tools-skills-title" lang="en"><span class="sr-only">Tools &amp; skills</span><span class="tools-skills__title-track" data-tools-title-track aria-hidden="true"><span class="tools-skills__title-first" data-tools-title-first>SKILL</span><em class="tools-skills__title-final" data-tools-title-final>tools &amp; skills</em></span></h2>
+            <p class="tools-skills__title-cue" lang="en">SCROLL TO DISCOVER</p>
+          </header>
+        </div>
+        <div class="tools-skills__inner">
+          <div class="tools-skills__lead"><p>아이디어를 그리고, 화면으로 연결하는 도구들.</p><span lang="en">18 TOOLS · 06 CATEGORIES</span></div>
+          <div class="skill-reef" data-skills-reef role="group" aria-label="해저 바위와 난파선 조각, 산호에 붙어 있는 작업 도구 물방울 18개. 선택하면 아래에서 활용 설명을 볼 수 있습니다.">
+            <div class="skill-reef__rock skill-reef__rock--design" style="--reef-part:0" role="group" aria-label="디자인과 프런트엔드">
+              <div class="skill-reef__art" aria-hidden="true"><img src="/images/skills-seabed-relics.png" alt="" loading="lazy" decoding="async" draggable="false"/></div>
+              <button class="skill-drop" type="button" style="--drop-x:81%;--drop-y:20%;--drop-delay:-0s" data-skill-node data-skill="figma" aria-pressed="true" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/figma.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Figma</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:75%;--drop-y:39%;--drop-delay:-1s" data-skill-node data-skill="photoshop" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/photoshop.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Photoshop</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:45%;--drop-y:66%;--drop-delay:-2s" data-skill-node data-skill="html" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/html.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">HTML</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:72%;--drop-y:72%;--drop-delay:-3s" data-skill-node data-skill="css" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/css.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">CSS</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:96%;--drop-y:83%;--drop-delay:-4s" data-skill-node data-skill="scss" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/scss.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">SCSS</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:81%;--drop-y:55%;--drop-delay:-5s" data-skill-node data-skill="javascript" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/javascript.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">JavaScript</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:54%;--drop-y:90%;--drop-delay:-6s" data-skill-node data-skill="react" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/react.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">React</span></button>
+            </div>
+            <div class="skill-reef__rock skill-reef__rock--workflow" style="--reef-part:1" role="group" aria-label="협업과 인터랙션">
+              <div class="skill-reef__art" aria-hidden="true"><img src="/images/skills-seabed-relics.png" alt="" loading="lazy" decoding="async" draggable="false"/></div>
+              <button class="skill-drop" type="button" style="--drop-x:8%;--drop-y:46%;--drop-delay:-3s" data-skill-node data-skill="git" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/git.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Git</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:32%;--drop-y:56%;--drop-delay:-4s" data-skill-node data-skill="github" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/github.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">GitHub</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:20%;--drop-y:73%;--drop-delay:-5s" data-skill-node data-skill="vercel" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/vercel.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Vercel</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:53%;--drop-y:66%;--drop-delay:-6s" data-skill-node data-skill="gsap" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/gsap.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">GSAP</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:77%;--drop-y:79%;--drop-delay:-7s" data-skill-node data-skill="scrolltrigger" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/scrolltrigger.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">ScrollTrigger</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:35%;--drop-y:90%;--drop-delay:-8s" data-skill-node data-skill="scrolla" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/scrolla.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Scrolla.js</span></button>
+            </div>
+            <div class="skill-reef__rock skill-reef__rock--creative" style="--reef-part:2" role="group" aria-label="AI 도구와 영상">
+              <div class="skill-reef__art" aria-hidden="true"><img src="/images/skills-seabed-relics.png" alt="" loading="lazy" decoding="async" draggable="false"/></div>
+              <button class="skill-drop" type="button" style="--drop-x:31%;--drop-y:49%;--drop-delay:-6s" data-skill-node data-skill="chatgpt" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/chatgpt.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">ChatGPT</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:58%;--drop-y:52%;--drop-delay:-7s" data-skill-node data-skill="gemini" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/gemini.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Gemini</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:79%;--drop-y:66%;--drop-delay:-8s" data-skill-node data-skill="claude" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/claude.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Claude</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:28%;--drop-y:72%;--drop-delay:-9s" data-skill-node data-skill="premiere-pro" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/premiere-pro.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">Premiere Pro</span></button>
+              <button class="skill-drop" type="button" style="--drop-x:64%;--drop-y:84%;--drop-delay:-10s" data-skill-node data-skill="capcut" aria-pressed="false" aria-describedby="skill-reef-detail"><span class="skill-drop__water"><img src="/icons/tools-skills/capcut.svg" width="64" height="64" alt="" loading="lazy" decoding="async" draggable="false"/></span><span lang="en">CapCut</span></button>
+            </div>
+          </div>
+          <div class="skill-reef__footer">
+            <div class="skill-reef__detail" id="skill-reef-detail">
+              <p class="skill-reef__category" data-skill-category lang="en">DESIGN</p>
+              <h3 data-skill-name lang="en">Figma</h3>
+              <p class="skill-reef__description" data-skill-description>와이어프레임부터 컴포넌트와 프로토타입까지, 화면의 구조와 흐름을 설계합니다.</p>
+            </div>
+            <p class="skill-reef__hint">도구를 선택해 살펴보세요.<span lang="en">EXPLORE THE TOOLS</span></p>
+          </div>
+        </div>
+      </section>
+
+      <section class="about-title" id="about" aria-labelledby="about-title">
+        <div class="about-title__voyage" data-about-voyage>
+          <header class="about-title__stage" data-about-stage>
+            <div class="about-title__tide" data-about-tide aria-hidden="true"></div>
+            <p class="about-title__eyebrow" lang="en"><span>A LITTLE DEEPER</span><span>PARK SEOJIN</span></p>
+            <h2 class="about-title__heading" id="about-title" lang="en"><span class="sr-only">About me</span><span class="about-title__track" data-about-track aria-hidden="true"><span class="about-title__first" data-about-first>ABOUT</span><em class="about-title__final" data-about-final>more about me</em></span></h2>
+            <p class="about-title__cue" lang="en">SCROLL TO EXPLORE</p>
+          </header>
+        </div>
+      </section>
+
+      <div class="capability-scene__viewport">
+      <div class="capability-scene__background" aria-hidden="true"></div>
       <div class="capability-scene__veil" aria-hidden="true"></div>
-      <section class="capability-cards" id="capability-cards" aria-labelledby="capability-cards-title" lang="en">
+      <section class="capability-cards capability-cards--about" id="capability-cards" aria-labelledby="capability-cards-title" lang="ko">
+        <div class="about-fish-layer" aria-hidden="true">
+          <div class="about-fish about-fish--blue" data-about-fish="blue"><img src="/images/about-fish-dorsal-blue.png" width="1024" height="1536" alt="" loading="lazy" decoding="async" draggable="false" /></div>
+          <div class="about-fish about-fish--white" data-about-fish="white"><img src="/images/about-fish-dorsal-white.png" width="1024" height="1536" alt="" loading="lazy" decoding="async" draggable="false" /></div>
+        </div>
         <header class="capability-cards__header">
-          <h2 id="capability-cards-title">FOUR WAYS I BRING IDEAS TO LIFE</h2>
+          <h2 id="capability-cards-title">ABOUT <span aria-hidden="true">/</span> 경험과 일하는 태도</h2>
           <div class="capability-cards__navigation">
-            <button class="capability-cards__previous" type="button" aria-label="Previous capability">←</button>
-            <p><span class="capability-cards__current" aria-hidden="true">01</span> / 04 <span class="capability-cards__scroll">SCROLL TO EXPLORE ↓</span></p>
-            <button class="capability-cards__next" type="button" aria-label="Next capability">→</button>
+            <button class="capability-cards__previous" type="button" aria-label="이전 질문 카드">←</button>
+            <p><span class="capability-cards__current" aria-hidden="true">01</span> / 04 <span class="capability-cards__scroll" lang="en">SCROLL TO EXPLORE ↓</span></p>
+            <button class="capability-cards__next" type="button" aria-label="다음 질문 카드">→</button>
           </div>
         </header>
         <div class="capability-cards__stage"><ol class="capability-cards__sequence">
           <li class="capability-step" id="capability-research" style="--card-index: 0">
             <article class="capability-card" aria-labelledby="card-title-1">
-              <div class="capability-card__top"><span class="capability-card__number">(01)</span></div>
+              <div class="capability-card__top"><span class="capability-card__number">(01)</span><span lang="en">THE BEGINNING</span></div>
               <div class="capability-card__body">
                 <div class="capability-card__content">
-                  <h3 class="capability-card__title" id="card-title-1">UX<br>RESEARCH<br>&amp; STRATEGY</h3>
-                  <p class="capability-card__description">Understanding users, identifying problems, and shaping clear design directions.</p>
-                  <details class="capability-card__details">
-                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
-                    <div class="capability-card__expanded"><h4>From observation to direction</h4><p lang="ko">사용자 조사에서 발견한 내용을 문제 정의로 정리하고, 정보 구조와 사용자 흐름으로 연결합니다.</p></div>
-                  </details>
+                  <h3 class="capability-card__title" id="card-title-1">디자인을<br>시작한 이유</h3>
+                  <div class="capability-card__qa" role="region" aria-labelledby="card-title-1" tabindex="0">
+                    <details class="about-question">
+                      <summary><span>왜 디자인을 선택했나요?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="beginning"><p>같은 내용도 이미지와 글자의 배치에 따라 다르게 전달된다는 점에 흥미를 느꼈습니다. 보기 좋은 화면을 만드는 일에서 출발해, 누군가가 쉽게 이해하고 자연스럽게 사용하는 경험을 만들고 싶어 디자인을 배우기 시작했습니다.</p></div>
+                    </details>
+                  </div>
+                  <p class="capability-card__description">질문을 눌러 이야기를 읽어보세요.</p>
                 </div>
               </div>
             </article>
           </li>
           <li class="capability-step" id="capability-visual" style="--card-index: 1">
             <article class="capability-card" aria-labelledby="card-title-2">
-              <div class="capability-card__top"><span class="capability-card__number">(02)</span></div>
+              <div class="capability-card__top"><span class="capability-card__number">(02)</span><span lang="en">EXPERIENCE</span></div>
               <div class="capability-card__body">
                 <div class="capability-card__content">
-                  <h3 class="capability-card__title" id="card-title-2">UI &amp;<br>VISUAL DESIGN</h3>
-                  <p class="capability-card__description">Creating thoughtful interfaces through typography, layout, and visual systems.</p>
-                  <details class="capability-card__details">
-                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
-                    <div class="capability-card__expanded"><h4>Giving structure a visual language</h4><p lang="ko">타이포그래피, 레이아웃, 컴포넌트의 관계를 설계합니다. Figma에서 화면과 시각 시스템을 구체화합니다.</p></div>
-                  </details>
+                  <h3 class="capability-card__title" id="card-title-2">경험이 만든<br>나의 강점</h3>
+                  <div class="capability-card__qa" role="region" aria-labelledby="card-title-2" tabindex="0">
+                    <details class="about-question">
+                      <summary><span>이전 경험에서 이어지는 강점은?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="experience"><p>학원에서 팀 프로젝트를 하며 혼자 완성하는 것과 함께 완성하는 것의 차이를 배웠습니다. 서로의 의견을 듣고 작업의 방향을 맞추는 과정에서, 생각을 화면과 말로 정리해 전달하는 힘을 길렀습니다.</p></div>
+                    </details>
+                    <details class="about-question">
+                      <summary><span>어떤 교육·경력·자격이 있나요?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="background"><p>학원 교육과정을 수료했습니다. 배운 내용을 개인 작업과 팀 프로젝트에 적용하며, 디자인부터 화면 구현까지의 과정을 포트폴리오로 정리했습니다.</p></div>
+                    </details>
+                  </div>
+                  <p class="capability-card__description">질문을 눌러 이야기를 읽어보세요.</p>
                 </div>
               </div>
             </article>
           </li>
           <li class="capability-step" id="capability-development" style="--card-index: 2">
             <article class="capability-card" aria-labelledby="card-title-3">
-              <div class="capability-card__top"><span class="capability-card__number">(03)</span></div>
+              <div class="capability-card__top"><span class="capability-card__number">(03)</span><span lang="en">HOW I WORK</span></div>
               <div class="capability-card__body">
                 <div class="capability-card__content">
-                  <h3 class="capability-card__title capability-card__title--long" id="card-title-3">FRONT-END<br>DEVELOPMENT</h3>
-                  <p class="capability-card__description">Turning designed interfaces into responsive, functional web experiences.</p>
-                  <details class="capability-card__details">
-                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
-                    <div class="capability-card__expanded"><h4>From designed form to working interface</h4><p lang="ko">HTML, CSS, JavaScript로 디자인을 반응형 화면에 구현합니다. 화면 크기와 입력 방식에 맞게 동작을 조정합니다.</p></div>
-                  </details>
+                  <h3 class="capability-card__title" id="card-title-3">문제를 풀고,<br>함께 다듬는 방식</h3>
+                  <div class="capability-card__qa" role="region" aria-labelledby="card-title-3" tabindex="0">
+                    <details class="about-question">
+                      <summary><span>문제를 풀 때 가장 중요한 기준은?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="problem-solving"><p>사용자가 정보를 이해하는 과정을 먼저 살펴봅니다. 관찰한 내용을 구조와 흐름으로 정리하고, 디자인과 인터랙션으로 구현합니다. 완성된 화면을 다시 확인하며 어색한 부분을 다듬습니다.</p></div>
+                    </details>
+                    <details class="about-question">
+                      <summary><span>협업과 피드백을 어떻게 대하나요?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="collaboration"><p>학원에서의 협업을 통해 각자의 작업이 하나의 흐름으로 이어져야 한다는 점을 배웠습니다. 의견이 다를 때는 먼저 이유를 듣고, 피드백은 화면을 더 나아지게 할 단서로 받아들이려 합니다. 수정한 결과를 함께 확인하며 방향을 맞춥니다.</p></div>
+                    </details>
+                  </div>
+                  <p class="capability-card__description">질문을 눌러 이야기를 읽어보세요.</p>
                 </div>
               </div>
             </article>
           </li>
           <li class="capability-step" id="capability-interaction" style="--card-index: 3">
             <article class="capability-card" aria-labelledby="card-title-4">
-              <div class="capability-card__top"><span class="capability-card__number">(04)</span></div>
+              <div class="capability-card__top"><span class="capability-card__number">(04)</span><span lang="en">WHAT'S NEXT</span></div>
               <div class="capability-card__body">
                 <div class="capability-card__content">
-                  <h3 class="capability-card__title" id="card-title-4">INTERACTION<br>DESIGN</h3>
-                  <p class="capability-card__description">Adding purposeful motion and interactions that support the user experience.</p>
-                  <details class="capability-card__details">
-                    <summary><span class="sr-only">Toggle capability details</span><span class="capability-card__toggle" aria-hidden="true">+</span></summary>
-                    <div class="capability-card__expanded"><h4>Motion with a reason</h4><p lang="ko">스크롤 전환과 마이크로인터랙션으로 상태 변화를 전달합니다. 키보드 입력과 모션 감소 설정도 함께 고려합니다.</p></div>
-                  </details>
+                  <h3 class="capability-card__title" id="card-title-4">앞으로<br>나아갈 방향</h3>
+                  <div class="capability-card__qa" role="region" aria-labelledby="card-title-4" tabindex="0">
+                    <details class="about-question">
+                      <summary><span>어떤 디자이너로 성장하고 싶나요?</span><span class="about-question__toggle" aria-hidden="true">+</span></summary>
+                      <div class="about-question__answer" data-about-answer="growth"><p>디자인의 의도를 실제로 작동하는 화면까지 연결하는 디자이너로 성장하고 싶습니다. 시각적인 완성도와 사용하기 편한 흐름을 함께 살피고, 새로운 도구를 익히는 데서 그치지 않고 작업에 적용하며 제 판단의 근거를 쌓아가겠습니다.</p></div>
+                    </details>
+                  </div>
+                  <p class="capability-card__description">질문을 눌러 이야기를 읽어보세요.</p>
                 </div>
               </div>
             </article>
@@ -194,38 +1541,46 @@
       </section>
       </div>
       </div>
-      <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title" lang="en" tabindex="-1">
+      <section class="portfolio" id="portfolio" aria-labelledby="portfolio-title" lang="ko" tabindex="-1">
         <div class="portfolio__intro">
           <div class="portfolio__divider" aria-hidden="true">
             <svg class="portfolio__star" viewBox="0 0 32 32" fill="currentColor" focusable="false">
               <path d="M16 0 18.6 13.4 32 16 18.6 18.6 16 32 13.4 18.6 0 16 13.4 13.4Z" />
             </svg>
           </div>
-          <h2 class="portfolio__label" id="portfolio-title">PORTFOLIO</h2>
+          <p class="portfolio__label" lang="en">MORE ABOUT ME</p>
         </div>
         <div class="portfolio__work">
-          <svg class="portfolio__glyphs" width="0" height="0" aria-hidden="true"><defs><path id="portfolio-letter-o" fill-rule="evenodd" d="M50 0C21 0 0 22 0 50s21 50 50 50 50-22 50-50S79 0 50 0Zm17 6C44-3 18 14 13 38S18 82 36 92s43-4 50-29S86 14 67 6Z"/></defs></svg>
-          <h2 class="portfolio__heading" aria-label="OUR WORK, IN FULL BLOOM">
-            <span class="portfolio__title-line" aria-hidden="true"><span class="portfolio__word"><svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>UR</span> <span class="portfolio__word">W<svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>RK,</span></span>
-            <span class="portfolio__title-line" aria-hidden="true"><span class="portfolio__word">IN</span> <span class="portfolio__word">FULL</span> <span class="portfolio__word">BL<svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg><svg class="portfolio__o" viewBox="0 0 100 100"><use href="#portfolio-letter-o"/></svg>M</span></span>
+          <h2 class="portfolio__heading" id="portfolio-title" lang="en">
+            <span class="portfolio__title-line"><span class="portfolio__word">Personal</span> <span class="portfolio__word">Moments</span></span>
           </h2>
-          <div class="portfolio__gallery" role="region" aria-label="Project gallery" aria-describedby="portfolio-gallery-help" tabindex="0">
-            <p class="sr-only" id="portfolio-gallery-help">Drag horizontally to explore. Use the left and right arrow keys to change projects, and Space to pause or resume automatic movement.</p>
+          <div class="portfolio__gallery" role="region" aria-label="일상 사진 18장 갤러리" aria-describedby="portfolio-gallery-help" tabindex="0">
+            <p class="sr-only" id="portfolio-gallery-help">옆으로 드래그하거나 좌우 방향키로 사진을 넘길 수 있습니다. 데스크톱에서는 스페이스바로 자동 넘김을 멈추거나 재생할 수 있습니다.</p>
             <div class="portfolio__canvas" aria-hidden="true"></div>
             <ol class="portfolio__projects">
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 01</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 02</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 03</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 04</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 05</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 06</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 07</span><span>YYYY</span></figcaption></figure></li>
-              <li class="portfolio__project" data-image=""><figure><div class="portfolio__placeholder"></div><figcaption><span>PROJECT 08</span><span>YYYY</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-01.jpg" data-focus-x="0.5" data-focus-y="0.9"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-01.jpg" width="2252" height="4000" alt="일상 사진 01" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 01</span><span>01 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-02.jpg" data-focus-x="0.5" data-focus-y="0.18"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-02.jpg" width="1448" height="3216" alt="일상 사진 02" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 02</span><span>02 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-03.jpg" data-focus-x="0.5" data-focus-y="0.22"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-03.jpg" width="1448" height="3216" alt="일상 사진 03" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 03</span><span>03 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-04.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-04.jpeg" width="3000" height="4000" alt="일상 사진 04" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 04</span><span>04 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-05.jpeg" data-focus-x="0.5" data-focus-y="0.25"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-05.jpeg" width="981" height="2181" alt="일상 사진 05" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 05</span><span>05 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-06.jpeg" data-focus-x="0.5" data-focus-y="0.9"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-06.jpeg" width="1126" height="2000" alt="일상 사진 06" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 06</span><span>06 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-07.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-07.jpeg" width="1081" height="1349" alt="일상 사진 07" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 07</span><span>07 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-08.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-08.jpeg" width="1080" height="1920" alt="일상 사진 08" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 08</span><span>08 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-09.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-09.jpeg" width="1200" height="1600" alt="일상 사진 09" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 09</span><span>09 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-10.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-10.jpeg" width="900" height="1200" alt="일상 사진 10" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 10</span><span>10 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-11.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-11.jpeg" width="1126" height="2000" alt="일상 사진 11" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 11</span><span>11 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-12.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-12.jpeg" width="1200" height="1600" alt="일상 사진 12" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 12</span><span>12 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-13.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-13.jpeg" width="1800" height="2400" alt="일상 사진 13" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 13</span><span>13 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-14.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-14.jpeg" width="1800" height="2400" alt="일상 사진 14" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 14</span><span>14 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-15.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-15.jpeg" width="1800" height="2400" alt="일상 사진 15" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 15</span><span>15 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-16.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-16.jpeg" width="1800" height="2400" alt="일상 사진 16" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 16</span><span>16 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-17.jpeg" data-focus-x="0.34" data-focus-y="0.5"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-17.jpeg" width="3392" height="2544" alt="일상 사진 17" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 17</span><span>17 / 18</span></figcaption></figure></li>
+              <li class="portfolio__project" data-image="/images/profile/moment-18.jpeg"><figure><div class="portfolio__placeholder"><img src="/images/profile/moment-18.jpeg" width="3000" height="4000" alt="일상 사진 18" loading="lazy" decoding="async" draggable="false" /></div><figcaption lang="en"><span>MOMENT 18</span><span>18 / 18</span></figcaption></figure></li>
             </ol>
             <div class="portfolio__gallery-controls">
-              <button type="button" data-gallery-previous aria-label="Previous project">←</button>
-              <button class="portfolio__pause" type="button" data-gallery-pause aria-label="Pause automatic gallery movement" aria-pressed="false">Ⅱ</button>
-              <button type="button" data-gallery-next aria-label="Next project">→</button>
+              <button type="button" data-gallery-previous aria-label="이전 사진">←</button>
+              <button class="portfolio__pause" type="button" data-gallery-pause aria-label="사진 자동 넘김 일시정지" aria-pressed="false">Ⅱ</button>
+              <button type="button" data-gallery-next aria-label="다음 사진">→</button>
             </div>
             <p class="sr-only" data-gallery-status aria-live="polite"></p>
           </div>
@@ -395,7 +1750,7 @@
         </div>
         <nav class="portfolio-menu__navigation" aria-label="포트폴리오 메뉴">
           <a class="portfolio-menu__link" href="#hero" data-menu-home><span class="portfolio-menu__number">01</span><span lang="en">THE SURFACE</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
-          <a class="portfolio-menu__link" href="/images/hero_edit.png" target="_blank" rel="noopener"><span class="portfolio-menu__number">02</span><span lang="en">GALLERY</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
+          <a class="portfolio-menu__link" href="/images/hero-mermaid-original.png" target="_blank" rel="noopener"><span class="portfolio-menu__number">02</span><span lang="en">GALLERY</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
           <a class="portfolio-menu__link" href="tel:+821051577159"><span class="portfolio-menu__number">03</span><span lang="en">LET’S TALK</span><span class="portfolio-menu__arrow" aria-hidden="true">↗</span></a>
         </nav>
         <div class="portfolio-menu__bottom"><p lang="en">UI/UX · WEB · VISUAL · CREATIVE</p><a href="tel:+821051577159">+82 10 5157 7159</a></div>

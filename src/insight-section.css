@@ -1,6 +1,11 @@
-/* Four centred lines share the former THAT MOVES type scale.
-   The O forms use authored vector contours rather than commercial font files. */
+/* Scope the opening display face to this section; later headings keep their
+   own typography. The O forms retain their authored vector contours. */
 .insight-section {
+  --insight-font-family: 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  --insight-font-weight: 400;
+  --insight-font-size: clamp(2.5rem, 13vw, 16rem);
+  --insight-line-height: .94;
+  --insight-letter-spacing: -.01em;
   --insight-top-inset: var(--ocean-message-inset);
   position: relative;
   /* Let the title and object paint in front of the shared underwater texture. */
@@ -12,14 +17,12 @@
   padding: var(--space-section) var(--container-gutter);
   padding-block-start: var(--insight-top-inset);
   color: var(--insight-color-text);
-  /* Match the existing HERO edge, then reduce light through the whole section. */
+  /* Continue the supplied image's navy behind the live type and shell. */
   background-color: var(--insight-color-bg);
   background-image: linear-gradient(
     180deg,
-    var(--insight-color-transition) 0%,
-    var(--ocean-color-mid) calc(var(--insight-top-inset) * .45),
-    var(--insight-color-navy) var(--insight-top-inset),
-    var(--insight-color-depth) calc(var(--insight-top-inset) + var(--insight-font-size) * 2),
+    var(--hero-sky) 0%,
+    var(--hero-sky) calc(var(--insight-top-inset) + var(--insight-font-size) * .8),
     var(--insight-color-bg) 100%
   );
   scroll-margin-top: 0;
@@ -37,7 +40,7 @@
   font-synthesis: none;
   line-height: var(--insight-line-height);
   letter-spacing: var(--insight-letter-spacing);
-  word-spacing: -.06em;
+  word-spacing: .01em;
   text-align: center;
   text-transform: uppercase;
   scroll-margin-top: var(--anchor-scroll-margin);
@@ -58,23 +61,75 @@
   margin: calc(-1 * (var(--still-life-image-inset) + var(--insight-object-overlap))) 0 0;
   pointer-events: none;
 }
-.insight-section__still-life img {
+.insight-clam {
+  position: relative;
   display: block;
   width: 100%;
-  height: auto;
+  aspect-ratio: 1;
+  perspective: calc(var(--insight-object-width) * 3);
   /* Submerge the cutout's edges without changing the section's background. */
   --still-life-mask: linear-gradient(180deg, transparent 0%, #000 13%, #000 82%, transparent 100%);
   -webkit-mask-image: var(--still-life-mask);
   mask-image: var(--still-life-mask);
   user-select: none;
 }
+.insight-clam__layer {
+  position: absolute;
+  inset: 0;
+}
+.insight-clam__layer svg { display: block; width: 100%; height: 100%; overflow: visible; }
+.insight-clam__base { z-index: 0; }
+/* The closed outer valve physically conceals the stationary pearl. */
+.insight-clam__pearl { z-index: 3; }
+.insight-clam__lid {
+  z-index: 2;
+  /* Inner and outer surfaces pivot around the stationary rear hinge. */
+  transform-origin: 50% 63%;
+}
+.insight-clam__outer {
+  z-index: 4;
+  opacity: 0;
+  transform: rotateX(104deg);
+  transform-origin: 50% 63%;
+  backface-visibility: hidden;
+}
+.insight-clam.is-motion-ready.is-open .insight-clam__lid {
+  transition: transform .58s cubic-bezier(.35, .05, .25, 1) .1s, opacity 0s linear .18s;
+}
+.insight-clam.is-motion-ready.is-open .insight-clam__outer {
+  /* Exchange the opaque surfaces edge-on, without a ghosted shell over the pearl. */
+  transition: transform .34s cubic-bezier(.2, .7, .25, 1), opacity 0s linear .18s;
+}
+.insight-clam.is-motion-ready:not(.is-open) .insight-clam__lid {
+  transform: rotateX(-88deg);
+  opacity: 0;
+}
+.insight-clam.is-motion-ready:not(.is-open) .insight-clam__outer { transform: none; opacity: 1; }
+/* Avoid a subpixel pearl fringe along the closed illustrated seam. */
+.insight-clam.is-motion-ready:not(.is-open) .insight-clam__pearl { visibility: hidden; }
+.insight-clam__luster { opacity: .86; }
+.insight-clam.is-motion-ready.is-open .insight-clam__luster {
+  animation: insight-pearl-luster .95s ease-out .3s both;
+}
+@keyframes insight-pearl-luster {
+  0% { opacity: 0; }
+  40% { opacity: 1; }
+  100% { opacity: .86; }
+}
+.insight-clam__trigger {
+  position: absolute;
+  top: 58%;
+  left: 10%;
+  width: 80%;
+  height: 32%;
+}
 
 .insight-section__symbol {
-  /* Roboto cap-height = .71em. The contours occupy 184/200 of the viewBox.
-     Compensate for the viewBox inset to align both cap-height and baseline. */
+  /* Keep the authored O contours aligned with the surrounding capitals.
+     Compensate for the contours' 184/200 viewBox height to align the baseline. */
   display: inline-block;
-  width: .772em;
-  height: .772em;
+  width: .775em;
+  height: .775em;
   vertical-align: -.031em;
   overflow: visible;
 }
@@ -97,11 +152,26 @@
 .insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(2) { animation-delay: var(--delay-stagger); }
 .insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(3) { animation-delay: calc(var(--delay-stagger) * 2); }
 .insight-section.is-motion-ready.is-revealed .insight-section__line:nth-child(4) { animation-delay: calc(var(--delay-stagger) * 3); }
+/* A shared stem must stay attached while the remaining lines appear. */
+.insight-section.is-motion-ready .insight-section__line.insight-section__line--connected {
+  opacity: 1;
+  transform: none;
+  animation: none;
+}
 @keyframes insight-line-reveal {
   from { opacity: 0; transform: translateY(var(--space-3)); }
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
+  .insight-clam .insight-clam__outer { opacity: 0 !important; transition: none !important; }
+  .insight-clam .insight-clam__luster { animation: none !important; opacity: .86 !important; }
+  .insight-clam .insight-clam__lid,
+  .insight-clam .insight-clam__pearl {
+    transition: none !important;
+    transform: none !important;
+    filter: none !important;
+    opacity: 1 !important;
+  }
   .insight-section .insight-section__line {
     animation: none !important;
     opacity: 1 !important;

@@ -1,0 +1,55 @@
+/* Surface light recedes overhead while the first work emerges on the seabed. */
+.ocean-descent { display: none; }
+.is-descent-ready .ocean-descent {
+  display: block;
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  height: auto;
+  overflow: hidden;
+  opacity: 0;
+  pointer-events: none;
+}
+.ocean-descent__water,
+.ocean-descent__shade,
+.ocean-descent__particles {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.ocean-descent__water {
+  background:
+    radial-gradient(ellipse at 52% -32%, #284e675c 0%, #11344b26 42%, transparent 70%),
+    linear-gradient(180deg, #061d36 0%, #04162c 35%, #020e23 72%, #020b1d 100%);
+}
+.ocean-descent__ceiling {
+  position: absolute;
+  top: 0;
+  left: -6%;
+  width: 112%;
+  height: 125%;
+  transform-origin: 50% 0;
+  -webkit-mask-image: linear-gradient(transparent 0%, #000 10% 45%, #000b 60%, #0004 76%, transparent 90%);
+  mask-image: linear-gradient(transparent 0%, #000 10% 45%, #000b 60%, #0004 76%, transparent 90%);
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.ocean-descent__ceiling img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 0;
+  user-select: none;
+}
+.ocean-descent__shade {
+  background:
+    linear-gradient(180deg, #04132600 0%, #020b1d17 38%, #020b1d8c 82%, #020b1dd9 100%),
+    linear-gradient(90deg, #010a1c66 0%, #020e2112 32% 67%, #010a1c70 100%);
+}
+.ocean-descent__particles { display: block; }
+@media (max-width: 767px) {
+  .ocean-descent__ceiling img { object-position: 25% 0; }
+}

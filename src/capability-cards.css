@@ -1,6 +1,7 @@
-/* The original capabilities composition is the background plane, without clones. */
+/* Read the mirror and voyage in flow; pin only the following card deck. */
 .capability-scene { background: var(--insight-color-bg); }
 .capability-scene__viewport { position: relative; }
+.capability-scene__background { position: relative; }
 .capability-scene__veil { display: none; }
 .capability-cards {
   /* Measured reference .cap-block dimensions; motion keeps its existing scale. */
@@ -128,13 +129,10 @@
 .is-immersive .capability-scene__viewport {
   isolation: isolate;
   overflow: clip;
-  /* Let the existing description and button travel into the reading area before
-     the bottom of this viewport reaches the pin. No cards move during this lead-in. */
-  padding-bottom: 28svh;
-  /* The background plane can leave the viewport without revealing other sections. */
+  min-height: 100svh;
   background: var(--insight-color-bg);
 }
-.is-immersive .capabilities { z-index: 0; will-change: transform, opacity; }
+.is-immersive .capability-scene__background { z-index: 0; min-height: 100svh; }
 .is-immersive .capability-scene__veil {
   display: block;
   position: absolute;
@@ -168,6 +166,68 @@
 .is-immersive .capability-step { position: absolute; inset: 0; margin: 0; width: 100%; will-change: transform, opacity; }
 .is-immersive .capability-step.is-active { pointer-events: auto; }
 .is-immersive .capability-step:not(.is-active) { pointer-events: none; }
+/* ABOUT keeps the four-card choreography, with readable questions inside it. */
+.capability-cards--about { font-family: var(--font-family-body); }
+.capability-cards--about .capability-cards__header { font-size: 11px; line-height: 1.6; }
+.capability-cards--about .capability-card { display: flex; flex-direction: column; padding: 8% 8% 7%; }
+.capability-cards--about .capability-card__top {
+  position: relative;
+  inset: auto;
+  display: flex;
+  flex-shrink: 0;
+  justify-content: space-between;
+  gap: 12px;
+  color: #9db9cc;
+  font: 400 10px/1.5 var(--insight-font-family);
+  letter-spacing: .08em;
+  text-align: left;
+}
+.capability-cards--about .capability-card__body { position: relative; display: flex; flex: 1; min-height: 0; padding-top: 9%; }
+.capability-cards--about .capability-card__content { display: flex; flex-direction: column; width: 100%; min-height: 0; }
+.capability-cards--about .capability-card__title {
+  position: static;
+  flex-shrink: 0;
+  margin: 0 0 9%;
+  color: #d5e6ee;
+  font-size: clamp(23px, calc(var(--stack-card-width) * .077), 40px);
+  font-weight: 300;
+  line-height: 1.3;
+  letter-spacing: -.045em;
+  text-align: left;
+  word-break: keep-all;
+}
+.capability-card__qa { flex: 1; min-height: 0; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #65899e66 transparent; scrollbar-gutter: stable; }
+.capability-card__qa:focus-visible { outline-offset: -2px; }
+.about-question { border-top: 1px solid #a7c4d133; }
+.about-question:last-child { border-bottom: 1px solid #a7c4d133; }
+.about-question summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 48px;
+  padding: 12px 6px 12px 2px;
+  color: #c5dce7;
+  font-size: clamp(11px, calc(var(--stack-card-width) * .029), 15px);
+  font-weight: 400;
+  line-height: 1.65;
+  word-break: keep-all;
+  list-style: none;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+.about-question summary::-webkit-details-marker { display: none; }
+.about-question summary::marker { content: ''; }
+.about-question summary:focus-visible { outline-offset: -2px; }
+.about-question__toggle { display: grid; place-items: center; flex-shrink: 0; width: 18px; height: 18px; color: #aac9da; font: 300 21px/1 var(--insight-font-family); transition: rotate .25s ease; }
+.about-question[open] .about-question__toggle { rotate: 45deg; }
+.about-question[open] summary { color: #edf4f6; }
+.about-question__answer { padding: 1px 3px 17px; }
+.about-question__answer p { margin: 0; color: #acc2d1; font-size: clamp(12px, calc(var(--stack-card-width) * .03), 15px); font-weight: 300; line-height: 1.95; word-break: keep-all; overflow-wrap: anywhere; }
+.capability-cards--about .capability-card__description { position: static; flex-shrink: 0; margin: 16px 0 0; color: #8ba7bc; font-size: 10px; font-weight: 300; line-height: 1.6; text-align: left; text-transform: none; }
+@media (hover: hover) and (pointer: fine) {
+  .about-question summary:hover { color: #edf4f6; }
+}
 @media (min-width: 768px) and (max-width: 1100px) {
   .is-immersive .capability-cards__header { top: var(--space-5); }
   .capability-cards__scroll { display: none; }
@@ -184,6 +244,13 @@
   .capability-card__details summary:hover { color: var(--color-off-white); }
 }
 @media (max-width: 767px) {
+  .capability-cards--about .capability-cards__header { font-size: 9px; }
+  .capability-cards--about .capability-cards__header h2 { max-width: 15ch; word-break: keep-all; }
+  .capability-cards--about .capability-card__top { font-size: 8px; }
+  .capability-cards--about .capability-card__title { font-size: clamp(22px, 6.1vw, 32px); }
+  .about-question summary { padding-block: 10px; font-size: 11px; line-height: 1.6; }
+  .about-question__answer p { font-size: 12px; line-height: 1.85; }
+  .capability-cards--about .capability-card__description { margin-top: 12px; font-size: 8px; }
   .capability-cards__header h2 { max-width: 18ch; }
   .is-immersive .capability-cards__header { top: var(--space-5); gap: var(--space-3); }
   .is-immersive .capability-cards__header h2 { max-width: 12ch; }
@@ -202,5 +269,5 @@
   }
 }
 @media (prefers-reduced-motion: reduce) {
-  .capability-card, .capability-card__toggle { transition: none; }
+  .capability-card, .capability-card__toggle, .about-question__toggle { transition: none; }
 }

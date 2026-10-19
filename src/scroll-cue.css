@@ -1,0 +1,115 @@
+/* Small rising bubbles at rest; a concentrated plume on activation. */
+.hero__scroll-dock {
+  --scroll-cue-height: 6.125rem;
+  position: absolute;
+  z-index: var(--z-content);
+  top: min(
+    max(84svh, calc(var(--ocean-surface-end) - var(--space-12)), calc(var(--ocean-silhouette-bottom) + var(--scroll-orbit-clearance))),
+    calc(100svh + var(--ocean-message-inset) - var(--scroll-cue-height) - var(--space-6)),
+    calc(100svh - var(--scroll-cue-height) - max(.75rem, env(safe-area-inset-bottom)))
+  );
+  left: 50%;
+  width: max-content;
+  max-width: 100%;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+.hero__scroll-cue {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+  gap: .5rem;
+  width: clamp(10.5rem, 13vw, 12.5rem);
+  min-height: var(--scroll-cue-height);
+  margin: 0;
+  padding: .625rem .75rem;
+  border: 0;
+  background: transparent;
+  color: var(--insight-color-text);
+  font-family: var(--hero-font-family);
+  font-size: clamp(.75rem, .82vw, .875rem);
+  font-weight: 400;
+  font-synthesis: none;
+  line-height: 1.35;
+  letter-spacing: .2em;
+  text-align: center;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+}
+.hero__scroll-label { display: block; padding-left: .2em; color: #e0edf2; }
+.hero-dive-bubbles {
+  position: absolute;
+  z-index: 0;
+  top: 1.5rem;
+  left: 50%;
+  display: block;
+  width: min(22.5rem, 94vw);
+  height: 10.5rem;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity .5s ease;
+}
+.hero__scroll-dock:has(.is-diving) .hero-dive-bubbles { opacity: 0; }
+/* Retain the small SVG as a fallback and preserve the cue's original spacing. */
+.hero__scroll-dock:has(.hero-dive-bubbles) .hero__dive-mark { visibility: hidden; }
+.hero__scroll-dock:has(.hero-dive-bubbles) .hero__dive-mark .hero__dive-bubble { animation: none; }
+.hero__dive-mark { display: block; width: 4rem; height: 3rem; overflow: visible; }
+.hero__dive-bubble { opacity: .42; transform-box: fill-box; transform-origin: center; }
+.hero__bubble-body { fill: #b6d2dd; fill-opacity: .045; stroke: #a8c5d1; stroke-opacity: .7; stroke-width: .65; }
+.hero__bubble-reflection { fill: none; stroke: #d2e4e9; stroke-opacity: .7; stroke-width: .65; stroke-linecap: round; }
+.hero__dive-bubble--near { --bubble-drift: -2.5px; --bubble-duration: 6.8s; --bubble-delay: -1.8s; }
+.hero__dive-bubble--far { --bubble-drift: 2px; --bubble-duration: 5.7s; --bubble-delay: -3.4s; }
+.hero__dive-bubble--small { --bubble-drift: -1.5px; --bubble-duration: 7.6s; --bubble-delay: -.6s; }
+
+/* Air rises at independent speeds before the dive. */
+@keyframes hero-bubble-rise {
+  0% { opacity: 0; transform: translate(0, 7px) scale(.85, .95); }
+  18% { opacity: .55; transform: translate(calc(var(--bubble-drift) * -.25), 2px) scale(.96, 1.03); }
+  52% { opacity: .5; transform: translate(var(--bubble-drift), -7px) scale(1.04, .98); }
+  82% { opacity: .28; transform: translate(calc(var(--bubble-drift) * .5), -14px) scale(.97, 1.02); }
+  100% { opacity: 0; transform: translate(var(--bubble-drift), -18px) scale(.9, 1.05); }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero.is-ready .hero__dive-bubble {
+    animation: hero-bubble-rise var(--bubble-duration) linear var(--bubble-delay) infinite;
+  }
+}
+.hero__scroll-cue:focus-visible { outline: 1px solid #91adbe; outline-offset: 4px; border-radius: 3px; }
+@media (max-height: 540px) {
+  .hero__scroll-dock {
+    --scroll-cue-height: 3rem;
+    top: auto;
+    bottom: .75rem;
+  }
+  .hero__scroll-cue {
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: .75rem;
+    width: 12.5rem;
+    padding: .375rem .75rem;
+    font-size: .75rem;
+  }
+  .hero__dive-mark { width: 2.5rem; height: 1.875rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-dive-bubbles { transition: none; }
+  .hero__scroll-cue * { animation: none !important; transition: none !important; }
+  .hero__dive-bubble { transform: none !important; opacity: .42 !important; }
+}
+
+.hero__scroll-cue.is-diving { cursor: progress; }
+.hero-dive-foam {
+  position: fixed;
+  z-index: var(--z-transition, 500);
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}

@@ -1,0 +1,61 @@
+.project-screens__archive-label { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #8aafc92b; color: #91adc1; font: 400 9px/1.5 var(--insight-font-family); letter-spacing: .12em; }
+.project-screens__archive-label b { font-weight: 400; }
+.project-screens .project-research__panel { border-color: #aec9db48; border-radius: 3px; }
+.project-screens .project-research__paper { aspect-ratio: 16 / 9; }
+/* Folder documents keep their original pixels; component exports keep their native proportions. */
+.screens-document { display: block; width: 1920px; height: 1080px; padding: 0; background: #f7f6f4; }
+.screens-document > img { display: block; width: 1920px; height: 1080px; object-fit: contain; }
+.screens-components { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); grid-template-rows: auto auto minmax(0, 1fr); gap: 32px 40px; padding: 60px 72px; color: #353a33; }
+.screens-components__header { grid-column: 1 / -1; display: flex; align-items: baseline; justify-content: space-between; padding-bottom: 24px; border-bottom: 1px solid #d2d4cb; }
+.screens-components__header h3 { font: 400 48px/1.2 Georgia, serif; letter-spacing: -.03em; }
+.screens-components__header > p { color: #7a8275; font: 400 15px/1.5 var(--insight-font-family); letter-spacing: .15em; }
+.screens-components__item { min-width: 0; margin: 0; }
+.screens-components__item > figcaption { margin-bottom: 14px; color: #70796a; font: 400 16px/1.5 var(--insight-font-family); letter-spacing: .07em; }
+.screens-components__item--navigation { grid-column: 1 / -1; }
+.screens-components__navigation-samples { display: grid; gap: 16px; padding: 24px; background: #efeee8; }
+.screens-components__navigation-samples > img { display: block; width: 100%; height: auto; }
+.screens-components__item--category > img { display: block; width: auto; height: auto; max-width: 100%; max-height: 500px; }
+.screens-components__item--button { display: flex; flex-direction: column; }
+.screens-components__button-sample { display: grid; flex: 1; align-content: center; justify-content: center; gap: 56px; padding: 30px; background: #efeee8; }
+.screens-components__button-sample > div { display: flex; align-items: center; gap: 32px; }
+.screens-components__button-sample span { width: 100px; color: #737c6d; font: 400 15px/1.5 var(--insight-font-family); letter-spacing: .07em; }
+.screens-components__button-sample img { display: block; width: 286px; height: auto; }
+.screens-components__item--button > p { margin-top: 18px; color: #737c6d; font-size: 18px; line-height: 1.7; }
+.project-screens__keywords { display: flex; flex-wrap: wrap; gap: 10px 16px; margin: 21px 0 0; padding: 0; list-style: none; color: #90acbf; font: 400 8px/1.6 var(--insight-font-family); letter-spacing: .1em; }
+.project-screens__keywords > li { display: flex; align-items: center; gap: 7px; }
+.project-screens__keywords > li::before { content: ''; width: 3px; height: 3px; border-radius: 50%; background: #adbed0; }
+.project-screens__source > span { display: block; }
+.project-screens__source > a { display: inline-flex; align-items: center; min-height: 32px; color: #b1c7d8; text-underline-offset: 4px; }
+.project-screens__source > a:focus-visible { outline: var(--focus-ring); outline-offset: 3px; }
+.project-screens__image-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-bottom: 18px; }
+.project-screens__image-tools > div { display: flex; gap: 8px; }
+.project-screens__image-tools button { min-height: 44px; padding: 9px 16px; border: 1px solid #929f97; border-radius: 999px; color: #64746a; background: none; font: 400 12px/1.5 var(--font-family-body); cursor: pointer; }
+.project-screens__image-tools button[aria-pressed="true"] { color: #faf9f5; background: #5f7469; }
+.project-screens__image-tools a { display: inline-flex; align-items: center; min-height: 44px; color: #6e7b70; font-size: 12px; text-underline-offset: 4px; }
+.project-screens__image-tools button:focus-visible, .project-screens__image-tools a:focus-visible { outline: 2px solid #536e83; outline-offset: 3px; }
+.project-screens__image-tools > p { flex-basis: 100%; margin: 0; color: #788276; font-size: 11px; line-height: 1.7; }
+.project-screens__dialog [data-research-full] { position: relative; overflow: hidden; overscroll-behavior: contain; }
+.project-screens__dialog [data-research-full]:focus-visible { outline: 2px solid #536e83; outline-offset: -3px; }
+.project-screens__dialog .screens-document { position: absolute; left: var(--screens-dialog-left, 0px); width: 1920px; height: 1080px; min-height: 0; margin: 0; padding: 0; transform: scale(var(--screens-dialog-scale, .5)); transform-origin: left top; }
+.project-screens__dialog .screens-components { padding: 60px 72px; }
+.project-screens__dialog[data-image-zoom="original"] [data-research-full] { overflow: auto; }
+.project-screens__dialog[data-image-zoom="original"] .screens-document { position: relative; }
+@media (max-width: 767px) {
+  .project-screens__archive-label { margin-bottom: 12px; padding-bottom: 12px; font-size: 8px; }
+  .project-screens__keywords { gap: 8px 12px; margin-top: 18px; }
+  .project-screens__source > a { min-height: 44px; }
+  .project-screens__image-tools { gap: 6px; margin-bottom: 14px; }
+  .project-screens__image-tools button { padding-inline: 13px; font-size: 11px; }
+  .project-screens__image-tools a { font-size: 11px; }
+  .project-screens__image-tools > p { font-size: 10px; }
+  /* Seven process pages fit the narrowest phones with 44px-high controls. */
+  .project-process .project-process__navigation > button,
+  .project-process .project-process__navigation > button[aria-current="page"] { width: clamp(36px, calc((100vw - var(--container-gutter) * 2 - 12px) / 7), 44px); min-width: 36px; padding: 0; }
+  .project-process .project-process__navigation > button > em,
+  .project-process .project-process__navigation > button[aria-current="page"] > em { display: none; }
+}
+@media (min-width: 768px) and (max-width: 1099px) {
+  .project-process .project-process__navigation { gap: 4px; }
+  .project-process .project-process__navigation > button { min-width: 44px; padding-inline: 7px; font-size: 9px; }
+  .project-process .project-process__navigation > span { width: 10px; }
+}

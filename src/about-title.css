@@ -1,0 +1,82 @@
+.about-title {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  color: #d9e8ef;
+  background: var(--insight-color-bg);
+  scroll-margin-top: 24px;
+}
+.about-title__stage {
+  --about-ink: #d9e8ef;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  min-height: 60svh;
+  padding: 100px var(--container-gutter);
+  overflow: clip;
+  background: var(--insight-color-bg);
+}
+.about-title__stage::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: auto 0 0;
+  height: 16svh;
+  background: linear-gradient(transparent, var(--insight-color-bg));
+  pointer-events: none;
+}
+.about-title__tide {
+  position: absolute;
+  z-index: -2;
+  inset: 0;
+  background: radial-gradient(ellipse at 65% 0, #17405b75, transparent 70%), #071b30;
+  clip-path: inset(0 0 0 100%);
+  pointer-events: none;
+}
+.about-title__tide::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url('/images/diptyque-seabed-hero-style.png') center 46% / cover no-repeat;
+  opacity: .1;
+  -webkit-mask-image: linear-gradient(transparent, #000 30% 65%, transparent);
+  mask-image: linear-gradient(transparent, #000 30% 65%, transparent);
+}
+.about-title__eyebrow {
+  position: absolute;
+  inset: clamp(28px, 5svh, 56px) var(--container-gutter) auto;
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 0;
+  color: #91aabd;
+  font: 400 10px/1.5 var(--insight-font-family);
+  letter-spacing: .15em;
+}
+.about-title__heading {
+  position: relative;
+  width: 100%;
+  margin: 0;
+  color: var(--about-ink);
+  font-size: clamp(80px, 18vw, 230px);
+  font-weight: 400;
+  line-height: 1;
+}
+.about-title__track { position: relative; display: block; width: max-content; max-width: 100%; margin-inline: auto; text-align: center; }
+.about-title__first { position: relative; display: block; font: 400 1em/1 'Hero Roboto', 'Helvetica Neue', Arial, sans-serif; letter-spacing: -.065em; }
+.about-title__final { position: relative; display: block; margin-top: .06em; font: italic 400 .56em/1.12 'Tools Instrument', Georgia, serif; letter-spacing: -.025em; white-space: nowrap; }
+.about-title__char { display: inline-block; white-space: pre; }
+.about-title__cue { position: absolute; bottom: clamp(28px, 5svh, 56px); left: var(--container-gutter); margin: 0; color: #94b3c9; font: 400 8px/1.5 var(--insight-font-family); letter-spacing: .17em; }
+.about-title.is-voyage .about-title__voyage { height: 280svh; }
+.about-title.is-voyage .about-title__stage { position: sticky; top: 0; height: 100svh; min-height: 0; padding-block: 0; }
+.about-title.is-voyage .about-title__heading { font-size: min(20.833vw, 48svh); white-space: nowrap; }
+.about-title.is-voyage .about-title__track { display: flex; align-items: baseline; gap: .18em; max-width: none; margin: 0; text-align: left; will-change: transform; }
+.about-title.is-voyage .about-title__first, .about-title.is-voyage .about-title__final { flex-shrink: 0; }
+.about-title.is-voyage .about-title__final { margin-top: 0; font-size: 1em; }
+@media (max-width: 767px) {
+  .about-title__stage { min-height: 52svh; padding-block: 90px; }
+  .about-title__heading { font-size: clamp(76px, 20vw, 116px); }
+  .about-title__eyebrow { font-size: 7px; letter-spacing: .1em; }
+  .about-title__cue { font-size: 7px; letter-spacing: .12em; }
+}

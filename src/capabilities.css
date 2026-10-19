@@ -1,23 +1,41 @@
-/* Naya reference: oversized display, 11.25vw / 17.18vw information columns.
-   Keep these editorial proportions local; existing section tokens stay intact. */
+@font-face {
+  font-family: 'Capabilities Helvetica';
+  src: url('/fonts/clients-helvetica-thin.woff2') format('woff2');
+  font-weight: 100;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Capabilities Carl';
+  src: url('/fonts/clients-carl-brown.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Keep the reference display typography local. Korean supporting copy uses
+   a wider measure so its phrases can breathe beside the artwork. */
 .capabilities {
-  --capabilities-title-size: clamp(5.5rem, 9.8vw, 14rem);
+  --capabilities-title-size: 7.3vw;
+  --capabilities-background-entry: clamp(180px, 22svh, 280px);
+  --capabilities-art-top: clamp(6rem, 12svh, 10rem);
+  --capabilities-art-bleed: clamp(24px, 3vw, 64px);
+  --capabilities-art-width: calc(min(48vw, 66rem, 81svh) + var(--container-gutter) + var(--capabilities-art-bleed));
   --capabilities-label-width: clamp(9rem, 11.25vw, 16rem);
-  --capabilities-copy-width: clamp(15rem, 17.18vw, 24rem);
+  --capabilities-copy-width: clamp(21rem, 30vw, 28rem);
   position: relative;
   isolation: isolate;
   overflow: hidden;
   display: grid;
   grid-template-rows: auto 1fr;
   row-gap: clamp(var(--space-12), 8svh, var(--space-24));
-  min-height: 110svh;
+  min-height: max(110svh, calc(var(--capabilities-art-top) + var(--capabilities-art-width) * 1448 / 1086 + var(--space-16)));
   padding: clamp(var(--space-16), 12svh, 10rem) var(--container-gutter) clamp(var(--space-12), 6svh, var(--space-24));
   background: var(--introduction-color-bg);
   color: var(--insight-color-text);
   font-family: var(--insight-font-family);
 }
-.capabilities::before,
-.capabilities::after {
+.capabilities::before {
   content: "";
   position: absolute;
   inset: 0;
@@ -25,53 +43,114 @@
   pointer-events: none;
 }
 .capabilities::before {
-  -webkit-mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%);
-  mask-image: linear-gradient(#000 0%, #000 65%, transparent 100%);
-  background:
-    radial-gradient(ellipse at 80% 75%, color-mix(in srgb, var(--color-blue) 22%, transparent), transparent 55%),
-    radial-gradient(ellipse at 18% 100%, var(--insight-color-navy), transparent 70%);
-}
-.capabilities::after {
-  opacity: .12;
-  background-image:
-    radial-gradient(circle, var(--color-soft-blue-gray) .7px, transparent 1px),
-    radial-gradient(circle, var(--color-soft-blue-gray) .5px, transparent 1px);
-  background-size: 137px 179px, 223px 251px;
-  background-position: 19px 31px, 61px 107px;
-  mask-image: linear-gradient(transparent, #000 40%, #000 85%, transparent);
+  /* Ease the navy into the illustration without a visible horizontal band. */
+  --background-mask: linear-gradient(180deg,
+    transparent,
+    rgba(0, 0, 0, .104) calc(var(--capabilities-background-entry) * .2),
+    rgba(0, 0, 0, .352) calc(var(--capabilities-background-entry) * .4),
+    rgba(0, 0, 0, .648) calc(var(--capabilities-background-entry) * .6),
+    rgba(0, 0, 0, .896) calc(var(--capabilities-background-entry) * .8),
+    #000 var(--capabilities-background-entry),
+    #000 calc(100% - 48px),
+    transparent);
+  background: url('/images/underwater-seabed-hero.png') center bottom / 100% 100% no-repeat;
+  -webkit-mask-image: var(--background-mask);
+  mask-image: var(--background-mask);
 }
 .capabilities__title {
+  display: flex;
+  flex-direction: column;
   position: relative;
   z-index: var(--z-content);
-  width: max-content;
+  width: 52.65vw;
   max-width: 100%;
   margin: 0;
+  color: #fff;
+  font-family: 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
   font-size: var(--capabilities-title-size);
   font-weight: 100;
-  line-height: .86;
-  letter-spacing: var(--letter-spacing-section);
+  line-height: .8;
+  letter-spacing: normal;
   text-transform: uppercase;
 }
-.capabilities__line { display: block; white-space: nowrap; }
-.capabilities__line + .capabilities__line { margin-top: .025em; }
-.capabilities__line:nth-child(2) { margin-left: 0; }
+.capabilities__line {
+  display: block;
+  position: relative;
+  margin-bottom: -.9vw;
+  padding-top: .9vw;
+  white-space: nowrap;
+}
+.capabilities__line:nth-child(2) {
+  margin-bottom: -1vw;
+  text-align: right;
+}
+.capabilities__accent {
+  font-family: 'Capabilities Carl', Arial, sans-serif;
+}
 .capabilities__artwork {
   position: absolute;
   z-index: var(--z-base);
-  width: min(54vw, 84rem);
-  right: -2vw;
-  bottom: calc(-1 * min(16vw, 20rem));
+  /* Keep the original layout slot so the text and following scroll scene stay put. */
+  width: var(--capabilities-art-width);
+  aspect-ratio: 1086 / 1448;
+  top: var(--capabilities-art-top);
+  right: calc(-1 * var(--capabilities-art-bleed));
   margin: 0;
   pointer-events: none;
 }
-.capabilities__arch {
+.capabilities__artwork::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  left: 13%;
+  bottom: 8%;
+  width: 74%;
+  height: 3%;
+  border-radius: 50%;
+  background: rgba(0, 5, 19, .65);
+  filter: blur(6px);
+}
+.capabilities__mirror {
+  position: absolute;
+  /* The wider transparent asset includes the reefs beside the oval. */
+  inset: 4% 9.111111%;
+}
+.capabilities__mirror-defs { position: absolute; overflow: hidden; }
+.capabilities__mirror-frame {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
   display: block;
   width: 100%;
-  height: auto;
-  transform: translateY(var(--arch-offset, 0px));
-  /* Absorb the cropped base into the same deep navy as the following panels. */
-  -webkit-mask-image: linear-gradient(#000 0%, #000 50%, transparent 70%);
-  mask-image: linear-gradient(#000 0%, #000 50%, transparent 70%);
+  height: 100%;
+  object-fit: contain;
+  filter: brightness(.79) saturate(.9);
+  user-select: none;
+}
+.capabilities__mirror-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  clip-path: url(#mermaid-mirror-opening);
+  /* The real scene shows through; no duplicated landscape or portrait is painted. */
+  background: rgba(1, 10, 33, .16);
+}
+.capabilities__mirror-content {
+  position: absolute;
+  inset: 11.6% 18.8% 20% 18.8%;
+}
+.capabilities__mirror-content > :is(img, video) {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.capabilities__mirror-reflections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
 }
 .capabilities__details {
   position: relative;
@@ -80,7 +159,7 @@
   grid-template-columns: var(--capabilities-label-width) var(--capabilities-copy-width);
   column-gap: var(--space-1);
   row-gap: clamp(var(--space-12), 5vw, var(--space-24));
-  align-items: start;
+  align-items: first baseline;
   align-self: end;
   margin-top: 0;
   font-size: var(--font-size-ui);
@@ -104,8 +183,23 @@
   background: var(--color-off-white);
 }
 .capabilities__copy { max-width: 100%; }
+.capabilities__copy:lang(ko) {
+  font-family: 'Intro Pretendard', var(--font-family-body);
+  font-size: clamp(1rem, 1.25vw, 1.125rem);
+  font-weight: 300;
+  line-height: 1.8;
+  letter-spacing: -.02em;
+  text-transform: none;
+  color: #e7ecf3;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
 .capabilities__copy p { margin: 0; }
-.capabilities__copy p + p { margin-top: var(--space-4); }
+.capabilities__copy p + p {
+  margin-top: var(--space-6);
+  color: #adbbce;
+}
+.capabilities__copy:lang(ko) p > span { display: block; }
 .capabilities__action { grid-column: 2; }
 .capabilities__button {
   display: inline-flex;
@@ -160,53 +254,67 @@
 .capabilities__artwork[hidden] { display: none; }
 @media (min-width: 768px) and (max-width: 991px) {
   .capabilities {
-    --capabilities-title-size: clamp(5rem, 12vw, 7.5rem);
+    --capabilities-title-size: 10.66vw;
     --capabilities-label-width: 9rem;
-    --capabilities-copy-width: 15rem;
     min-height: 100svh;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--space-8);
   }
-  .capabilities__artwork { width: 58vw; right: -8vw; bottom: -4rem; }
-  .capabilities__details { grid-template-columns: 15rem; row-gap: var(--space-6); }
+  .capabilities__artwork {
+    position: relative;
+    grid-column: 2;
+    grid-row: 2;
+    align-self: end;
+    width: min(100%, 28rem);
+    top: auto;
+    right: auto;
+    margin-left: auto;
+  }
+  .capabilities__title { width: 73.2vw; grid-column: 1 / -1; }
+  .capabilities__details {
+    grid-column: 1;
+    grid-row: 2;
+    grid-template-columns: minmax(0, 1fr);
+    row-gap: var(--space-6);
+  }
   .capabilities__action { grid-column: 1; margin-top: var(--space-4); }
 }
 @media (max-width: 767px) {
   .capabilities {
-    --capabilities-title-size: clamp(2rem, 15.7vw, 7rem);
+    --capabilities-title-size: 10.66vw;
     min-height: 0;
     padding-top: var(--space-12);
-    padding-bottom: 0;
+    padding-bottom: var(--space-8);
     row-gap: var(--space-12);
     grid-template-rows: auto auto auto;
+  }
+  .capabilities::before {
+    background-position: right bottom;
+    background-size: auto 100%;
   }
   .capabilities__artwork {
     grid-row: 3;
     position: relative;
-    width: min(90%, 28rem);
+    width: min(100%, 28rem);
+    top: auto;
     right: auto;
     bottom: auto;
-    margin: 0 0 -12% auto;
+    margin: 0 auto;
   }
+  .capabilities__title { width: 76.85vw; }
   .capabilities__details {
     grid-row: 2;
     grid-template-columns: minmax(0, 1fr);
     gap: var(--space-6);
     max-width: 24rem;
   }
-  .capabilities__copy { max-width: 21rem; }
   .capabilities__action { grid-column: 1; margin-top: var(--space-4); }
 }
 @media (prefers-reduced-motion: reduce) {
   .capabilities [data-capabilities-reveal],
-  .capabilities__arch {
+  .capabilities__mirror-frame {
     opacity: 1 !important;
     transform: none !important;
     transition: none !important;
-  }
-}
-
-@media (max-width: 991px) {
-  .capabilities__arch {
-    -webkit-mask-image: linear-gradient(#000 0%, #000 62%, transparent 84%);
-    mask-image: linear-gradient(#000 0%, #000 62%, transparent 84%);
   }
 }

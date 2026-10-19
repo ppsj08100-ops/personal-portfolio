@@ -1,0 +1,107 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1536 1024" fill="none">
+  <defs>
+    <!-- The cloth is independent of the rigging; the host controls its unrolling. -->
+    <path id="sail-cloth-outline" d="M503 231 Q690 236 878 213 C854 370 868 552 883 728 Q670 714 417 702 C465 543 500 390 503 231 Z"/>
+    <clipPath id="sail-cloth-clip"><use href="#sail-cloth-outline"/></clipPath>
+    <linearGradient id="sail-cloth-body" x1="435" y1="458" x2="883" y2="435" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#254d79"/>
+      <stop offset=".14" stop-color="#6d9fc0"/>
+      <stop offset=".35" stop-color="#b1cddb"/>
+      <stop offset=".52" stop-color="#c8dce6"/>
+      <stop offset=".7" stop-color="#9fbfd3"/>
+      <stop offset=".88" stop-color="#527ea4"/>
+      <stop offset="1" stop-color="#254b76"/>
+    </linearGradient>
+    <linearGradient id="sail-cloth-depth" x1="650" y1="215" x2="650" y2="727" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#10284b" stop-opacity=".25"/>
+      <stop offset=".26" stop-color="#d2e6f0" stop-opacity=".015"/>
+      <stop offset=".67" stop-color="#a4c2da" stop-opacity=".03"/>
+      <stop offset="1" stop-color="#16345a" stop-opacity=".3"/>
+    </linearGradient>
+    <linearGradient id="sail-fold-light" x1="660" y1="225" x2="660" y2="730" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#e3eff5" stop-opacity=".6"/>
+      <stop offset=".25" stop-color="#eef6fa" stop-opacity=".9"/>
+      <stop offset=".68" stop-color="#d6eaf4" stop-opacity=".8"/>
+      <stop offset="1" stop-color="#a7c9df" stop-opacity=".6"/>
+    </linearGradient>
+    <linearGradient id="sail-cloth-rim" x1="475" y1="230" x2="847" y2="728" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#c5e2f0"/>
+      <stop offset=".45" stop-color="#e3eff5"/>
+      <stop offset="1" stop-color="#9abbd3"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#sail-cloth-clip)">
+    <use href="#sail-cloth-outline" fill="url(#sail-cloth-body)"/>
+    <use href="#sail-cloth-outline" fill="url(#sail-cloth-depth)"/>
+    <!-- Closely spaced vertical folds follow the sail's belly without ripples. -->
+    <path d="M507.92 231.13 C508.28 388.13 435.68 535.32 423.65 702.32" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M510.32 232.13 C512.08 388.13 439.48 535.32 426.05 702.32" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M517.76 231.35 C518.77 388.35 450.04 535.95 436.91 702.95" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M527.61 231.54 C529.25 388.54 464.33 536.59 450.12 703.59" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M530.01 232.54 C533.05 388.54 468.13 536.59 452.52 703.59" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M537.46 231.68 C539.73 388.68 478.55 537.23 463.27 704.23" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M547.3 231.79 C550.19 388.79 492.69 537.87 476.36 704.87" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M549.7 232.79 C553.99 388.79 496.49 537.87 478.76 704.87" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M557.15 231.86 C560.63 388.86 506.74 538.52 489.4 705.52" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M567 231.89 C571.05 388.89 520.69 539.16 502.38 706.16" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M569.4 232.89 C574.85 388.89 524.49 539.16 504.78 706.16" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M576.85 231.88 C581.44 388.88 534.54 539.81 515.31 706.81" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M586.71 231.84 C591.8 388.84 548.28 540.47 528.18 707.47" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M589.11 232.84 C595.6 388.84 552.08 540.47 530.58 707.47" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M596.56 231.75 C602.13 388.75 561.91 541.13 541 708.13" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M606.42 231.63 C612.43 388.63 575.42 541.78 553.76 708.78" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M608.82 232.63 C616.23 388.63 579.22 541.78 556.16 708.78" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M616.28 231.46 C622.68 388.46 588.8 542.45 566.47 709.45" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M626.13 231.26 C632.89 388.26 602.06 543.11 579.12 710.11" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M628.53 232.26 C636.69 388.26 605.86 543.11 581.52 710.11" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M635.99 231.02 C643.06 388.02 615.18 543.78 591.71 710.78" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M645.86 230.74 C653.18 387.74 628.16 544.45 604.25 711.45" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M648.26 231.74 C656.98 387.74 631.96 544.45 606.65 711.45" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M655.72 230.42 C663.25 387.42 641.01 545.12 616.74 712.12" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M665.58 230.06 C673.28 387.06 653.71 545.8 629.17 712.8" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M667.98 231.06 C677.08 387.06 657.51 545.8 631.57 712.8" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M675.45 229.67 C683.25 386.67 666.26 546.48 641.54 713.48" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M685.32 229.23 C693.17 386.23 678.67 547.16 653.86 714.16" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M687.72 230.23 C696.97 386.23 682.47 547.16 656.26 714.16" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M695.18 228.76 C703.04 385.76 690.93 547.84 666.12 714.84" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M705.05 228.25 C712.85 385.25 703.05 548.53 678.33 715.53" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M707.45 229.25 C716.65 385.25 706.85 548.53 680.73 715.53" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M714.93 227.69 C722.62 384.69 715.02 549.22 690.48 716.22" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M724.8 227.1 C732.33 384.1 726.85 549.91 702.58 716.91" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M727.2 228.1 C736.13 384.1 730.65 549.91 704.98 716.91" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M734.67 226.48 C742 383.48 738.53 550.61 714.62 717.61" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M744.55 225.81 C751.61 382.81 750.07 551.31 726.61 718.31" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M746.95 226.81 C755.41 382.81 753.87 551.31 729.01 718.31" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M754.42 225.1 C761.18 382.1 761.48 552.01 738.54 719.01" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M764.3 224.36 C770.71 381.36 772.75 552.71 750.42 719.71" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M766.7 225.36 C774.51 381.36 776.55 552.71 752.82 719.71" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M774.18 223.57 C780.19 380.57 783.89 553.42 762.24 720.42" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M784.06 222.75 C789.63 379.75 794.91 554.13 774 721.13" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M786.46 223.75 C793.43 379.75 798.71 554.13 776.4 721.13" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M793.94 221.89 C799.04 378.89 805.81 554.84 785.71 721.84" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M803.83 220.99 C808.41 377.99 816.59 555.55 797.36 722.55" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M806.23 221.99 C812.21 377.99 820.39 555.55 799.76 722.55" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M813.71 220.05 C817.76 377.05 827.27 556.27 808.96 723.27" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M823.6 219.07 C827.07 376.07 837.84 556.99 820.5 723.99" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M826 220.07 C830.87 376.07 841.64 556.99 822.9 723.99" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M833.49 218.05 C836.37 375.05 848.32 557.71 831.99 724.71" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.23"/>
+    <path d="M843.38 217 C845.65 374 858.71 558.44 843.42 725.44" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M845.78 218 C849.45 374 862.51 558.44 845.82 725.44" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M853.27 215.91 C854.91 372.91 869.02 559.17 854.8 726.17" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <path d="M863.16 214.77 C864.17 371.77 879.25 559.9 866.12 726.9" stroke="url(#sail-fold-light)" stroke-width="1.05" opacity="0.33"/>
+    <path d="M865.56 215.77 C867.97 371.77 883.05 559.9 868.52 726.9" stroke="#17395f" stroke-width="1.25" opacity=".12"/>
+    <path d="M873.05 213.6 C873.42 370.6 889.42 560.63 877.39 727.63" stroke="url(#sail-fold-light)" stroke-width="0.65" opacity="0.15"/>
+    <!-- Fine sewn panels share the same gentle curvature as the cloth. -->
+    <path d="M498.38 316.35 C610.38 325.35 759.52 308.03 868.52 300.03" stroke="#d7e8f1" stroke-width=".7" opacity=".14"/>
+    <path d="M488.2 400.95 C600.2 409.95 756.13 398.83 865.13 390.83" stroke="#d7e8f1" stroke-width=".7" opacity=".14"/>
+    <path d="M473.14 485.22 C585.14 494.22 757.54 492.33 866.54 484.33" stroke="#d7e8f1" stroke-width=".7" opacity=".2"/>
+    <path d="M453.85 569.59 C565.85 578.59 762.45 587.43 871.45 579.43" stroke="#d7e8f1" stroke-width=".7" opacity=".14"/>
+    <path d="M430.99 654.47 C542.99 663.47 769.57 683.05 878.57 675.05" stroke="#d7e8f1" stroke-width=".7" opacity=".14"/>
+    <path d="M513 235 C516 396 476 553 433 699" stroke="#d3e8f2" stroke-width="1.15" opacity=".46"/>
+    <path d="M866 220 C845 384 859 551 871 724" stroke="#bcd8e9" stroke-width="1.15" opacity=".47"/>
+    <path d="M498 246 Q682 250 874 228" stroke="#eef5f8" stroke-width=".9" opacity=".27"/>
+    <path d="M422 690 Q667 705 880 716" stroke="#cce1ed" stroke-width=".9" opacity=".36"/>
+  </g>
+  <use href="#sail-cloth-outline" stroke="url(#sail-cloth-rim)" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" opacity=".87"/>
+</svg>
+

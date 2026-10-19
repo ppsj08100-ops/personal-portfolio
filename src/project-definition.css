@@ -1,0 +1,40 @@
+.project-definition__users { display: flex; flex-wrap: wrap; gap: 4px 12px; margin-bottom: 18px; }
+.project-definition__users > button { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; padding: 8px 2px; border: 0; border-bottom: 1px solid transparent; color: #88a3b7; background: none; font: 400 11px/1.5 var(--font-family-body); cursor: pointer; transition: color .2s, border-color .2s; }
+.project-definition__users > button > span { color: #68899f; font: 400 9px/1.5 var(--insight-font-family); }
+.project-definition__users > button[aria-pressed="true"] { border-bottom-color: #b8d1e3; color: #e1edf5; }
+.project-definition__users > button[aria-pressed="true"] > span { color: #bed6e6; }
+.project-definition__users > button:hover { color: #e1edf5; }
+.project-definition__users > button:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
+.project-definition .project-definition__paper--persona { aspect-ratio: 8 / 5; }
+.project-definition .project-definition__paper--journey { aspect-ratio: 16 / 9; }
+.project-definition .project-definition__paper--canvas { aspect-ratio: 4 / 3; }
+/* Original exports stay intact; only their container is scaled for the preview. */
+.definition-document { display: block; width: var(--definition-document-width); height: var(--definition-document-height); padding: 0; background: #fff; }
+.definition-document > img { display: block; width: 100%; height: auto; object-fit: contain; }
+.definition-document > img[hidden] { display: none; }
+.project-definition__source > a { color: #b1c7d8; text-underline-offset: 4px; }
+.project-definition__source > a:focus-visible { outline: var(--focus-ring); outline-offset: 4px; }
+.project-definition__source > span:not([hidden]) { display: block; margin-top: 6px; }
+.project-definition__dialog .definition-document { width: 100%; height: auto; min-height: 0; max-height: max(150px, calc(100svh - 280px)); padding: 0; overflow: auto; overscroll-behavior: contain; }
+.project-definition__dialog .definition-document:focus-visible { outline: 2px solid #536e83; outline-offset: -3px; }
+.project-definition__dialog .definition-document > img { width: auto; max-width: 100%; max-height: max(150px, calc(100svh - 280px)); margin-inline: auto; }
+.project-definition__dialog[data-image-zoom="original"] .definition-document > img { width: var(--definition-document-width); max-width: none; max-height: none; }
+.project-definition__image-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-bottom: 18px; }
+.project-definition__image-tools > div { display: flex; gap: 8px; }
+.project-definition__image-tools button { min-height: 44px; padding: 9px 16px; border: 1px solid #929f97; border-radius: 999px; color: #64746a; background: none; font: 400 12px/1.5 var(--font-family-body); cursor: pointer; }
+.project-definition__image-tools button[aria-pressed="true"] { color: #faf9f5; background: #5f7469; }
+.project-definition__image-tools button:focus-visible, .project-definition__image-tools a:focus-visible { outline: 2px solid #536e83; outline-offset: 3px; }
+.project-definition__image-tools a { display: inline-flex; align-items: center; min-height: 44px; color: #6e7b70; font-size: 12px; text-underline-offset: 4px; }
+.project-definition__image-tools > p { flex-basis: 100%; margin: 0; color: #788276; font-size: 11px; line-height: 1.7; }
+@media (max-width: 767px) {
+  .project-process .project-process__navigation { max-width: calc(100% - var(--container-gutter) * 2); gap: 2px; }
+  .project-process .project-process__navigation > button { min-width: 44px; width: auto; padding-inline: 6px; font-size: 8px; letter-spacing: .04em; }
+  .project-definition__users { gap: 2px 12px; margin-bottom: 12px; }
+  .project-definition__users > button { gap: 5px; font-size: 10px; }
+  .project-definition__users > button > span { font-size: 8px; }
+  .project-definition__image-tools { gap: 6px; margin-bottom: 14px; }
+  .project-definition__image-tools button { padding-inline: 13px; font-size: 11px; }
+  .project-definition__image-tools a { font-size: 11px; }
+  .project-definition__image-tools > p { font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) { .project-definition__users > button { transition: none; } }

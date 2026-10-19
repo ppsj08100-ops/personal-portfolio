@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <path d="M8 22h11M5 30h11M8 38h8" stroke="#c1d9e5" stroke-width="2" stroke-linecap="round" opacity=".55"/>
+  <text x="34" y="40" fill="#c1d9e5" font-family="Arial,Helvetica,sans-serif" font-size="19" font-style="italic" font-weight="900" text-anchor="middle" letter-spacing="-1.4">GSAP</text>
+  <path d="m48 15 8 5-8 5" stroke="#c1d9e5" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

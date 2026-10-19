@@ -8,7 +8,7 @@ gsap.registerPlugin(ScrollTrigger)
 const panelWidth = 2.31
 const panelHeight = panelWidth * 1.22
 const labelHeight = panelWidth * .17
-const angleStep = Math.PI * 2 / 8
+const referenceRadius = panelWidth * 8 / (Math.PI * 2)
 
 function curvedPlane(width, height, depth, columns = 15, rows = 15) {
   const geometry = new THREE.PlaneGeometry(width, height, columns, rows)
@@ -66,7 +66,10 @@ export function initPortfolioGallery(section) {
     name: item.querySelector('figcaption span:first-child').textContent,
     year: item.querySelector('figcaption span:last-child').textContent,
     image: item.dataset.image,
+    focusX: Number(item.dataset.focusX ?? .5),
+    focusY: Number(item.dataset.focusY ?? .5),
   }))
+  const angleStep = Math.PI * 2 / projects.length
   const previous = gallery.querySelector('[data-gallery-previous]')
   const next = gallery.querySelector('[data-gallery-next]')
   const pauseButton = gallery.querySelector('[data-gallery-pause]')
@@ -79,12 +82,11 @@ export function initPortfolioGallery(section) {
   let togglePause = () => {}
   let disposed = false
 
-  // Keep the measured line widths while using the existing licensed thin font.
+  // Keep the display font's proportions; only shrink a line if it cannot fit.
   function fitHeading() {
-    const compact = innerWidth <= 991
-    const ratios = compact ? [.5855, .7496] : [.40095, .5133]
-    lines.forEach((line, i) => {
-      line.style.transform = `scaleX(${innerWidth * ratios[i] / parseFloat(getComputedStyle(line).width)})`
+    lines.forEach(line => {
+      const scale = Math.min(1, heading.clientWidth / line.offsetWidth)
+      line.style.transform = scale < 1 ? `scaleX(${scale})` : ''
     })
   }
   const resize = new ResizeObserver(fitHeading)
@@ -93,7 +95,9 @@ export function initPortfolioGallery(section) {
   fitHeading()
 
   projects.forEach((project, i) => {
-    if (project.image) items[i].querySelector('.portfolio__placeholder').style.backgroundImage = `url(${JSON.stringify(project.image)})`
+    const placeholder = items[i].querySelector('.portfolio__placeholder')
+    placeholder.style.setProperty('--photo-focus', `${project.focusX * 100}% ${project.focusY * 100}%`)
+    if (project.image && !placeholder.querySelector('img')) placeholder.style.backgroundImage = `url(${JSON.stringify(project.image)})`
   })
 
   media.add('(prefers-reduced-motion: no-preference)', () => {
@@ -125,9 +129,10 @@ export function initPortfolioGallery(section) {
     const scene = new THREE.Scene()
     const camera = new THREE.PerspectiveCamera(37, 1000 / 600, .1, 1000)
     const group = new THREE.Group()
-    group.position.z = -3
     scene.add(group)
     const radius = panelWidth * projects.length / (Math.PI * 2)
+    // Keep the visible back of the ring at the approved distance as photos grow.
+    group.position.z = radius - referenceRadius - 3
     const mask = roundedMask()
     const textures = [mask]
     const color = getComputedStyle(section).color
@@ -153,10 +158,32 @@ export function initPortfolioGallery(section) {
       if (project.image) loader.load(project.image, texture => {
         if (!alive) { texture.dispose(); return }
         texture.colorSpace = THREE.SRGBColorSpace
+        const image = texture.image
+        const scale = Math.min(1, 1536 / Math.max(image.width, image.height))
+        if (scale < 1) {
+          const canvas = document.createElement('canvas')
+          canvas.width = Math.round(image.width * scale)
+          canvas.height = Math.round(image.height * scale)
+          const context = canvas.getContext('2d')
+          context.drawImage(image, 0, 0, canvas.width, canvas.height)
+          texture.image = canvas
+        }
+        // Fit real project captures to the existing portrait panels by cropping,
+        // keeping their pixels in proportion just like the HTML cover fallback.
+        const imageAspect = texture.image.width / texture.image.height
+        const panelAspect = panelWidth / panelHeight
+        if (imageAspect > panelAspect) {
+          texture.repeat.x = panelAspect / imageAspect
+          texture.offset.x = (1 - texture.repeat.x) * project.focusX
+        } else {
+          texture.repeat.y = imageAspect / panelAspect
+          texture.offset.y = (1 - texture.repeat.y) * (1 - project.focusY)
+        }
         textures.push(texture)
         material.map = texture
         material.color.set('#fff')
         material.needsUpdate = true
+        texture.needsUpdate = true
       }, undefined, () => {})
     })
     document.fonts.ready.then(() => {
@@ -169,7 +196,8 @@ export function initPortfolioGallery(section) {
     document.body.append(cursor)
     const events = new AbortController()
     let dragging = false, previousX = 0, dragVelocity = 0
-    let targetRotation = 0, speed = .001, wave = 0, waveTime = 0
+    let targetRotation = Math.PI, speed = .001, wave = 0, waveTime = 0
+    group.rotation.y = targetRotation
     let paused = false, visible = false, frame, lastTime = 0
     let pointerX = 0, pointerY = 0, cursorX = 0, cursorY = 0
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)')
@@ -197,7 +225,7 @@ export function initPortfolioGallery(section) {
           for (let i = 0; i < position.count; i++) {
             const x = rest[i * 3], y = rest[i * 3 + 1]
             point.set(x, y, 0).applyMatrix4(mesh.matrixWorld)
-            const falloff = Math.max(0, 1 - ((point.x + radius) / 5) ** 2)
+            const falloff = Math.max(0, 1 - ((point.x + referenceRadius) / 5) ** 2)
             const displacement = wave * 2 * (Math.sin(point.x * 2 + waveTime) + Math.sin(point.x * 1.3 + point.y * .8 + waveTime * 1.2)) * falloff
             position.setY(i, y + displacement)
           }
@@ -211,7 +239,7 @@ export function initPortfolioGallery(section) {
       lastTime = time
       if (!visible || document.hidden) return
       if (!dragging) {
-        if (!paused) targetRotation += speed * delta
+        if (!paused) targetRotation -= speed * delta
         dragVelocity *= Math.pow(.95, delta)
       }
       group.rotation.y += (targetRotation - group.rotation.y) * (1 - Math.pow(.9, delta))
@@ -234,7 +262,7 @@ export function initPortfolioGallery(section) {
       const distance = event.clientX - previousX
       previousX = event.clientX
       dragVelocity = distance * .01
-      targetRotation -= distance * .002
+      targetRotation += distance * .002
     }
     function release(event) {
       if (dragging && event?.pointerId != null && gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId)
@@ -259,18 +287,18 @@ export function initPortfolioGallery(section) {
       if (!gallery.hasPointerCapture(event.pointerId)) release(event)
     }, { signal: events.signal })
     step = direction => {
-      targetRotation += direction * angleStep
+      targetRotation -= direction * angleStep
       dragVelocity = 0
       paused = true
       pauseButton.setAttribute('aria-pressed', 'true')
-      pauseButton.setAttribute('aria-label', 'Resume automatic gallery movement')
+      pauseButton.setAttribute('aria-label', '사진 자동 넘김 재생')
       const index = ((Math.round((Math.PI - targetRotation) / angleStep) % projects.length) + projects.length) % projects.length
       status.textContent = `${projects[index].name}, ${projects[index].year}`
     }
     togglePause = () => {
       paused = !paused
       pauseButton.setAttribute('aria-pressed', String(paused))
-      pauseButton.setAttribute('aria-label', `${paused ? 'Resume' : 'Pause'} automatic gallery movement`)
+      pauseButton.setAttribute('aria-label', paused ? '사진 자동 넘김 재생' : '사진 자동 넘김 일시정지')
     }
     return () => {
       alive = false
@@ -285,7 +313,7 @@ export function initPortfolioGallery(section) {
       cursor.remove()
       gallery.classList.remove('is-webgl')
       pauseButton.setAttribute('aria-pressed', 'false')
-      pauseButton.setAttribute('aria-label', 'Pause automatic gallery movement')
+      pauseButton.setAttribute('aria-label', '사진 자동 넘김 일시정지')
       step = fallbackStep
       togglePause = () => {}
     }

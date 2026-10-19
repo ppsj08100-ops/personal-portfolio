@@ -6,6 +6,14 @@
   font-display: swap;
 }
 
+@font-face {
+  font-family: 'Julius Sans One';
+  src: url('/fonts/julius-sans-one-regular-latin.woff2') format('woff2');
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+}
+
 /* Preserve the supplied artwork; cover crops it to the viewport without distortion. */
 :root {
   color-scheme: dark;
@@ -31,10 +39,10 @@ body, #app {
   display: block;
 }
 #app {
-  /* Measure one total transition from the fading water to the heading.
-     The HERO and existing scroll orbit keep their independent geometry. */
+  /* One continuous image plane carries the surface current into DESIGN.
+     Its 2011 × 782 source meets the D at (605, 604). */
   --ocean-artwork-unit: max(calc(100vw / 1672), calc(100svh / 941));
-  --ocean-silhouette-bottom: calc(50svh + var(--ocean-artwork-unit) * 206.5);
+  --ocean-silhouette-bottom: calc(50svh + var(--ocean-artwork-unit) * 230.5);
   --ocean-entry-start: max(
     calc(100svh * (1 - var(--hero-fade-ratio))),
     calc(var(--ocean-silhouette-bottom) + var(--hero-fade-clearance))
@@ -49,10 +57,12 @@ body, #app {
   );
   --ocean-orbit-overhang: max(0px, calc(var(--ocean-orbit-top) + var(--ocean-orbit-diameter) * var(--scroll-orbit-fade-end) - 100svh));
   --ocean-surface-end: calc(var(--ocean-entry-start) + (100svh - var(--ocean-entry-start)) * var(--hero-surface-end-ratio));
-  --ocean-message-inset: max(
-    calc(var(--ocean-orbit-overhang) + var(--insight-transition-gap)),
-    calc(var(--ocean-surface-end) + var(--ocean-transition-distance) - 100svh)
-  );
+  --post-hero-art-height: max(420px, calc(100vw * 782 / 2011));
+  --post-hero-top: calc(var(--ocean-entry-start) - var(--post-hero-art-height) * .14);
+  --ocean-message-inset: max(0px, calc(
+    var(--post-hero-top) + var(--post-hero-art-height) * 604 / 782
+    - 100svh - var(--post-hero-type-offset, 0px)
+  ));
 }
 button, a { -webkit-tap-highlight-color: transparent; }
 button { font: inherit; color: inherit; }
@@ -91,7 +101,7 @@ button, a, [tabindex] { touch-action: manipulation; }
 .hero {
   --hero-font-family: "Helvetica Neue", "Hero Roboto", Arial, sans-serif;
   --hero-artwork-unit: max(calc(100vw / 1672), calc(100svh / 941));
-  /* Reserve the source silhouette through y=677 plus a clear-water margin.
+  /* Reserve the source silhouette through y=701 plus a clear-water margin.
      On short screens the fade starts later to keep the mermaid untouched. */
   --hero-fade-start: var(--ocean-entry-start);
   width: 100%;
@@ -102,108 +112,74 @@ button, a, [tabindex] { touch-action: manipulation; }
   height: 100svh;
   position: relative;
   display: block;
-  /* Let the single decorative orbit bridge the following section. */
+  /* Keep the scroll cue above the following section. */
   overflow: visible;
   z-index: var(--z-content);
   isolation: isolate;
-  /* Only the empty lower water can expose this surface-to-depth backing. */
-  background: linear-gradient(180deg, var(--hero-sky) var(--ocean-entry-start), var(--section-bridge-color) 100%);
+  background: var(--hero-sky);
 }
 .hero__frame {
-  /* Resolve the source-image arc mask against the actual cover crop. */
-  container-type: size;
   position: absolute;
-  /* Keep the fade below the sibling scroll label and orbit in all motion modes. */
+  /* Keep the fade below the sibling scroll cue in all motion modes. */
   z-index: 0;
   inset: 0;
   width: 100%;
   height: 100%;
-  /* Clip artwork and its repair layer, without clipping the orbit sibling. */
+  /* Clip the artwork without clipping the scroll cue sibling. */
   overflow: hidden;
-  /* Release the real water texture into the shared background. No coloured
-     overlay, blur or synthetic light is placed on top of the raster. */
+  /* Preserve the figure, then pass the surface to the supplied post-HERO
+     current. Both images share one unbroken deep-navy backing. */
   --hero-fade-height: calc(100svh - var(--hero-fade-start));
   --hero-water-mask: linear-gradient(
     180deg,
     #000 0%,
     #000 var(--hero-fade-start),
-    #000 calc(var(--hero-fade-start) + var(--hero-fade-height) * .18),
-    rgba(0, 0, 0, .96) calc(var(--hero-fade-start) + var(--hero-fade-height) * .30),
-    rgba(0, 0, 0, .78) calc(var(--hero-fade-start) + var(--hero-fade-height) * .48),
-    rgba(0, 0, 0, .44) var(--ocean-surface-end),
-    rgba(0, 0, 0, .13) calc(var(--hero-fade-start) + var(--hero-fade-height) * .85),
+    rgba(0, 0, 0, .94) calc(var(--hero-fade-start) + var(--hero-fade-height) * .08),
+    rgba(0, 0, 0, .72) calc(var(--hero-fade-start) + var(--hero-fade-height) * .18),
+    rgba(0, 0, 0, .36) calc(var(--hero-fade-start) + var(--hero-fade-height) * .30),
+    rgba(0, 0, 0, .12) calc(var(--hero-fade-start) + var(--hero-fade-height) * .42),
+    rgba(0, 0, 0, .025) calc(var(--hero-fade-start) + var(--hero-fade-height) * .54),
+    transparent var(--ocean-surface-end),
     transparent 100%
   );
   -webkit-mask-image: var(--hero-water-mask);
   mask-image: var(--hero-water-mask);
 }
-.hero__ring-repair {
-  /* Original 1672 × 941 artwork: embedded arc centre (834, 1035.5), r ≈ 234.
-     Cover its stroke only; the base image and its cover crop stay untouched. */
-  --artwork-unit: max(calc(100cqw / 1672), calc(100cqh / 941));
-  --baked-ring-radius: calc(var(--artwork-unit) * 234);
-  --baked-ring-mask: radial-gradient(
-    circle at calc(50% - var(--artwork-unit) * 2) calc(50% + var(--artwork-unit) * 565),
-    transparent calc(var(--baked-ring-radius) - var(--artwork-unit) * 4),
-    #000 calc(var(--baked-ring-radius) - var(--artwork-unit) * 3),
-    #000 calc(var(--baked-ring-radius) + var(--artwork-unit) * 3),
-    transparent calc(var(--baked-ring-radius) + var(--artwork-unit) * 4)
-  );
-  position: absolute;
-  z-index: 1;
-  inset: 0;
-  pointer-events: none;
-  -webkit-mask-image: var(--baked-ring-mask);
-  mask-image: var(--baked-ring-mask);
-}
-.hero__ring-repair::before {
-  /* Only the narrow masked arc exposes this nearby-artwork repair layer.
-     Scaling around the source arc's centre moves its raster line out of the
-     mask, preserving the rest of the artwork and its original cover crop. */
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: 0;
-  --artwork-unit: max(calc(100cqw / 1672), calc(100cqh / 941));
-  background: center / cover no-repeat image-set(
-    url('/images/hero_edit.webp') type('image/webp'),
-    url('/images/hero_edit-background.png') type('image/png')
-  );
-  transform-origin: calc(50% - var(--artwork-unit) * 2) calc(50% + var(--artwork-unit) * 565);
-  transform: scale(.96);
-}
-.hero.has-image-error .hero__ring-repair { display: none; }
 .ocean-transition {
-  /* Sit behind the real water's mask, then cross the seam as one texture.
-     The HERO's isolation keeps this negative layer above its own backing. */
+  /* Above the next section's backing, below the HERO and the live heading. */
   position: absolute;
   z-index: -1;
-  top: var(--ocean-entry-start);
+  top: var(--post-hero-top);
   inset-inline: 0;
-  /* The 2:1 image plane extends 16% above this window: its duplicate shoreline
-     stays behind the HERO's existing surface. Only the submerged rays emerge.
-     On narrow screens, cover crops around the upper centre without stretching. */
-  height: max(
-    42vw,
-    calc(100svh - var(--ocean-entry-start) + var(--ocean-message-inset) + var(--insight-font-size) * var(--insight-line-height) * 1.4)
-  );
+  height: var(--post-hero-art-height);
   overflow: hidden;
   pointer-events: none;
-  --ocean-depth-mask: linear-gradient(180deg, transparent, #000 12%, #000 66%, rgba(0, 0, 0, .8) 80%, transparent 100%);
+  /* Fade the painted stem within the live D's cap-height. The taller mobile
+     water column must not leave a stray vertical line through the next row. */
+  --ocean-depth-mask: linear-gradient(
+    180deg, transparent, #000 12%,
+    #000 calc(var(--post-hero-art-height) * 604 / 782 + var(--insight-font-size) * .071),
+    transparent min(100%, calc(var(--post-hero-art-height) * 604 / 782 + var(--insight-font-size) * .71)),
+    transparent 100%
+  );
   -webkit-mask-image: var(--ocean-depth-mask);
   mask-image: var(--ocean-depth-mask);
 }
 .ocean-transition__texture {
-  /* A single raster, with no repeat, filter or additional water surface.
-     The HERO's water mask hides the new surface's edge before the rays emerge. */
+  /* Match the measured D ink, including the font's left side-bearing.
+     On portrait screens the empty water column extends to leave breathing
+     room between the cue and the heading. */
   display: block;
   position: absolute;
-  inset: auto 0 0;
+  top: 0;
+  left: var(--post-hero-shift-x, 0px);
   width: 100%;
-  height: calc(100% * 25 / 21);
+  height: 100%;
   max-width: none;
-  object-fit: cover;
-  object-position: 50% 0%;
+  object-fit: fill;
+  image-rendering: auto;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 3%, #000 97%, transparent);
   user-select: none;
   -webkit-user-drag: none;
 }
@@ -226,12 +202,12 @@ button, a, [tabindex] { touch-action: manipulation; }
   inset-inline: var(--container-gutter);
   margin: 0;
   color: var(--color-text);
-  font-family: var(--hero-font-family);
-  font-size: clamp(2rem, 5.5vw, 13.25rem);
-  font-weight: 100;
+  font-family: 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(2.5rem, 6.4vw, 15.5rem);
+  font-weight: 400;
   font-synthesis: none;
-  line-height: var(--line-height-hero);
-  letter-spacing: .01em;
+  line-height: .98;
+  letter-spacing: .005em;
   text-align: center;
   text-transform: uppercase;
   text-shadow: 0 0 6px rgba(230, 233, 255, .12);
@@ -286,154 +262,8 @@ button, a, [tabindex] { touch-action: manipulation; }
   transition: opacity var(--duration-hover) var(--ease-out);
 }
 .hero__control--sound[aria-pressed="true"] .hero__sound-dot { opacity: 1; }
-.hero__scroll-orbit {
-  /* One quiet centreline links the small label, straight arrow and fading arc. */
-  --scroll-cue-label-size: clamp(.625rem, .6vw, .75rem);
-  --scroll-cue-arrow-height: 2.625rem;
-  --scroll-cue-height: calc(var(--scroll-cue-label-size) * 1.35 + var(--space-3) + var(--scroll-cue-arrow-height) + var(--space-4));
-  --scroll-cue-blue: #9cbfdb;
-  --scroll-cue-highlight: #eaf5ff;
-  position: absolute;
-  z-index: var(--z-content);
-  top: min(
-    max(
-      calc(84svh),
-      calc(var(--ocean-surface-end) - var(--space-12)),
-      calc(var(--ocean-silhouette-bottom) + var(--scroll-orbit-clearance))
-    ),
-    calc(100svh + var(--ocean-message-inset) - var(--scroll-cue-height) - var(--space-6))
-  );
-  left: 50%;
-  width: max-content;
-  max-width: 100%;
-  transform: translateX(-50%);
-  pointer-events: none;
-}
-.hero__scroll-orbit::after {
-  /* Reuse the existing orbit scale, showing only a quiet upper arc below the tip. */
-  content: '';
-  position: absolute;
-  z-index: -1;
-  top: calc(100% + var(--space-3));
-  left: 50%;
-  width: var(--scroll-orbit-size);
-  aspect-ratio: 1;
-  border: 1px solid var(--color-scroll-orbit);
-  border-radius: 50%;
-  opacity: .65;
-  transform: translateX(-50%);
-  --scroll-cue-arc-mask: linear-gradient(180deg, #000, rgba(0, 0, 0, .6) 14%, transparent 32%);
-  -webkit-mask-image: var(--scroll-cue-arc-mask);
-  mask-image: var(--scroll-cue-arc-mask);
-  pointer-events: none;
-}
-.hero__scroll-cue {
-  display: grid;
-  justify-items: center;
-  gap: var(--space-3);
-  min-width: var(--tap-target-min);
-  min-height: var(--tap-target-min);
-  margin: 0;
-  padding: var(--space-2) var(--space-5);
-  border: 0;
-  background: transparent;
-  color: var(--insight-color-text);
-  font-family: var(--hero-font-family);
-  font-size: var(--scroll-cue-label-size);
-  font-weight: 300;
-  font-synthesis: none;
-  line-height: 1.35;
-  letter-spacing: .22em;
-  text-indent: .22em;
-  text-align: center;
-  text-transform: uppercase;
-  text-decoration: none;
-  white-space: nowrap;
-  cursor: pointer;
-  pointer-events: auto;
-}
-.hero__scroll-label {
-  display: block;
-  color: var(--insight-color-text);
-}
-.hero__scroll-arrow-light {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  pointer-events: none;
-}
-.hero__scroll-arrow {
-  position: relative;
-  display: block;
-  width: calc(var(--scroll-cue-arrow-height) * .25);
-  height: var(--scroll-cue-arrow-height);
-}
-.hero__scroll-arrow svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  overflow: visible;
-}
-.hero__scroll-arrow path {
-  stroke: currentColor;
-  stroke-width: .9;
-  stroke-linecap: round;
-  stroke-linejoin: round;
-  vector-effect: non-scaling-stroke;
-}
-.hero__scroll-arrow-base { opacity: .65; }
-.hero__scroll-arrow-tail,
-.hero__scroll-arrow-tint,
-.hero__scroll-arrow-core {
-  position: absolute;
-  inset: 0;
-  /* The band starts just above the curve and clears the tip before repeating. */
-  mask-size: 100% 300%;
-  mask-position: 50% 50%;
-  mask-repeat: no-repeat;
-}
-.hero__scroll-arrow-tail {
-  color: var(--scroll-cue-blue);
-  mask-image: linear-gradient(180deg,
-    transparent 25%,
-    rgba(0, 0, 0, .08) 26.5%,
-    rgba(0, 0, 0, .28) 29%,
-    rgba(0, 0, 0, .55) 30%,
-    transparent 31.5%);
-}
-.hero__scroll-arrow-tint {
-  color: var(--scroll-cue-blue);
-  /* Blue on both sides of the white core, then a soft transparent leading edge. */
-  mask-image: linear-gradient(180deg,
-    transparent 28.5%,
-    rgba(0, 0, 0, .75) 30%,
-    #000 30.75%,
-    transparent 31.4%,
-    transparent 32%,
-    #000 32.65%,
-    transparent 33.333%);
-}
-.hero__scroll-arrow-core {
-  color: var(--scroll-cue-highlight);
-  /* The white reflection uses the same 0.9px contour; it never becomes a dot. */
-  mask-image: linear-gradient(180deg,
-    transparent 30.5%,
-    rgba(0, 0, 0, .65) 31.05%,
-    #000 31.4%,
-    #000 32%,
-    rgba(0, 0, 0, .65) 32.35%,
-    transparent 32.9%);
-}
-.hero__scroll-cue:focus-visible { outline: none; }
-/* Accessible static fallback before JS, or in browsers without Web Animations. */
-.hero__scroll-cue:not(.is-scroll-motion-ready):focus-visible .hero__scroll-arrow-light { opacity: 1; }
-.hero__scroll-cue:not(.is-scroll-motion-ready):focus-visible :is(.hero__scroll-arrow-tail, .hero__scroll-arrow-tint, .hero__scroll-arrow-core) { mask-position: 50% 25%; }
-@media (hover: hover) and (pointer: fine) {
-  .hero__scroll-cue:not(.is-scroll-motion-ready):hover .hero__scroll-arrow-light { opacity: 1; }
-  .hero__scroll-cue:not(.is-scroll-motion-ready):hover :is(.hero__scroll-arrow-tail, .hero__scroll-arrow-tint, .hero__scroll-arrow-core) { mask-position: 50% 25%; }
-}
-.hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) { opacity: 0; }
-.hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) {
+.hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-dock, .ocean-transition) { opacity: 0; }
+.hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-dock, .ocean-transition) {
   animation: hero-reveal var(--duration-title) var(--ease-out) both;
 }
 @keyframes hero-reveal { from { opacity: 0; } to { opacity: 1; } }
@@ -566,20 +396,21 @@ body.has-menu-open { overflow: hidden; }
 
 /* Keep HTML lettering inside the viewport independently of the cover crop. */
 @media (max-width: 767px) {
+  /* Keep the face and silver hair inside the portrait cover crop. */
+  .hero__artwork { object-position: 68% 50%; }
   .hero__nav-group { flex-direction: column; align-items: flex-start; gap: 0; }
   .hero__nav-group--right { align-items: flex-end; }
   .hero__title {
     top: max(12svh, calc(env(safe-area-inset-top) + var(--space-4) + var(--tap-target-min) * 2 + var(--space-6)));
-    font-size: clamp(2rem, 9vw, 4rem);
+    font-size: clamp(2.25rem, 11vw, 5rem);
   }
 }
 @media (max-height: 500px) and (min-width: 768px) {
   .hero__title { font-size: min(5.5vw, 12svh); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition) { opacity: 1; }
-  .hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-orbit, .ocean-transition),
-  .hero__scroll-arrow,
+  .hero.is-loading :is(.hero__frame, .hero__title, .hero__scroll-dock, .ocean-transition) { opacity: 1; }
+  .hero.is-ready :is(.hero__frame, .hero__title, .hero__scroll-dock, .ocean-transition),
   .portfolio-menu.is-opening,
   .portfolio-menu.is-closing { animation: none; }
 }
