@@ -28,11 +28,12 @@ export function initFooter(footer) {
     link.append(...placeholder.childNodes)
     link.firstElementChild.textContent = footerContent.email
     placeholder.replaceWith(link)
+    link.hidden = false
   }
   footer.querySelectorAll('[data-footer-social]').forEach(placeholder => {
     const service = placeholder.dataset.footerSocial
     const value = footerContent.socials[service]
-    if (!value) return
+    if (!value) { placeholder.hidden = true; return }
     let url
     try { url = new URL(value) } catch { return }
     if (!['https:', 'http:'].includes(url.protocol)) return
@@ -45,6 +46,7 @@ export function initFooter(footer) {
     link.setAttribute('aria-label', `${service} (새 탭)`)
     link.append(...placeholder.childNodes)
     placeholder.replaceWith(link)
+    footer.querySelector('.site-footer__socials').hidden = false
   })
 
   const runs = [...footer.querySelectorAll('[data-footer-letters]')].map(element => ({ element, text: element.textContent }))
