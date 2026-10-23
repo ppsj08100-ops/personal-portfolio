@@ -4,6 +4,7 @@ export function initProjectPreview(device) {
   if (!video || !button) return () => {}
 
   const controller = new AbortController()
+  const exhibition = device.closest('.project-overview')
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
   let visible = false
   let choice = null
@@ -15,6 +16,7 @@ export function initProjectPreview(device) {
   button.hidden = false
 
   const shouldPlay = () => !disposed && !failed && visible && !document.hidden
+    && (!exhibition || (!device.closest('[inert]') && !exhibition.classList.contains('is-overview-open')))
     && (choice === 'play' || (choice !== 'pause' && !reducedMotion.matches))
 
   function update() {
@@ -71,6 +73,12 @@ export function initProjectPreview(device) {
   }, { threshold: [0, .1] })
   warmObserver.observe(device)
   observer.observe(device)
+  const stateObserver = exhibition ? new MutationObserver(sync) : null
+  if (stateObserver) {
+    for (let ancestor = exhibition; ancestor; ancestor = ancestor.parentElement) {
+      stateObserver.observe(ancestor, { attributes: true, attributeFilter: ancestor === exhibition ? ['inert', 'class'] : ['inert'] })
+    }
+  }
 
   button.addEventListener('click', () => {
     choice = video.paused ? 'play' : 'pause'
@@ -87,6 +95,7 @@ export function initProjectPreview(device) {
     controller.abort()
     observer.disconnect()
     warmObserver.disconnect()
+    stateObserver?.disconnect()
     video.pause()
     button.hidden = true
     delete device.dataset.previewState

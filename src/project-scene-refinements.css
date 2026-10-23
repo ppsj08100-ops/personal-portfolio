@@ -1,0 +1,65 @@
+/* An outlined invitation uses the same language as the approach and cover. */
+.project-overview__explore {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 32px;
+  width: 188px;
+  min-height: 48px;
+  padding: 13px 21px;
+  border: 1px solid #bdcfdd8c;
+  border-radius: 999px;
+  color: #dce8f0;
+  background: #07172b30;
+  box-shadow: none;
+  font-size: 11px;
+  letter-spacing: .06em;
+  transition: border-color .3s, background-color .3s;
+}
+.project-overview__explore:hover { transform: none; border-color: #e4edf4; background: #a4c7dd12; }
+.project-overview__plus { align-self: center; flex: 0 0 16px; width: 16px; height: 16px; border-radius: 0; color: #c5dbe9; background: transparent; }
+.project-overview__plus svg { width: 16px; height: 16px; stroke-width: 1; }
+
+/* A small change in depth and refracted light accompanies lateral travel. */
+.project-details--voyage .project-overview__scene {
+  opacity: var(--chapter-visibility, 1);
+  translate: var(--chapter-travel-x, 0px) var(--chapter-settle-y, 0px);
+  scale: var(--chapter-scale, 1);
+}
+.project-details--voyage .project-overview :is(.project-overview__title, .project-overview__copy) {
+  opacity: var(--chapter-copy-visibility, 1);
+  translate: calc(var(--chapter-travel-x, 0px) * .35) 0;
+}
+.project-details--voyage .sail-project--seabed .sail-project__screen {
+  opacity: var(--chapter-visibility, 1);
+  translate: var(--chapter-travel-x, 0px) var(--chapter-settle-y, 0px);
+  scale: var(--chapter-scale, 1);
+}
+.project-details--voyage .sail-project--seabed :is(.sail-project__header, .sail-project__details) { opacity: var(--chapter-copy-visibility, 1); }
+.project-details--voyage.is-project-paged > .project-details__stage::after {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: -4%;
+  pointer-events: none;
+  opacity: calc(var(--chapter-shift, 0) * .55);
+  background: radial-gradient(ellipse at 47% 45%, #84adc518, transparent 60%), linear-gradient(112deg, transparent 28%, #accfd20d 38%, #8cb3cf3b 45%, transparent 56%);
+  transform: translateX(calc(var(--chapter-flow, 1) * var(--chapter-shift, 0) * 5%));
+}
+
+@media (max-width: 899px) {
+  .project-overview__summary { flex-direction: column; align-items: flex-start; gap: 19px; }
+  .project-overview__summary > p br { display: none; }
+  .project-overview__summary > p { max-width: 35ch; line-height: 1.8; }
+  .project-overview__explore { margin-top: 0; width: 176px; min-height: 46px; padding: 12px 20px; border-radius: 999px; font-size: 10px; }
+  .project-overview__meta { margin-top: 22px; }
+}
+@media (max-width: 520px) {
+  .project-overview__summary { gap: 16px; }
+  .project-overview__explore { width: 166px; min-height: 44px; padding: 11px 19px; gap: 28px; }
+  .project-overview__plus, .project-overview__plus svg { width: 15px; height: 15px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-overview__explore { transition: none; }
+  .project-details--voyage > .project-details__stage::after { display: none; }
+}

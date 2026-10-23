@@ -1,7 +1,9 @@
 import { getDiveFoamSprites } from './dive-foam-sprites.js'
 
-const REST_COUNT = 44
-const EXTRA_COUNT = 12
+const NEAR_COUNT = 36
+const REST_COUNT = 116
+const EXTRA_COUNT = 18
+const STILL_COUNT = 6
 const seed = value => {
   const result = Math.sin(value * 127.1 + 311.7) * 43758.5453
   return result - Math.floor(result)
@@ -11,130 +13,144 @@ const smooth = value => {
   return t * t * (3 - 2 * t)
 }
 
-// A continuous, softly staggered stream stays close to the invitation.
-// Each bubble follows one slow curve with a stable shape, without wobbling.
+// A broad oval cloud with independent, gently spreading upward journeys.
+// Animate static sprites on the compositor so fine rims are not redrawn
+// at a different subpixel position on every JavaScript frame.
 export function initDiveBubbles(link) {
   const dock = link.closest('.hero__scroll-dock')
   const label = link.querySelector('.hero__scroll-label')
   const sprites = getDiveFoamSprites()
   if (!dock || !label || !sprites) return () => {}
-  const canvas = document.createElement('canvas')
-  let context
-  try { context = canvas.getContext('2d', { alpha: true }) } catch { return () => {} }
-  if (!context) return () => {}
-  canvas.className = 'hero-dive-bubbles'
-  canvas.setAttribute('aria-hidden', 'true')
-  dock.prepend(canvas)
+
+  const layer = document.createElement('div')
+  layer.className = 'hero-dive-bubbles'
+  layer.setAttribute('aria-hidden', 'true')
+  const extraLayer = document.createElement('div')
+  extraLayer.className = 'hero-dive-bubbles__extra'
+  layer.append(extraLayer)
+  dock.prepend(layer)
 
   const controller = new AbortController()
   const { signal } = controller
   const reduced = matchMedia('(prefers-reduced-motion: reduce)')
-  const bubbles = Array.from({ length: REST_COUNT + EXTRA_COUNT }, (_, i) => ({
-    side: i % 3 === 0 ? 0 : i % 2 ? -1 : 1,
-    offset: seed(i + 31),
-    radius: 2.1 + seed(i + 73) * 2.4,
-    duration: 4.2 + seed(i + 11) * 2,
-    rest: .15 + seed(i + 19) * .45,
-    phase: seed(i + 53),
-    drift: (seed(i + 41) - .5) * 8,
-    bend: (seed(i + 83) - .5) * 3,
-    aspect: .97 + seed(i + 101) * .06,
-    opacity: .52 + seed(i + 97) * .4,
-    extra: i >= REST_COUNT,
-  }))
-  let width = 0
-  let height = 0
-  let labelWidth = 0
-  let labelHeight = 0
-  let frame = 0
-  let lastTick = 0
-  let elapsed = 0
-  let invitationTime = 0
-  let attention = 0
+  const spriteURL = sprites.restingBubble.toDataURL()
+  const bubbles = Array.from({ length: REST_COUNT + EXTRA_COUNT }, (_, i) => {
+    const extra = i >= REST_COUNT
+    const near = i < NEAR_COUNT
+    const count = extra ? EXTRA_COUNT : near ? NEAR_COUNT : REST_COUNT - NEAR_COUNT
+    const index = extra ? i - REST_COUNT : near ? i : i - NEAR_COUNT
+    const duration = near ? 7.2 + seed(i + 11) * 2.4 : 5.6 + seed(i + 11) * 2.8
+    const rest = .35 + seed(i + 19) * .8
+    const element = document.createElement('img')
+    element.className = 'hero-dive-bubbles__particle'
+    element.src = spriteURL
+    element.alt = ''
+    element.draggable = false
+    const animation = element.animate([], { duration: (duration + rest) * 1000, iterations: Infinity })
+    animation.pause()
+    animation.currentTime = seed(i + 53) * (duration + rest) * 1000
+    const parent = extra ? extraLayer : layer
+    parent.append(element)
+    return {
+      element,
+      animation,
+      near,
+      angle: (index + seed(i + 31) * .8) / count * Math.PI * 2,
+      offset: seed(i + 67),
+      radius: near ? 2.5 + seed(i + 73) * 1.5 : 1.6 + seed(i + 73) ** 1.2 * 3.5,
+      duration,
+      rest,
+      rise: near ? 20 + seed(i + 83) * 10 : 40 + seed(i + 83) * 24,
+      drift: near ? 3 + seed(i + 41) * 4 : 12 + seed(i + 41) * 16,
+      aspect: .97 + seed(i + 101) * .06,
+      opacity: near ? .38 + seed(i + 97) * .3 : .26 + seed(i + 97) * .42,
+    }
+  })
   let hovered = false
   let focused = false
   let visible = false
   let disposed = false
 
-  function draw(time) {
-    context.clearRect(0, 0, width, height)
-    const cx = width / 2
-    const cy = height / 2
-    const still = reduced.matches
-    const count = still ? 3 : bubbles.length
-
-    for (let i = 0; i < count; i++) {
-      const bubble = bubbles[i]
-      const period = bubble.duration + bubble.rest
-      const extraAge = invitationTime - (i - REST_COUNT) * .3
-      if (bubble.extra && extraAge < 0) continue
-      const age = bubble.extra ? extraAge % period : (time + bubble.phase * period) % period
-      if (!still && age > bubble.duration) continue
-      const progress = still ? [.25, .62, .44][i] : age / bubble.duration
-      const envelope = still ? .75 : smooth(progress / .18) * (1 - smooth((progress - .72) / .28))
-      const alpha = envelope * bubble.opacity * (bubble.extra ? attention : 1)
-      if (alpha < .005) continue
-
-      // The side bubbles can rise above the type. Center bubbles dissolve
-      // below it, keeping the lettering clear and the activity close by.
-      const side = bubble.side
-      const originX = side
-        ? side * (labelWidth / 2 + 12 + bubble.offset * 20)
-        : (bubble.offset - .5) * labelWidth * .55
-      const originY = labelHeight / 2 + 54 + bubble.offset * 12
-      const rise = side ? 92 + bubble.offset * 18 : 38 + bubble.offset * 12
-      const drift = bubble.drift * progress + bubble.bend * progress * (1 - progress)
-      const x = cx + originX + drift
-      const y = cy + originY - rise * (.88 * progress + .12 * progress * progress)
-      const stretch = bubble.aspect
-      const size = bubble.radius * 2 * (32 / 26)
-      context.globalAlpha = alpha
-      context.drawImage(sprites.bubble, x - size * stretch / 2, y - size / stretch / 2, size * stretch, size / stretch)
-    }
-    context.globalAlpha = 1
-  }
-
-  function render(now) {
-    frame = 0
-    if (disposed || !visible || document.hidden || reduced.matches) return
-    const delta = lastTick ? Math.min(.1, (now - lastTick) / 1000) : 0
-    lastTick = now
-    elapsed += delta
-    attention += ((hovered || focused ? 1 : 0) - attention) * (1 - Math.exp(-delta * 3))
-    invitationTime = hovered || focused || attention > .01 ? invitationTime + delta : 0
-    // Paint on every display frame. Throttling these small, slow highlights
-    // made their subpixel movement visibly step between positions.
-    draw(elapsed)
-    frame = requestAnimationFrame(render)
-  }
-  function sync() {
-    cancelAnimationFrame(frame)
-    frame = 0
-    lastTick = 0
-    if (!disposed && reduced.matches) draw(0)
-    if (!disposed && visible && !document.hidden && !reduced.matches) {
-      frame = requestAnimationFrame(render)
-    }
-  }
   function resize() {
+    if (disposed) return
     const textBounds = label.getBoundingClientRect()
     const dockBounds = dock.getBoundingClientRect()
-    labelWidth = textBounds.width
-    labelHeight = textBounds.height
-    canvas.style.left = `${textBounds.left + textBounds.width / 2 - dockBounds.left}px`
-    canvas.style.top = `${textBounds.top + textBounds.height / 2 - dockBounds.top}px`
-    const bounds = canvas.getBoundingClientRect()
-    width = bounds.width
-    height = bounds.height
-    const ratio = Math.min(devicePixelRatio || 1, 2)
-    canvas.width = Math.ceil(width * ratio)
-    canvas.height = Math.ceil(height * ratio)
-    context.setTransform(ratio, 0, 0, ratio, 0, 0)
-    context.imageSmoothingQuality = 'high'
-    draw(elapsed)
+    const labelWidth = textBounds.width
+    const labelHeight = textBounds.height
+    layer.style.left = `${textBounds.left + labelWidth / 2 - dockBounds.left}px`
+    layer.style.top = `${textBounds.top + labelHeight / 2 - dockBounds.top}px`
+    const { width, height } = layer.getBoundingClientRect()
+    const radiusX = Math.min(labelWidth / 2 + 110, width / 2 - 36)
+    const radiusY = Math.min(labelHeight / 2 + 42, height / 2 - 40)
+    const pixelRatio = devicePixelRatio || 1
+    const align = value => Math.round(value * pixelRatio) / pixelRatio
+
+    bubbles.forEach((bubble, i) => {
+      const still = reduced.matches
+      const angle = still ? i / STILL_COUNT * Math.PI * 2 : bubble.angle
+      const band = bubble.near ? .92 + bubble.offset * .18 : .65 + bubble.offset * .4
+      const orbitX = bubble.near ? labelWidth / 2 + 24 : radiusX
+      const orbitY = bubble.near ? labelHeight / 2 + 20 : radiusY
+      const x = orbitX * band * Math.cos(angle)
+      let y = orbitY * band * Math.sin(angle)
+      const size = bubble.radius * 2 * (32 / 26)
+      const bubbleWidth = align(size * bubble.aspect)
+      const bubbleHeight = align(size / bubble.aspect)
+      let startY = bubble.rise / 2
+      let endY = -bubble.rise / 2
+      const drift = Math.cos(angle) < 0 ? -bubble.drift : bubble.drift
+      const startX = -drift / 2
+      const endX = drift / 2
+
+      // Drift stays in one outward direction, with no wobble or size change.
+      // Keep the complete diagonal lane clear of the lettering.
+      const padding = bubble.near ? 5 : 10
+      if (Math.max(0, Math.abs(x) - Math.abs(drift) / 2) < labelWidth / 2 + bubbleWidth / 2 + padding) {
+        const clearance = labelHeight / 2 + bubbleHeight / 2 + padding
+        if (bubble.near) {
+          y = (y < 0 ? -1 : 1) * Math.max(Math.abs(y), clearance + bubble.rise / 2)
+        } else if (y >= 0) endY = Math.max(endY, clearance - y)
+        else startY = Math.min(startY, -clearance - y)
+      }
+      bubble.element.hidden = (still && i >= STILL_COUNT) || endY >= startY
+      Object.assign(bubble.element.style, {
+        left: `${align(width / 2 + x - bubbleWidth / 2)}px`,
+        top: `${align(height / 2 + y - bubbleHeight / 2)}px`,
+        width: `${bubbleWidth}px`,
+        height: `${bubbleHeight}px`,
+      })
+
+      const active = bubble.duration / (bubble.duration + bubble.rest)
+      const keyframes = Array.from({ length: 21 }, (_, step) => {
+        const progress = step / 20
+        const opacity = smooth(progress / .24) * (1 - smooth((progress - .65) / .35)) * bubble.opacity
+        const translate = startY + (endY - startY) * progress
+        const sideways = startX + (endX - startX) * progress
+        return { offset: progress * active, opacity, transform: `translate3d(${sideways}px, ${translate}px, 0)` }
+      })
+      keyframes.push({ offset: 1, opacity: 0, transform: `translate3d(${endX}px, ${endY}px, 0)` })
+      bubble.animation.effect.setKeyframes(keyframes)
+      if (still) bubble.animation.currentTime = bubble.duration * 500
+    })
   }
+
+  function sync() {
+    const paused = disposed || !visible || document.hidden || reduced.matches
+    layer.classList.toggle('is-inviting', !reduced.matches && (hovered || focused))
+    bubbles.forEach(({ animation }) => paused ? animation.pause() : animation.play())
+  }
+  function motionChanged() {
+    if (!reduced.matches) {
+      bubbles.forEach((bubble, i) => {
+        bubble.animation.currentTime = seed(i + 53) * (bubble.duration + bubble.rest) * 1000
+      })
+    }
+    resize()
+    sync()
+  }
+
   const sizeObserver = new ResizeObserver(resize)
-  sizeObserver.observe(canvas)
+  sizeObserver.observe(layer)
   sizeObserver.observe(label)
   sizeObserver.observe(link)
   const observer = new IntersectionObserver(entries => {
@@ -142,20 +158,21 @@ export function initDiveBubbles(link) {
     sync()
   })
   observer.observe(link)
-  link.addEventListener('pointerenter', event => { hovered = event.pointerType !== 'touch' }, { signal })
-  link.addEventListener('pointerleave', () => { hovered = false }, { signal })
-  link.addEventListener('focus', () => { focused = true }, { signal })
-  link.addEventListener('blur', () => { focused = false }, { signal })
-  reduced.addEventListener('change', sync, { signal })
+  link.addEventListener('pointerenter', event => { hovered = event.pointerType !== 'touch'; sync() }, { signal })
+  link.addEventListener('pointerleave', () => { hovered = false; sync() }, { signal })
+  link.addEventListener('focus', () => { focused = true; sync() }, { signal })
+  link.addEventListener('blur', () => { focused = false; sync() }, { signal })
+  reduced.addEventListener('change', motionChanged, { signal })
   document.addEventListener('visibilitychange', sync, { signal })
   resize()
+  sync()
 
   return () => {
     disposed = true
     controller.abort()
     observer.disconnect()
     sizeObserver.disconnect()
-    cancelAnimationFrame(frame)
-    canvas.remove()
+    bubbles.forEach(({ animation }) => animation.cancel())
+    layer.remove()
   }
 }

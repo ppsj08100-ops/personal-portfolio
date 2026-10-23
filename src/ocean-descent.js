@@ -14,17 +14,18 @@ export function initOceanDescent(section) {
   const stage = section.querySelector('.ocean-type__stage')
   const scene = section.querySelector('.ocean-descent')
   const ceiling = scene?.querySelector('.ocean-descent__ceiling')
+  const ceilingImage = ceiling?.querySelector('img')
   const shade = scene?.querySelector('.ocean-descent__shade')
   const article = section.querySelector('.sail-project')
   const environment = article?.querySelector('.sail-project__environment')
   const surface = article?.querySelector('.sail-project__surface')
-  const waves = section.querySelector('.ocean-type__waves')
-  const front = waves?.querySelector('.ocean-type__layer--front')
-  const back = waves?.querySelector('.ocean-type__layer--back')
+  const opening = section.querySelector('.ocean-type__opening')
+  const nightScene = opening?.querySelector('.ocean-entry__scene')
+  const chapter = scene?.querySelector('.ocean-descent__chapter')
   const typeWindow = section.querySelector('.ocean-type__type-window')
   const label = section.querySelector('.ocean-type__label')
   const explore = section.querySelector('.ocean-type__explore')
-  if (!stage || !scene || !ceiling || !shade || !environment || !surface || !front || !back) return () => {}
+  if (!stage || !scene || !ceiling || !shade || !environment || !surface || !opening || !nightScene || !chapter || !typeWindow || !label || !explore) return () => {}
   const text = [...article.querySelectorAll('[data-project-reveal]')]
   const media = gsap.matchMedia()
   const controller = new AbortController()
@@ -102,15 +103,11 @@ export function initOceanDescent(section) {
     let layout
     let disposed = false
     let lastMode = ''
-    let waterTime = 0
-    let sceneVisible = false
-    let ticking = false
     let particlesVisible = false
-    let currentAtEntry = -2
     let observedSize = ''
     // Keep the existing chapter's trigger and runway hooks so its eight
     // horizontal pages begin exactly after the descent is complete.
-    const runway = () => Math.round(innerHeight * (context.conditions.phone ? 1 : 1.1))
+    const runway = () => Math.round(innerHeight * (context.conditions.phone ? 2 : 2.3))
 
     function measure() {
       section.style.setProperty('--sail-runway', `${runway()}px`)
@@ -119,6 +116,13 @@ export function initOceanDescent(section) {
       if (layout && needsRestore(layout, { width, height })) rememberProgress()
       layout = { width, height }
       particles.resize(width, height)
+      // Keep the painted moon path and the underwater light at the same part
+      // of the viewport, including the narrow crop on portrait screens.
+      if (ceilingImage) {
+        const crop = Math.min(1, ceiling.clientWidth / ceiling.clientHeight / 2)
+        const left = Math.max(0, Math.min(1 - crop, .25 - .375 * crop))
+        ceilingImage.style.objectPosition = `${(crop < .9999 ? left / (1 - crop) * 100 : 50).toFixed(3)}% 0`
+      }
       observedSize = `${width}:${height}`
     }
     function fade(element, opacity, y = 0) {
@@ -127,59 +131,46 @@ export function initOceanDescent(section) {
       if (y) element.style.transform = `translate3d(0,${y.toFixed(3)}px,0)`
       else element.style.removeProperty('transform')
     }
-    function tickWater(_time, deltaTime) {
-      waterTime += Math.min(deltaTime / 1000, .05)
-      render()
-    }
-    function syncPlayback() {
-      const playing = !disposed && sceneVisible && !document.hidden && state.progress < .98
-      if (playing === ticking) return
-      ticking = playing
-      if (playing) gsap.ticker.add(tickWater)
-      else gsap.ticker.remove(tickWater)
-    }
     function render() {
       if (!layout || disposed) return
       const p = clamp(state.progress)
       const { width, height } = layout
       lastProgress = p
-      const leaveType = smooth(range(p, 0, .18))
-      const passSurface = smooth(range(p, 0, .34))
-      const recede = smooth(range(p, 0, .7))
-      const approach = smooth(range(p, .08, .62))
-      const reveal = smooth(range(p, .25, .72))
-      const sceneAlpha = smooth(range(p, 0, .12)) * (1 - smooth(range(p, .58, .9)))
+      const leaveType = smooth(range(p, .05, .23))
+      const immersed = smooth(range(p, .32, .51))
+      const recede = smooth(range(p, .42, .90))
+      const approach = smooth(range(p, .68, .96))
+      const reveal = smooth(range(p, .72, .98))
+      const sceneAlpha = smooth(range(p, .30, .40)) * (1 - smooth(range(p, .76, .97)))
 
-      // The crests pass overhead first. The same current continues from the
-      // typography; there is no incoming object or framed image aperture.
-      if (!lastMode || p === 0) {
-        const live = parseFloat(section.style.getPropertyValue('--wave-current-x'))
-        currentAtEntry = Number.isFinite(live) ? live : -2
-      }
-      const nearBob = Math.sin(waterTime * .85) * 5 * (1 - passSurface)
-      const farBob = Math.sin(waterTime * .7 + 1) * 3 * (1 - passSurface)
-      waves.style.transform = `translate3d(${(currentAtEntry * width / 100).toFixed(3)}px,${(-height * 1.05 * passSurface).toFixed(3)}px,0)`
-      waves.style.opacity = (1 - smooth(range(p, .15, .38))).toFixed(4)
-      front.style.transform = `translate3d(0,${nearBob.toFixed(3)}px,0) scaleY(${mix(1, .9, passSurface).toFixed(4)})`
-      back.style.transform = `translate3d(0,${(farBob - height * .08 * passSurface).toFixed(3)}px,0) scaleY(${mix(1, .93, passSurface).toFixed(4)})`
-
+      // First look down toward the reflected moon. As the lens passes through
+      // the surface, that whole plane tilts away into the ceiling above us.
+      section.dispatchEvent(new CustomEvent('ocean-entry-camera', { detail: { progress: p } }))
+      nightScene.style.transform = `perspective(${(height * 2.8).toFixed(1)}px) translate3d(0,${(-height * .31 * immersed).toFixed(3)}px,0) rotateX(${(-48 * immersed).toFixed(3)}deg) scale(${mix(1, 1.35, immersed).toFixed(4)})`
+      const feather = `linear-gradient(#000 0%,#000 ${(100 - immersed * 40).toFixed(3)}%,transparent 100%)`
+      nightScene.style.maskImage = feather
+      nightScene.style.webkitMaskImage = feather
+      opening.style.opacity = (1 - smooth(range(p, .37, .54))).toFixed(4)
+      opening.style.visibility = p >= .54 ? 'hidden' : 'visible'
+      opening.inert = p >= .31
       scene.style.opacity = sceneAlpha.toFixed(4)
-      ceiling.style.transform = `translate3d(0,${mix(height * .1, -height * .24, recede).toFixed(3)}px,0) scale(${mix(1.04, 1, recede).toFixed(4)})`
-      // Hold the overhead light until the seabed's own light has taken over.
-      ceiling.style.opacity = (1 - smooth(range(approach, .55, 1))).toFixed(4)
-      shade.style.opacity = mix(.1, .45, smooth(range(p, .15, .6))).toFixed(4)
-      if (p > .08 && p < .95) {
-        particles.render(p, waterTime)
+      ceiling.style.transform = `translate3d(0,${mix(0, -height * .22, recede).toFixed(3)}px,0) scale(${mix(1.08, 1, recede).toFixed(4)})`
+      ceiling.style.opacity = (1 - smooth(range(p, .70, .96))).toFixed(4)
+      shade.style.opacity = mix(.12, .62, smooth(range(p, .43, .86))).toFixed(4)
+      const chapterAlpha = smooth(range(p, .50, .60)) * (1 - smooth(range(p, .66, .76)))
+      fade(chapter, chapterAlpha, (1 - smooth(range(p, .50, .62))) * 20)
+      if (p > .39 && p < .97) {
+        particles.render(range(p, .34, 1), p * 3)
         particlesVisible = true
       } else if (particlesVisible) {
-        particles.render(0, waterTime)
+        particles.render(0, 0)
         particlesVisible = false
       }
 
       // The seabed rises out of the blue distance, then settles into the exact
       // existing cover composition. Keep the project's screen pixels rigid.
       article.style.setProperty('--seabed-reveal', approach.toFixed(4))
-      article.style.setProperty('--project-depth', smooth(range(p, .4, .85)).toFixed(4))
+      article.style.setProperty('--project-depth', smooth(range(p, .78, .98)).toFixed(4))
       // The overscan covers the viewport throughout the small rise, so both
       // images can crossfade in full without a mask cutting through the rays.
       environment.style.transform = `translate3d(0,${((1 - approach) * height * .08).toFixed(3)}px,0) scale(${mix(1.2, 1, approach).toFixed(4)})`
@@ -188,26 +179,25 @@ export function initOceanDescent(section) {
       surface.style.visibility = reveal > 0 ? 'visible' : 'hidden'
       surface.style.filter = reveal < 1 ? `blur(${((1 - reveal) * 3).toFixed(3)}px)` : 'none'
 
-      fade(typeWindow, 1 - leaveType, -height * .08 * leaveType)
+      fade(typeWindow, 1 - leaveType, -height * .10 * leaveType)
       fade(label, 1 - leaveType, -height * .04 * leaveType)
       fade(explore, 1 - leaveType, -height * .04 * leaveType)
-      const ranges = [[.45, .7], [.49, .75], [.55, .8], [.58, .84]]
+      const ranges = [[.80, .94], [.82, .96], [.84, .98], [.86, 1]]
       text.forEach((element, index) => {
         const amount = smooth(range(p, ...ranges[index]))
         fade(element, amount, 16 * (1 - amount))
       })
-      const readable = p >= .9
+      const readable = p >= .995
       article.inert = !readable
       article.classList.toggle('is-readable', readable)
       section.dataset.descentProgress = p.toFixed(4)
-      const mode = p <= 0 ? 'type' : p < .32 ? 'immersing' : 'deep'
+      const mode = p <= 0 ? 'surface' : p < .43 ? 'immersing' : 'deep'
       if (mode !== lastMode) {
         lastMode = mode
         section.classList.toggle('is-descending', p > 0)
-        section.classList.toggle('is-submerged', p >= .32)
+        section.classList.toggle('is-submerged', p >= .43)
         section.dispatchEvent(new Event('depth-statechange'))
       }
-      syncPlayback()
     }
 
     measure()
@@ -223,17 +213,11 @@ export function initOceanDescent(section) {
     })
     activeTrigger = animation.scrollTrigger
     render()
-    const observer = new IntersectionObserver(entries => {
-      sceneVisible = entries.some(entry => entry.isIntersecting)
-      syncPlayback()
-    })
-    observer.observe(stage)
-    document.addEventListener('visibilitychange', syncPlayback)
     jumpToProject = () => {
       jumpAnimation?.kill()
       const position = { y: scrollY }
       jumpAnimation = gsap.to(position, {
-        y: animation.scrollTrigger.end + 2, duration: 1.8, ease: 'power2.inOut',
+        y: animation.scrollTrigger.end + 2, duration: 2.6, ease: 'power2.inOut',
         onUpdate: () => window.scrollTo({ top: position.y, behavior: 'instant' }),
         onComplete: () => {
           jumpAnimation = null
@@ -261,10 +245,7 @@ export function initOceanDescent(section) {
       jumpAnimation = null
       cancelAnimationFrame(refreshFrame)
       dimensions.disconnect()
-      observer.disconnect()
       particles.destroy()
-      gsap.ticker.remove(tickWater)
-      document.removeEventListener('visibilitychange', syncPlayback)
       jumpToProject = undefined
       animation.scrollTrigger?.kill()
       animation.kill()
@@ -272,10 +253,12 @@ export function initOceanDescent(section) {
       section.style.removeProperty('--sail-runway')
       delete section.dataset.descentProgress
       article.inert = false
+      opening.inert = false
       article.classList.remove('is-readable')
       article.style.removeProperty('--seabed-reveal')
       article.style.removeProperty('--project-depth')
-      ;[scene, ceiling, shade, waves, front, back, environment, surface, typeWindow, label, explore, ...text].forEach(element => element.removeAttribute('style'))
+      ;[scene, ceiling, shade, opening, nightScene, chapter, environment, surface, typeWindow, label, explore, ...text].forEach(element => element.removeAttribute('style'))
+      ceilingImage?.style.removeProperty('object-position')
       section.dispatchEvent(new Event('depth-statechange'))
     }
   })

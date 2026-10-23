@@ -25,7 +25,9 @@ dist-ssr
 
 # Local files
 artifacts/
+output/
 .env
 .env.*
 !.env.example
 .vercel
+.env*

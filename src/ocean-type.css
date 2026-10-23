@@ -1,44 +1,120 @@
-/* A quiet surface between the underwater introduction and selected work. */
+/* The last view above water, before the selected works descend into the sea. */
 .ocean-type {
   position: relative;
   isolation: isolate;
   overflow: visible;
   background: var(--insight-color-bg);
-  color: #f0f2f4;
+  color: #e6eef4;
 }
 .ocean-type__stage {
   position: relative;
   overflow: clip;
-  min-height: clamp(740px, 94svh, 1180px);
-  padding: clamp(168px, 24svh, 300px) var(--container-gutter) 108px;
+}
+.ocean-type__opening {
+  position: relative;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 540px;
+  overflow: clip;
+  background: #020b1a;
+}
+.ocean-entry__scene,
+.ocean-entry__shade {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+.ocean-entry__scene { z-index: 0; overflow: hidden; transform-origin: 50% 0; will-change: transform, opacity; }
+.ocean-entry__scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: 50% 50%;
+  user-select: none;
+}
+.ocean-entry__surface {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+  opacity: 0;
+  pointer-events: none;
+}
+.ocean-entry__scene .ocean-entry__moon-surface {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  object-position: 50% 50%;
+}
+.ocean-entry__shade {
+  z-index: 1;
+  background:
+    linear-gradient(180deg, #02091459 0%, #0209140d 31%, transparent 51%, #020b1a2b 80%, #020b1a73 100%),
+    linear-gradient(90deg, #0209143d 0%, transparent 28% 72%, #0209143d 100%);
 }
 .ocean-type__label {
   position: absolute;
+  z-index: 5;
   top: clamp(28px, 4svh, 48px);
   left: var(--container-gutter);
   margin: 0;
-  color: #b1c8dc;
-  font: 400 12px/1.4 var(--insight-font-family);
-  letter-spacing: .2em;
+  color: #a7bfd0;
+  font: 400 10px/1.5 var(--insight-font-family);
+  letter-spacing: .23em;
+}
+.ocean-type__type-window {
+  position: absolute;
+  z-index: 3;
+  top: clamp(106px, 13.5svh, 176px);
+  left: var(--container-gutter);
+  right: var(--container-gutter);
+  text-align: center;
 }
 .ocean-type__text {
-  position: relative;
-  z-index: 2;
-  display: block;
-  max-width: 100%;
-  margin: 0;
-  font-family: 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(60px, 7.05vw, 160px);
-  font-weight: 100;
+  max-width: 14ch;
+  margin: 0 auto;
+  color: #e4edf4;
+  font: 400 clamp(48px, 5.25vw, 96px)/.99 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
   font-kerning: normal;
-  line-height: 1.08;
-  letter-spacing: -.035em;
+  letter-spacing: -.045em;
   text-transform: uppercase;
+  text-wrap: balance;
 }
-.ocean-type__segment { white-space: normal; }
-.ocean-type__accent { color: #b9d8ec; }
-/* Keep the whole sentence in one held scene. Document scroll moves its single
-   line sideways; the independently animated letters ride a continuous swell. */
+.ocean-type__text > span { display: block; }
+.ocean-entry__caption {
+  margin: clamp(20px, 2.5svh, 30px) 0 0;
+  color: #a2bacb;
+  font: 400 9px/1.6 var(--insight-font-family);
+  letter-spacing: .26em;
+}
+.ocean-type__explore {
+  position: absolute;
+  z-index: 6;
+  left: var(--container-gutter);
+  bottom: clamp(32px, 4.5svh, 60px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 14px;
+  min-width: 44px;
+  min-height: 56px;
+  color: #b5ccdc;
+  font: 400 10px/1.5 var(--insight-font-family);
+  letter-spacing: .23em;
+  text-decoration: none;
+}
+.ocean-type__explore svg {
+  width: 20px;
+  height: 14px;
+  stroke: #d8e5f0;
+  stroke-width: 1.2;
+}
+.ocean-type__explore:focus-visible { outline: var(--focus-ring); outline-offset: 8px; }
+
+/* One native sticky stage also holds the descent and the first project. */
 .ocean-type.is-tidal { height: calc(100svh + var(--ocean-type-runway, 0px)); }
 .ocean-type.is-tidal > .ocean-type__stage {
   position: sticky;
@@ -46,114 +122,20 @@
   height: 100svh;
   min-height: 0;
 }
-.is-tidal .ocean-type__type-window {
-  width: calc(100% + var(--container-gutter) * 2);
-  margin: -48px calc(-1 * var(--container-gutter));
-  padding-block: 48px;
-  overflow: clip;
-}
-.is-tidal .ocean-type__text {
-  width: max-content;
-  max-width: none;
-  font-size: clamp(76px, 9.4vw, 176px);
-  font-kerning: none;
-  line-height: 1.18;
-  white-space: pre;
-  will-change: transform;
-}
-.is-tidal .ocean-type__segment { position: relative; white-space: pre; }
-.ocean-type__word { position: relative; display: inline-block; }
-.ocean-type__letter { position: relative; display: inline-block; transform-origin: 50% 80%; }
-.ocean-type__waves {
-  position: relative;
-  z-index: 1;
-  width: calc(100% + var(--container-gutter) * 2 + 8vw);
-  aspect-ratio: 3 / 1;
-  margin-top: clamp(-116px, -6vw, -48px);
-  margin-left: calc(-1 * var(--container-gutter) - 4vw);
-  pointer-events: none;
-  /* Only the water fades; the section itself stays the site's original navy. */
-  -webkit-mask-image: linear-gradient(#000 0 66%, rgba(0, 0, 0, .88) 78%, transparent 99%);
-  mask-image: linear-gradient(#000 0 66%, rgba(0, 0, 0, .88) 78%, transparent 99%);
-}
-.ocean-type__layer {
-  position: absolute;
-  inset: 0;
-  transform-origin: 50% 80%;
-  animation-play-state: paused;
-}
-.ocean-type__layer img {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: contain;
-  user-select: none;
-}
-.ocean-type__layer--back {
-  inset: -12% -2% 12%;
-  opacity: .58;
-  filter: brightness(.7) saturate(.82);
-  animation: work-wave-distant 8s ease-in-out infinite;
-  animation-play-state: paused;
-}
-.ocean-type__layer--front {
-  filter: brightness(.86) saturate(.9);
-  animation: work-wave-near 7.2s ease-in-out infinite;
-  animation-play-state: paused;
-}
-.ocean-type.is-in-view .ocean-type__layer { animation-play-state: running; }
-.ocean-type__explore {
-  position: absolute;
-  left: var(--container-gutter);
-  bottom: clamp(32px, 4svh, 56px);
-  z-index: 2;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 12px;
-  min-width: 44px;
-  min-height: 56px;
-  color: #b1c8dc;
-  font: 400 11px/1.5 var(--insight-font-family);
-  letter-spacing: .19em;
-  text-decoration: none;
-}
-.ocean-type__explore svg { width: 20px; height: 14px; stroke: #d8e5f0; stroke-width: 1.2; }
-.ocean-type__explore:focus-visible { outline: var(--focus-ring); outline-offset: 8px; }
-@keyframes work-wave-near {
-  0%, 100% { transform: translate3d(-.45%, 5px, 0) scaleY(.987); }
-  50% { transform: translate3d(.5%, -7px, 0) scaleY(1.026); }
-}
-@keyframes work-wave-distant {
-  0%, 100% { transform: translate3d(.4%, -3px, 0) scaleY(1.012); }
-  50% { transform: translate3d(-.5%, 5px, 0) scaleY(.98); }
-}
+.is-tidal .ocean-type__opening { height: 100%; min-height: 0; }
+
 @media (max-width: 1099px) {
-  .ocean-type__stage { min-height: min(88svh, 1000px); padding-top: clamp(144px, 21svh, 240px); }
-  .ocean-type__text { font-size: clamp(48px, 7.8vw, 88px); }
-  .ocean-type__waves { width: 130vw; margin-left: calc(-1 * var(--container-gutter) - 15vw); margin-top: -4vw; }
+  .ocean-type__text { font-size: clamp(48px, 6.6vw, 72px); }
 }
 @media (max-width: 767px) {
-  .ocean-type__stage { min-height: clamp(600px, 86svh, 820px); padding-top: clamp(144px, 22svh, 192px); padding-bottom: 112px; }
-  .ocean-type__label { top: 28px; font-size: 10px; letter-spacing: .18em; }
-  .ocean-type__text { font-size: clamp(34px, 10.5vw, 64px); line-height: 1.15; letter-spacing: -.035em; }
-  .is-tidal .ocean-type__text { font-size: clamp(56px, 15vw, 88px); line-height: 1.2; }
-  .ocean-type__waves {
-    width: 190vw;
-    margin-left: calc(-1 * var(--container-gutter) - 68vw);
-    margin-top: 10px;
-  }
-  .ocean-type__layer--front { animation-name: work-wave-near-compact; }
-  .ocean-type__explore { bottom: 32px; font-size: 10px; }
+  .ocean-type__label { top: 28px; font-size: 9px; letter-spacing: .18em; }
+  .ocean-type__type-window { top: clamp(106px, 13.5svh, 145px); }
+  .ocean-type__text { font-size: clamp(40px, 10.7vw, 64px); line-height: 1.03; letter-spacing: -.055em; }
+  .ocean-entry__caption { margin-top: 22px; font-size: 8px; letter-spacing: .18em; }
+  .ocean-type__explore { bottom: 32px; font-size: 9px; letter-spacing: .19em; }
 }
-@keyframes work-wave-near-compact {
-  0%, 100% { transform: translate3d(-.3%, 3px, 0) scaleY(.99); }
-  50% { transform: translate3d(.35%, -4px, 0) scaleY(1.02); }
-}
-@media (max-height: 600px) and (min-width: 768px) {
-  .ocean-type__stage { min-height: 640px; padding-top: 150px; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .ocean-type__layer { animation: none; transform: none; }
+@media (max-height: 699px) and (min-width: 768px) {
+  .ocean-type__type-window { top: 96px; }
+  .ocean-type__text { font-size: clamp(42px, 5vw, 64px); }
+  .ocean-entry__caption { margin-top: 20px; }
 }

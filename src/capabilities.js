@@ -1,3 +1,5 @@
+import { initMirrorCurrentTransition } from './mirror-current-transition.js'
+
 export function initCapabilities(section) {
   if (!section) return () => {}
 
@@ -36,8 +38,10 @@ export function initCapabilities(section) {
   }
   reducedMotion.addEventListener('change', configure, { signal })
   configure()
+  const destroyCurrent = initMirrorCurrentTransition(section)
 
   return () => {
+    destroyCurrent()
     controller.abort()
     revealObserver?.disconnect()
     section.classList.remove('is-motion-ready')

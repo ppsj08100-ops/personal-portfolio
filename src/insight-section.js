@@ -1,3 +1,5 @@
+import { initInsightOceanZoom } from './insight-ocean-zoom.js'
+
 export function initInsightReveal(section) {
   if (!section || !('IntersectionObserver' in window)) return () => {}
 
@@ -6,16 +8,10 @@ export function initInsightReveal(section) {
   const scene = section.closest('#app')
   const currentPlane = scene?.querySelector('.ocean-transition')
   const typeMeasure = document.createElement('canvas').getContext('2d')
-  const clam = section.querySelector('.insight-clam')
-  const clamTrigger = clam?.querySelector('.insight-clam__trigger')
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
   const controller = new AbortController()
   let observer
-  let clamObserver
   let revealed = false
-  let opened = false
-  let textureReady = false
-  let openFrame
   let alignFrame
 
   function alignCurrent() {
@@ -48,30 +44,6 @@ export function initInsightReveal(section) {
   document.fonts.addEventListener('loadingdone', queueAlignment, { signal: controller.signal })
   queueAlignment()
 
-  function openClam() {
-    if (opened) return
-    opened = true
-    clamObserver?.disconnect()
-    // Paint the closed pose before opening, including on direct anchor visits.
-    openFrame = requestAnimationFrame(() => {
-      openFrame = requestAnimationFrame(() => clam?.classList.add('is-open'))
-    })
-  }
-
-  function observeClam() {
-    clamObserver?.disconnect()
-    if (!clamTrigger || opened || !textureReady) return
-    if (reducedMotion.matches) {
-      openClam()
-      return
-    }
-    // Watch the closed shell's body, rather than the empty area above its lid.
-    clamObserver = new IntersectionObserver((entries) => {
-      if (entries.some((entry) => entry.isIntersecting && entry.intersectionRatio >= .6)) openClam()
-    }, { rootMargin: `0px 0px -${innerHeight * .08}px 0px`, threshold: .6 })
-    clamObserver.observe(clamTrigger)
-  }
-
   function reveal() {
     revealed = true
     section.classList.add('is-revealed')
@@ -97,44 +69,22 @@ export function initInsightReveal(section) {
     if (reducedMotion.matches) {
       section.classList.remove('is-motion-ready')
       reveal()
-      openClam()
     }
   }, { signal: controller.signal })
   window.addEventListener('resize', () => {
     queueAlignment()
     observe()
-    observeClam()
   }, { signal: controller.signal })
   observe()
 
-  if (clam) {
-    if (reducedMotion.matches) {
-      openClam()
-    } else {
-      clam.classList.add('is-motion-ready')
-      const texturePaths = new Set(Array.from(clam.querySelectorAll('image'), image => image.getAttribute('href')))
-      Promise.all(Array.from(texturePaths, path => {
-        const texture = new Image()
-        texture.src = path
-        return texture.decode()
-      })).then(() => {
-        if (controller.signal.aborted) return
-        textureReady = true
-        observeClam()
-      }).catch(() => {
-        if (!controller.signal.aborted) openClam()
-      })
-    }
-  }
+  const destroyOceanZoom = initInsightOceanZoom(section)
 
   return () => {
+    destroyOceanZoom()
     observer?.disconnect()
-    clamObserver?.disconnect()
     typeObserver.disconnect()
     cancelAnimationFrame(alignFrame)
-    cancelAnimationFrame(openFrame)
     controller.abort()
-    clam?.classList.remove('is-motion-ready', 'is-open')
     section.classList.remove('is-motion-ready', 'is-revealed')
     scene?.style.removeProperty('--post-hero-type-offset')
     scene?.style.removeProperty('--post-hero-shift-x')

@@ -1,0 +1,20 @@
+/* The host is already positioned by the exhibition layout. No device is tinted. */
+.has-project-bubbles { isolation: isolate; }
+.project-bubbles {
+  position: absolute;
+  z-index: -1;
+  top: -6%;
+  left: -9%;
+  width: 118%;
+  height: 112%;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+.project-bubbles[hidden] { display: none; }
+@media (max-width: 520px) {
+  .project-bubbles { left: -4%; width: 108%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-bubbles { display: none; }
+}

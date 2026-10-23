@@ -7,30 +7,6 @@
 }
 .portfolio__project-link { display: block; color: inherit; text-decoration: none; }
 .has-sail .ocean-type__stage { padding: 0; min-height: 0; overflow: clip; }
-.ocean-type__opening {
-  position: relative;
-  min-height: 52svh;
-  padding: clamp(168px, 24svh, 300px) var(--container-gutter) 96px;
-}
-.has-sail .ocean-type__waves {
-  position: absolute;
-  z-index: auto;
-  top: calc(clamp(168px, 24svh, 300px) + clamp(76px, 9.4vw, 176px) * 1.18 - clamp(48px, 6vw, 116px));
-  left: -4vw;
-  width: 116vw;
-  margin: 0;
-  -webkit-mask-image: none;
-  mask-image: none;
-}
-.has-sail .ocean-type__layer {
-  -webkit-mask-image: linear-gradient(#000 0 65%, rgba(0,0,0,.9) 78%, transparent 100%);
-  mask-image: linear-gradient(#000 0 65%, rgba(0,0,0,.9) 78%, transparent 100%);
-}
-.has-sail .ocean-type__layer--back { z-index: 0; }
-.has-sail .ocean-type__layer--front { z-index: 2; }
-.has-sail.is-descent-ready .ocean-type__layer { animation: none; transform-origin: 0 0; will-change: transform; }
-.has-sail .ocean-type__text { z-index: 3; }
-.has-sail .ocean-type__explore { z-index: 6; }
 .sail-transition {
   position: relative;
   color: var(--insight-color-text);
@@ -74,15 +50,12 @@
 .is-tidal .sail-transition__scene { position: absolute; inset: 0; height: auto; }
 .is-tidal .sail-project { height: 100%; display: flex; flex-direction: column; justify-content: center; padding-block: clamp(28px, 5svh, 64px); pointer-events: none; }
 .is-tidal .sail-project.is-readable { pointer-events: auto; }
+.is-descent-ready .project-details--voyage:not(.is-project-ready) { pointer-events: none; }
 .is-tidal .sail-project__screen { flex: 0 0 auto; }
 @media (max-width: 1099px) {
-  .ocean-type__opening { padding-top: clamp(144px, 21svh, 240px); }
-  .has-sail .ocean-type__waves { width: 130vw; left: -13vw; top: calc(clamp(144px, 21svh, 240px) + clamp(76px, 9.4vw, 176px) * 1.18 - 4vw); }
   .sail-project__discipline { flex-basis: 100%; text-align: left; }
 }
 @media (max-width: 767px) {
-  .ocean-type__opening { padding: clamp(144px, 22svh, 192px) var(--container-gutter) 88px; }
-  .has-sail .ocean-type__waves { width: 190vw; left: -66vw; top: calc(clamp(144px, 22svh, 192px) + clamp(56px, 15vw, 88px) * 1.2 + 10px); }
   .sail-transition__scene { height: 400px; }
   .sail-project { width: calc(100% - var(--container-gutter) * 2); }
   .sail-project__eyebrow { margin-bottom: 24px; gap: 18px; font-size: 9px; }
@@ -97,12 +70,8 @@
 }
 @media (max-height: 699px), (prefers-reduced-motion: reduce) {
   .has-sail .ocean-type__stage { overflow-x: clip; overflow-y: visible; }
-  .has-sail .ocean-type__waves { top: clamp(300px, 45vw, 620px); }
   .sail-project__screen { max-height: none; }
 }
 @media (prefers-reduced-motion: reduce) {
   .sail-transition__scene { display: none; }
-  .has-sail .ocean-type__waves { display: none; }
-  .ocean-type__opening { min-height: 0; padding-block: clamp(72px, 12svh, 120px); }
-  .has-sail .ocean-type__explore { position: relative; left: auto; bottom: auto; margin-top: 24px; }
 }

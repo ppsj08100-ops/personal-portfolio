@@ -50,6 +50,51 @@
     linear-gradient(90deg, #010a1c66 0%, #020e2112 32% 67%, #010a1c70 100%);
 }
 .ocean-descent__particles { display: block; }
+.ocean-descent__chapter {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(20px, 3svh, 32px);
+  padding: 8svh var(--container-gutter);
+  color: #e3edf4;
+  font-family: 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  text-align: center;
+  opacity: 0;
+}
+.ocean-descent__chapter::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 12% 8%;
+  background: radial-gradient(ellipse, #020c1f66, transparent 65%);
+}
+.ocean-descent__chapter-label {
+  margin: 0;
+  color: #a7c3d8;
+  font-size: clamp(9px, .75vw, 12px);
+  line-height: 1.6;
+  letter-spacing: .25em;
+}
+.ocean-descent__chapter-title {
+  margin: 0;
+  font-size: clamp(56px, 7.4vw, 116px);
+  line-height: 1.12;
+  letter-spacing: .035em;
+}
+.ocean-descent__chapter-title span { display: block; }
+.ocean-descent__chapter-caption {
+  margin: 0;
+  max-width: 32rem;
+  color: #9ebbd0;
+  font-size: clamp(8px, .65vw, 10px);
+  line-height: 1.8;
+  letter-spacing: .16em;
+}
 @media (max-width: 767px) {
   .ocean-descent__ceiling img { object-position: 25% 0; }
+  .ocean-descent__chapter-title { font-size: clamp(42px, 12vw, 72px); }
+  .ocean-descent__chapter-caption { max-width: 17rem; }
 }

@@ -1,0 +1,46 @@
+.mirror-current {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  overflow: hidden;
+  isolation: isolate;
+  pointer-events: none;
+  contain: strict;
+}
+.mirror-current[hidden] { display: none; }
+.mirror-current__shade,
+.mirror-current__drawing,
+.mirror-current__surface { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.mirror-current__shade { background: #020b1d; }
+.mirror-current__water-plane {
+  position: absolute;
+  inset: -4%;
+  opacity: 0;
+  pointer-events: none;
+  background: url('/images/approach-midnight-water.png') center / cover no-repeat;
+  filter: brightness(.9) saturate(.8);
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
+  mask-image: linear-gradient(180deg, transparent, #000 12%, #000 88%, transparent);
+}
+.mirror-current__surface[data-surface-ready="true"] + .mirror-current__water-plane { visibility: hidden; }
+.mirror-current__drawing { display: block; overflow: visible; }
+.mirror-current__mirror { opacity: 1; }
+.mirror-current__surface { display: block; opacity: 0; }
+/* The actual image remains opaque. Its identical foreground copy builds the
+   reflection beneath the water, then hands back without two translucent faces. */
+.capabilities.is-current-linked:not(.is-current-landed) .capabilities__mirror-frame { visibility: hidden; }
+.capabilities.is-current-linked .capabilities__intro {
+  opacity: var(--current-title-opacity, 1);
+  transform: translateY(var(--current-title-offset, 0px));
+}
+.capabilities.is-current-linked.is-motion-ready .capabilities__intro [data-capabilities-reveal],
+.capabilities.is-current-linked.is-motion-ready .capabilities__artwork[data-capabilities-reveal] {
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+@media (prefers-reduced-motion: reduce), (max-height: 599px) {
+  .mirror-current { display: none; }
+  .capabilities.is-current-linked .capabilities__intro { opacity: 1; transform: none; }
+  .capabilities.is-current-linked:not(.is-current-landed) .capabilities__mirror-frame { visibility: visible; }
+}

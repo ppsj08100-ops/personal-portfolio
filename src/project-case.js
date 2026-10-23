@@ -4,18 +4,29 @@ import { initProjectPreview } from './project-preview.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const timing = { entry: .18, slide: 1, between: .3, exit: .22 }
+const defaultTiming = { entry: .18, slide: 1, between: .3, exit: .22 }
+const voyageTiming = { entry: .3, slide: 1, between: .65, exit: .45 }
+const transitionProperties = ['--chapter-visibility', '--chapter-copy-visibility', '--chapter-travel-x', '--chapter-settle-y', '--chapter-scale']
+
+function smoothRange(start, end, value) {
+  const progress = Math.max(0, Math.min(1, (value - start) / (end - start)))
+  return progress * progress * (3 - 2 * progress)
+}
 
 export function initProjectCase(section, { id = 'diptyque-project-pages' } = {}) {
   const chapter = section?.closest('.project-details')
   const stage = chapter?.querySelector('.project-details__stage')
   const track = stage?.querySelector('.project-pages')
   if (!track) return () => {}
+  const isVoyage = chapter.classList.contains('project-details--voyage')
+  const timing = isVoyage ? voyageTiming : defaultTiming
   const voyage = chapter.closest('.ocean-type.has-sail')
   const runwayHost = voyage || chapter
   const destroyPreviews = [...chapter.querySelectorAll('[data-project-preview]')].map(initProjectPreview)
 
   const pages = [...track.children]
+  const sceneRoots = isVoyage ? pages.map(page => page.matches('.project-overview, .sail-project--seabed')
+    ? page : page.querySelector('.sail-project--seabed')) : []
   const duration = timing.entry + (pages.length - 1) * timing.slide
     + Math.max(0, pages.length - 2) * timing.between + timing.exit
   const pageProgress = pages.map((_, index) => index === 0 ? 0
@@ -40,10 +51,39 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
   let destroyed = false
   let stageVisible = false
   let viewport = { width: innerWidth, height: innerHeight }
+  let previousScenePage = 0
+  let sceneDirection = 1
   const stageObserver = new IntersectionObserver(entries => {
     stageVisible = entries.some(entry => entry.isIntersecting && entry.intersectionRatio >= .5)
   }, { threshold: [0, .5] })
   stageObserver.observe(stage)
+
+  function clearSceneTransition() {
+    sceneRoots.forEach(scene => transitionProperties.forEach(property => scene?.style.removeProperty(property)))
+    chapter.style.removeProperty('--chapter-shift')
+    chapter.style.removeProperty('--chapter-flow')
+    previousScenePage = 0
+    sceneDirection = 1
+  }
+
+  function renderSceneTransition(pagePosition) {
+    if (!isVoyage) return
+    if (Math.abs(pagePosition - previousScenePage) > .0001) sceneDirection = pagePosition > previousScenePage ? 1 : -1
+    previousScenePage = pagePosition
+    chapter.style.setProperty('--chapter-flow', String(sceneDirection))
+    chapter.style.setProperty('--chapter-shift', smoothRange(0, .5, Math.abs(pagePosition - Math.round(pagePosition))).toFixed(4))
+    sceneRoots.forEach((scene, index) => {
+      if (!scene) return
+      const offset = Math.max(-1, Math.min(1, index - pagePosition))
+      const distance = Math.abs(offset)
+      const recession = smoothRange(0, .95, distance)
+      scene.style.setProperty('--chapter-visibility', (1 - recession * .65).toFixed(4))
+      scene.style.setProperty('--chapter-copy-visibility', (1 - smoothRange(.08, .42, distance)).toFixed(4))
+      scene.style.setProperty('--chapter-travel-x', `${(offset * 20).toFixed(3)}px`)
+      scene.style.setProperty('--chapter-settle-y', `${(recession * 14).toFixed(3)}px`)
+      scene.style.setProperty('--chapter-scale', (1 - recession * .015).toFixed(4))
+    })
+  }
 
   function select(index) {
     if (index === activeIndex) return
@@ -116,7 +156,9 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
     const position = { page: 0 }
     chapter.classList.add('is-project-paged')
     track.scrollLeft = 0
-    const runway = () => Math.round(stage.clientHeight * (innerWidth < 768 ? 1.25 : 1.55) * (pages.length - 1))
+    const runway = () => Math.round(stage.clientHeight
+      * (isVoyage ? innerWidth < 768 ? 1.8 : 2.3 : innerWidth < 768 ? 1.25 : 1.55)
+      * (pages.length - 1))
     const measure = () => runwayHost.style.setProperty('--project-pages-runway', `${runway()}px`)
     const start = () => voyage
       ? ScrollTrigger.getById('sail-to-project')?.end ?? voyage.getBoundingClientRect().top + scrollY
@@ -137,6 +179,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
       lastProgress = animation?.scrollTrigger?.progress ?? 0
       track.style.transform = `translate3d(${(-position.page * stage.clientWidth).toFixed(3)}px,0,0)`
       chapter.dataset.projectPage = position.page.toFixed(4)
+      renderSceneTransition(position.page)
       select(Math.max(0, Math.min(pages.length - 1, Math.round(position.page))))
       syncReadiness()
     }
@@ -145,7 +188,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
       onUpdate: render,
       scrollTrigger: {
         id, trigger: chapter, refreshPriority: -12,
-        start, end: () => start() + runway(), scrub: .25,
+        start, end: () => start() + runway(), scrub: isVoyage ? .5 : .25,
         invalidateOnRefresh: true,
         onRefreshInit: measure,
         onRefresh: render,
@@ -171,6 +214,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
       runwayHost.style.removeProperty('--project-pages-runway')
       track.style.removeProperty('transform')
       delete chapter.dataset.projectPage
+      clearSceneTransition()
       nativePage()
     }
   })
@@ -197,6 +241,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
     gsap.removeEventListener('matchMediaInit', remember)
     gsap.removeEventListener('matchMedia', restore)
     media.revert()
+    clearSceneTransition()
     pages.forEach(page => { page.inert = false })
     delete chapter.dataset.projectPageIndex
   }

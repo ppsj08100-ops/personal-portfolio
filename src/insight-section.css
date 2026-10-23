@@ -8,16 +8,17 @@
   --insight-letter-spacing: -.01em;
   --insight-top-inset: var(--ocean-message-inset);
   position: relative;
-  /* Let the title and object paint in front of the shared underwater texture. */
+  /* Keep the title in front of the shared underwater texture. */
   isolation: auto;
   display: grid;
-  /* Fit the message and object to their content instead of a spare viewport. */
+  /* Keep the message and illustrated scene in one continuous section. */
   grid-template-rows: auto auto;
   place-items: center;
   padding: var(--space-section) var(--container-gutter);
   padding-block-start: var(--insight-top-inset);
+  padding-block-end: 0;
   color: var(--insight-color-text);
-  /* Continue the supplied image's navy behind the live type and shell. */
+  /* Continue the illustration palette behind the type and ocean scene. */
   background-color: var(--insight-color-bg);
   background-image: linear-gradient(
     180deg,
@@ -48,80 +49,185 @@
 .insight-section__line { display: block; white-space: nowrap; }
 .insight-section__word { display: inline-block; }
 
-.insight-section__still-life {
-  --still-life-size: min(100%, var(--insight-object-width));
-  /* The supplied cutout's top shell contour is 5.75% below its image edge.
-     Compensate for that alpha inset so the drawing, not its box, overlaps. */
-  --still-life-image-inset: calc(var(--still-life-size) * .0575);
-  position: relative;
-  z-index: calc(var(--z-content) + 1);
-  grid-row: 2;
-  align-self: start;
-  width: var(--still-life-size);
-  margin: calc(-1 * (var(--still-life-image-inset) + var(--insight-object-overlap))) 0 0;
-  pointer-events: none;
-}
-.insight-clam {
-  position: relative;
+.insight-section__voyage { position: relative; width: 100%; min-width: 0; }
+.insight-section__stage { position: relative; }
+.insight-section__portal {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
   display: block;
   width: 100%;
-  aspect-ratio: 1;
-  perspective: calc(var(--insight-object-width) * 3);
-  /* Submerge the cutout's edges without changing the section's background. */
-  --still-life-mask: linear-gradient(180deg, transparent 0%, #000 13%, #000 82%, transparent 100%);
-  -webkit-mask-image: var(--still-life-mask);
-  mask-image: var(--still-life-mask);
-  user-select: none;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
 }
-.insight-clam__layer {
+.insight-section__ocean-ink { filter: brightness(1.65); }
+.insight-section.is-immersive {
+  --insight-font-size: min(clamp(2.5rem, 13vw, 16rem), 24.6svh);
+  grid-template-columns: minmax(0, 1fr);
+}
+.insight-section__ocean-world {
+  position: sticky;
+  z-index: 0;
+  top: 0;
+  grid-column: 1;
+  grid-row: 1 / span 2;
+  align-self: start;
+  width: calc(100% + var(--container-gutter) * 2);
+  height: 100svh;
+  margin-inline: calc(-1 * var(--container-gutter));
+  opacity: 0;
+  overflow: clip;
+  pointer-events: none;
+}
+.insight-section__ocean-world > img {
   position: absolute;
   inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
 }
-.insight-clam__layer svg { display: block; width: 100%; height: 100%; overflow: visible; }
-.insight-clam__base { z-index: 0; }
-/* The closed outer valve physically conceals the stationary pearl. */
-.insight-clam__pearl { z-index: 3; }
-.insight-clam__lid {
-  z-index: 2;
-  /* Inner and outer surfaces pivot around the stationary rear hinge. */
-  transform-origin: 50% 63%;
-}
-.insight-clam__outer {
-  z-index: 4;
-  opacity: 0;
-  transform: rotateX(104deg);
-  transform-origin: 50% 63%;
-  backface-visibility: hidden;
-}
-.insight-clam.is-motion-ready.is-open .insight-clam__lid {
-  transition: transform .58s cubic-bezier(.35, .05, .25, 1) .1s, opacity 0s linear .18s;
-}
-.insight-clam.is-motion-ready.is-open .insight-clam__outer {
-  /* Exchange the opaque surfaces edge-on, without a ghosted shell over the pearl. */
-  transition: transform .34s cubic-bezier(.2, .7, .25, 1), opacity 0s linear .18s;
-}
-.insight-clam.is-motion-ready:not(.is-open) .insight-clam__lid {
-  transform: rotateX(-88deg);
-  opacity: 0;
-}
-.insight-clam.is-motion-ready:not(.is-open) .insight-clam__outer { transform: none; opacity: 1; }
-/* Avoid a subpixel pearl fringe along the closed illustrated seam. */
-.insight-clam.is-motion-ready:not(.is-open) .insight-clam__pearl { visibility: hidden; }
-.insight-clam__luster { opacity: .86; }
-.insight-clam.is-motion-ready.is-open .insight-clam__luster {
-  animation: insight-pearl-luster .95s ease-out .3s both;
-}
-@keyframes insight-pearl-luster {
-  0% { opacity: 0; }
-  40% { opacity: 1; }
-  100% { opacity: .86; }
-}
-.insight-clam__trigger {
+/* Darken the departing seabed into the next section, after the full scene hold. */
+.insight-section__ocean-world::after,
+.insight-section__ocean-scene::after {
+  content: '';
   position: absolute;
-  top: 58%;
-  left: 10%;
-  width: 80%;
-  height: 32%;
+  z-index: 2;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(180deg,
+    transparent 40%,
+    rgba(2, 11, 29, .08) 58%,
+    rgba(2, 11, 29, .45) 76%,
+    rgba(2, 11, 29, .88) 91%,
+    var(--introduction-color-bg) 100%);
+}
+.insight-section__ocean-world::after { opacity: var(--insight-exit-progress, 0); }
+.insight-section.is-immersive .insight-section__ocean-scene::after { display: none; }
+.insight-section__shipwreck-light {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.insight-section__shipwreck-glow {
+  opacity: .42;
+  animation: insight-shipwreck-light 8.8s cubic-bezier(.45, 0, .55, 1) infinite;
+}
+@keyframes insight-shipwreck-light {
+  0%, 100% { opacity: .42; }
+  50% { opacity: .86; }
+}
+.insight-section__marine-life,
+.insight-section__marine-life > svg,
+.insight-section__marine-canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+.insight-section__marine-life.has-marine-canvas > svg { visibility: hidden; }
+.insight-section__bubbles,
+.insight-section__light-motes {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.insight-section__sunrays {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.insight-sunray {
+  opacity: .84;
+  /* Each shaft sways from its own surface source inside the positioned SVG group. */
+  transform-box: view-box;
+  transform-origin: 0 0;
+}
+.insight-section__sunrays.is-animated .insight-sunray {
+  animation: insight-sunray-breathe var(--ray-duration) ease-in-out var(--ray-delay) infinite;
+  animation-play-state: paused;
+}
+.insight-section__sunrays.is-active .insight-sunray { animation-play-state: running; }
+@keyframes insight-sunray-breathe {
+  0%, 100% { opacity: .77; transform: skewX(calc(var(--ray-sway) * -.55)) scaleX(.985); }
+  50% { opacity: .95; transform: skewX(var(--ray-sway)) scaleX(1.015); }
+}
+.insight-section.is-immersive .insight-section__voyage {
+  z-index: 1;
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+  width: calc(100% + var(--container-gutter) * 2);
+  height: calc(100svh + var(--insight-zoom-runway, 190svh));
+  margin-inline: calc(-1 * var(--container-gutter));
+}
+.insight-section.is-immersive .insight-section__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  overflow: clip;
+  isolation: isolate;
+}
+.insight-section.is-immersive .insight-section__title {
+  z-index: 1;
+  width: calc(100% - var(--container-gutter) * 2);
+  margin-inline: auto;
+}
+.insight-section.is-immersive .insight-section__stage .insight-section__title .insight-section__line {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+.insight-section__ocean-scene {
+  position: relative;
+  grid-column: 1;
+  grid-row: 2;
+  width: calc(100% + var(--container-gutter) * 2);
+  height: min(88svh, 880px);
+  margin: 0 calc(-1 * var(--container-gutter));
+}
+.insight-section__ocean-scene picture,
+.insight-section__ocean-scene img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.insight-section__ocean-scene img { object-fit: cover; object-position: center; }
+.insight-section__ocean-scene picture {
+  -webkit-mask-image: linear-gradient(transparent, #000 8% 88%, transparent);
+  mask-image: linear-gradient(transparent, #000 8% 88%, transparent);
+}
+/* The static picture also reserves the final pause while the same illustration
+   remains fixed in the shared world above it. */
+.insight-section.is-immersive .insight-section__ocean-scene picture { visibility: hidden; }
+.insight-section.is-immersive .insight-section__ocean-scene > .insight-section__shipwreck-light,
+.insight-section.is-immersive .insight-section__ocean-scene > .insight-section__marine-life,
+.insight-section.is-immersive .insight-section__ocean-scene > .insight-section__bubbles,
+.insight-section.is-immersive .insight-section__ocean-scene > .insight-section__sunrays,
+.insight-section.is-immersive .insight-section__ocean-scene > .insight-section__light-motes { display: none; }
+@media (max-width: 767px) {
+  .insight-section__ocean-scene { height: 80svh; }
+  .insight-section.is-immersive .insight-section__ocean-scene { height: 68svh; }
 }
 
 .insight-section__symbol {
@@ -163,15 +269,8 @@
   to { opacity: 1; transform: translateY(0); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .insight-clam .insight-clam__outer { opacity: 0 !important; transition: none !important; }
-  .insight-clam .insight-clam__luster { animation: none !important; opacity: .86 !important; }
-  .insight-clam .insight-clam__lid,
-  .insight-clam .insight-clam__pearl {
-    transition: none !important;
-    transform: none !important;
-    filter: none !important;
-    opacity: 1 !important;
-  }
+  .insight-section__sunrays.is-animated .insight-sunray { animation: none; opacity: .84; transform: none; }
+  .insight-section__shipwreck-glow { animation: none; opacity: .6; }
   .insight-section .insight-section__line {
     animation: none !important;
     opacity: 1 !important;

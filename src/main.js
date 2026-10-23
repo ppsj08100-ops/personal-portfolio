@@ -1,5 +1,6 @@
 ﻿import '../portfolio-tokens.css'
 import './style.css'
+import './hero-motion.css'
 import './scroll-cue.css'
 import './insight-section.css'
 import './introduction.css'
@@ -9,7 +10,10 @@ import './ocean-type.css'
 import './sail-transition.css'
 import './ocean-descent.css'
 import './project-case.css'
+import './project-overview.css'
+import './project-bubbles.css'
 import './seabed-cover.css'
+import './project-scene-refinements.css'
 import './project-planning.css'
 import './project-research.css'
 import './project-interviews.css'
@@ -31,6 +35,8 @@ import './contact-intro.css'
 import './contact-form.css'
 import './footer.css'
 import { initHero } from './hero.js'
+import { initHeroStars } from './hero-stars.js'
+import { initHeroLocalMotion } from './hero-local-motion.js'
 import { initScrollCue } from './scroll-cue.js'
 import { initInsightReveal } from './insight-section.js'
 import { initIntroduction } from './introduction.js'
@@ -40,6 +46,8 @@ import { initOceanType } from './ocean-type.js'
 import { initOceanDescent } from './ocean-descent.js'
 import { initSeabedCover } from './seabed-cover.js'
 import { initProjectCase } from './project-case.js'
+import { initProjectOverview } from './project-overview.js'
+import { initProjectBubbles } from './project-bubbles.js'
 import { initProjectPlanning } from './project-planning.js'
 import { initProjectResearch } from './project-research.js'
 import { initProjectInterviews } from './project-interviews.js'
@@ -60,6 +68,8 @@ import { initContactForm } from './contact-form.js'
 import { initFooter } from './footer.js'
 
 const destroyHero = initHero(document.querySelector('.hero'))
+const destroyHeroStars = initHeroStars(document.querySelector('.hero'))
+const destroyHeroLocalMotion = initHeroLocalMotion(document.querySelector('.hero'))
 const destroyScrollCue = initScrollCue()
 const destroyInsightReveal = initInsightReveal(document.querySelector('.insight-section'))
 const destroyIntroduction = initIntroduction(document.querySelector('.introduction'))
@@ -68,6 +78,8 @@ const destroyOceanType = initOceanType(document.querySelector('.ocean-type'))
 const destroyOceanDescent = initOceanDescent(document.querySelector('.ocean-type.has-sail'))
 const destroySeabedCover = initSeabedCover(document.querySelector('.sail-project--seabed'))
 const destroyProjectCase = initProjectCase(document.querySelector('.project-case'))
+const destroyProjectOverviews = [...document.querySelectorAll('#diptyque-details .project-overview')].map(initProjectOverview)
+const destroyProjectBubbles = [...document.querySelectorAll('#diptyque-details .project-overview, #diptyque-details .sail-project--seabed')].map(section => initProjectBubbles(section))
 const destroyProjectProcess = initProjectCase(document.querySelector('.project-planning'), { id: 'diptyque-process-pages' })
 const destroyProjectPlanning = initProjectPlanning(document.querySelector('.project-planning'))
 const destroyProjectResearch = initProjectResearch(document.querySelector('.project-research'))
@@ -105,6 +117,8 @@ import('./portfolio-gallery.js').then(({ initPortfolioGallery }) => {
 
 if (import.meta.hot) {
   import.meta.hot.dispose(destroyHero)
+  import.meta.hot.dispose(destroyHeroStars)
+  import.meta.hot.dispose(destroyHeroLocalMotion)
   import.meta.hot.dispose(destroyScrollCue)
   import.meta.hot.dispose(destroyInsightReveal)
   import.meta.hot.dispose(destroyIntroduction)
@@ -113,6 +127,8 @@ if (import.meta.hot) {
   import.meta.hot.dispose(destroyOceanDescent)
   import.meta.hot.dispose(destroySeabedCover)
   import.meta.hot.dispose(destroyProjectCase)
+  import.meta.hot.dispose(() => destroyProjectOverviews.forEach(destroy => destroy()))
+  import.meta.hot.dispose(() => destroyProjectBubbles.forEach(destroy => destroy()))
   import.meta.hot.dispose(destroyProjectProcess)
   import.meta.hot.dispose(destroyProjectPlanning)
   import.meta.hot.dispose(destroyProjectResearch)

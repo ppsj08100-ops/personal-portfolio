@@ -54,6 +54,18 @@ function captionTexture(text, align, color) {
   return texture
 }
 
+function fitPanelTexture(texture, width, height, project) {
+  const imageAspect = width / height
+  const panelAspect = panelWidth / panelHeight
+  if (imageAspect > panelAspect) {
+    texture.repeat.x = panelAspect / imageAspect
+    texture.offset.x = (1 - texture.repeat.x) * project.focusX
+  } else {
+    texture.repeat.y = imageAspect / panelAspect
+    texture.offset.y = (1 - texture.repeat.y) * (1 - project.focusY)
+  }
+}
+
 export function initPortfolioGallery(section) {
   const gallery = section?.querySelector('.portfolio__gallery')
   if (!gallery) return () => {}
@@ -66,6 +78,7 @@ export function initPortfolioGallery(section) {
     name: item.querySelector('figcaption span:first-child').textContent,
     year: item.querySelector('figcaption span:last-child').textContent,
     image: item.dataset.image,
+    video: item.querySelector('video'),
     focusX: Number(item.dataset.focusX ?? .5),
     focusY: Number(item.dataset.focusY ?? .5),
   }))
@@ -81,6 +94,14 @@ export function initPortfolioGallery(section) {
   let step = fallbackStep
   let togglePause = () => {}
   let disposed = false
+  const playback = new WeakMap()
+  function playVideo(video, playing) {
+    if (playback.get(video) === playing && (playing || video.paused)) return
+    playback.set(video, playing)
+    video.muted = video.defaultMuted = true
+    if (playing) video.play().catch(() => {}) // Keep the poster if autoplay is unavailable.
+    else video.pause()
+  }
 
   // Keep the display font's proportions; only shrink a line if it cannot fit.
   function fitHeading() {
@@ -138,6 +159,8 @@ export function initPortfolioGallery(section) {
     const color = getComputedStyle(section).color
     const point = new THREE.Vector3()
     const loader = new THREE.TextureLoader()
+    const videoPanels = []
+    const videoEvents = new AbortController()
     let alive = true
     projects.forEach((project, index) => {
       const material = new THREE.MeshBasicMaterial({ color: '#888888', alphaMap: mask, transparent: true, side: THREE.DoubleSide })
@@ -147,6 +170,24 @@ export function initPortfolioGallery(section) {
       mesh.position.set(radius * Math.sin(angle), 0, radius * Math.cos(angle))
       mesh.lookAt(0, 0, 0)
       group.add(mesh)
+      let showingVideo = false
+      if (project.video) {
+        const video = project.video
+        const showVideo = () => {
+          if (!alive || showingVideo) return
+          const texture = new THREE.VideoTexture(video)
+          texture.colorSpace = THREE.SRGBColorSpace
+          fitPanelTexture(texture, video.videoWidth, video.videoHeight, project)
+          textures.push(texture)
+          material.map = texture
+          material.color.set('#fff')
+          material.needsUpdate = true
+          showingVideo = true
+        }
+        video.addEventListener('loadeddata', showVideo, { signal: videoEvents.signal })
+        if (video.readyState >= video.HAVE_CURRENT_DATA) showVideo()
+        videoPanels.push({ video, index })
+      }
       for (const [text, align, x] of [[project.name, 'left', .01], [project.year, 'right', -.01]]) {
         const texture = captionTexture(text, align, color)
         textures.push(texture)
@@ -154,7 +195,7 @@ export function initPortfolioGallery(section) {
         caption.position.set(x, -panelHeight / 2 - labelHeight / 4, -.05)
         mesh.add(caption)
       }
-      // Replace only data-image in the HTML to use a photo on both renderers.
+      // A video starts with the same poster on both renderers.
       if (project.image) loader.load(project.image, texture => {
         if (!alive) { texture.dispose(); return }
         texture.colorSpace = THREE.SRGBColorSpace
@@ -170,19 +211,13 @@ export function initPortfolioGallery(section) {
         }
         // Fit real project captures to the existing portrait panels by cropping,
         // keeping their pixels in proportion just like the HTML cover fallback.
-        const imageAspect = texture.image.width / texture.image.height
-        const panelAspect = panelWidth / panelHeight
-        if (imageAspect > panelAspect) {
-          texture.repeat.x = panelAspect / imageAspect
-          texture.offset.x = (1 - texture.repeat.x) * project.focusX
-        } else {
-          texture.repeat.y = imageAspect / panelAspect
-          texture.offset.y = (1 - texture.repeat.y) * (1 - project.focusY)
-        }
+        fitPanelTexture(texture, texture.image.width, texture.image.height, project)
         textures.push(texture)
-        material.map = texture
-        material.color.set('#fff')
-        material.needsUpdate = true
+        if (!showingVideo) {
+          material.map = texture
+          material.color.set('#fff')
+          material.needsUpdate = true
+        }
         texture.needsUpdate = true
       }, undefined, () => {})
     })
@@ -198,8 +233,15 @@ export function initPortfolioGallery(section) {
     let dragging = false, previousX = 0, dragVelocity = 0
     let targetRotation = Math.PI, speed = .001, wave = 0, waveTime = 0
     group.rotation.y = targetRotation
-    let paused = false, visible = false, frame, lastTime = 0
+    let paused = false, videoPaused = false, visible = false, frame, lastTime = 0
     let pointerX = 0, pointerY = 0, cursorX = 0, cursorY = 0
+    function syncVideos() {
+      videoPanels.forEach(({ video, index }) => {
+        const angle = index * angleStep + group.rotation.y
+        playVideo(video, visible && !document.hidden && !videoPaused && Math.cos(angle) < -.65)
+      })
+    }
+    document.addEventListener('visibilitychange', syncVideos, { signal: events.signal })
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)')
     function size() {
       renderer.setSize(gallery.clientWidth, gallery.clientWidth * .6)
@@ -212,6 +254,7 @@ export function initPortfolioGallery(section) {
     const visibility = new IntersectionObserver(entries => {
       visible = entries[0].isIntersecting
       if (!visible) cursor.classList.remove('is-visible')
+      syncVideos()
     }, { rootMargin: '100px' })
     visibility.observe(gallery)
     function waveGeometry(delta) {
@@ -243,6 +286,7 @@ export function initPortfolioGallery(section) {
         dragVelocity *= Math.pow(.95, delta)
       }
       group.rotation.y += (targetRotation - group.rotation.y) * (1 - Math.pow(.9, delta))
+      syncVideos()
       waveGeometry(delta)
       renderer.render(scene, camera)
       cursorX += (pointerX - cursorX) * (1 - Math.pow(.95, delta))
@@ -297,11 +341,15 @@ export function initPortfolioGallery(section) {
     }
     togglePause = () => {
       paused = !paused
+      videoPaused = paused
+      syncVideos()
       pauseButton.setAttribute('aria-pressed', String(paused))
       pauseButton.setAttribute('aria-label', paused ? '사진 자동 넘김 재생' : '사진 자동 넘김 일시정지')
     }
     return () => {
       alive = false
+      videoEvents.abort()
+      videoPanels.forEach(({ video }) => playVideo(video, false))
       events.abort()
       cancelAnimationFrame(frame)
       dimensions.disconnect()
@@ -335,6 +383,31 @@ export function initPortfolioGallery(section) {
       else list.append(fragment)
     }
     const compactEvents = new AbortController()
+    const videos = [...list.querySelectorAll('video')]
+    const visibleVideos = new Set()
+    let galleryVisible = false
+    const syncVideos = () => videos.forEach(video => {
+      const visible = galleryVisible && visibleVideos.has(video) && !document.hidden
+      if (!visible || !context.conditions.reduce) playVideo(video, visible)
+    })
+    videos.forEach(video => {
+      video.muted = video.defaultMuted = true
+      video.controls = context.conditions.reduce
+    })
+    const videoVisibility = new IntersectionObserver(entries => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) visibleVideos.add(target)
+        else visibleVideos.delete(target)
+      })
+      syncVideos()
+    }, { root: list, threshold: .05 })
+    const galleryVisibility = new IntersectionObserver(entries => {
+      galleryVisible = entries[0].isIntersecting
+      syncVideos()
+    })
+    videos.forEach(video => videoVisibility.observe(video))
+    galleryVisibility.observe(gallery)
+    document.addEventListener('visibilitychange', syncVideos, { signal: compactEvents.signal })
     let gesture, scrollTween
     const stride = () => items[0].getBoundingClientRect().width + 20
     const period = () => stride() * items.length
@@ -397,6 +470,9 @@ export function initPortfolioGallery(section) {
       clearTimeout(timer)
       cancelAnimationFrame(resetFrame)
       compactEvents.abort()
+      videoVisibility.disconnect()
+      galleryVisibility.disconnect()
+      videos.forEach(video => { playVideo(video, false); video.controls = false })
       scrollTween?.kill()
       compactResize.disconnect()
       list.removeEventListener('scroll', wrap)

@@ -1,82 +1,132 @@
 import { getDiveFoamSprites } from './dive-foam-sprites.js'
 
-const DURATION = 1750
-const SCROLL_DELAY = .22
-const SCROLL_DURATION = 1.18
+const DURATION = 2900
+const SCROLL_DELAY = .7
+const SCROLL_DURATION = 1.55
 const TAU = Math.PI * 2
 const random = (min, max) => min + Math.random() * (max - min)
 const smooth = (start, end, value) => {
   const t = Math.max(0, Math.min(1, (value - start) / (end - start)))
   return t * t * (3 - 2 * t)
 }
-const gaussian = () => Math.sqrt(-2 * Math.log(Math.max(.00001, Math.random()))) * Math.cos(random(0, TAU))
-const easeDive = value => value < .5 ? 4 * value ** 3 : 1 - (-2 * value + 2) ** 3 / 2
+const easeDive = value => smooth(0, 1, value)
 
-function makeBubbles(width, origin) {
+function makeBubbles(width, origin, labelWidth, labelHeight) {
   const particles = []
   const scale = Math.min(1, Math.max(.72, width / 700))
-  const coreCount = width < 600 ? 160 : 210
+  const compact = width < 600
+  const pixelRatio = devicePixelRatio || 1
+  const align = value => Math.round(value * pixelRatio) / pixelRatio
+  const groups = [
+    { name: 'near', count: compact ? 88 : 112, parallax: 1 },
+    { name: 'middle', count: compact ? 144 : 196, parallax: .48 },
+    { name: 'outer', count: compact ? 60 : 92, parallax: .2 },
+    { name: 'falling', count: compact ? 112 : 160, parallax: 0 },
+  ]
 
-  function addBubble(outer = false, anchor = false) {
-    let dx = gaussian() * (outer ? 66 : 29) * scale
-    let dy = gaussian() * (outer ? 26 : 15) * scale
-    const limit = (outer ? 142 : 82) * scale
-    const distance = Math.hypot(dx, dy)
-    if (distance > limit) { dx *= limit / distance; dy *= limit / distance }
-    const radius = anchor ? random(4, 6.5) : Math.random() < .16 ? random(2.8, 4.7) : random(.7, 2.6)
-    const drift = random(-2, 3)
-    particles.push({
-      x: origin.x + dx,
-      y: origin.y + dy,
-      delay: anchor ? random(0, .055) : random(.015, .28),
-      life: random(1.12, 1.58),
-      rise: (20 + radius * 5.3) * scale,
-      drift,
-      bend: (drift < 0 ? -1 : 1) * random(.08, .26),
-      aspect: random(.96, 1.04),
-      radius: Math.max(1.1, radius * scale),
-      opacity: anchor ? random(.65, .82) : outer ? random(.16, .3) : random(.3, .58),
-    })
+  for (const group of groups) {
+    const near = group.name === 'near'
+    const outer = group.name === 'outer'
+    const falling = group.name === 'falling'
+    for (let i = 0; i < group.count; i++) {
+      const angle = (i + random(.1, .9)) / group.count * TAU
+      const band = outer ? random(.85, 1.12) : random(.55, 1.05)
+      const radiusX = near ? labelWidth / 2 + random(10, 30) : Math.min(width * (falling ? .35 : .33), falling ? 230 : 205)
+      const radiusY = near ? labelHeight / 2 + random(10, 25) : compact ? 42 : 54
+      const x = Math.cos(angle) * radiusX * (near ? 1 : band)
+      let y = falling ? random(-78, 24) * scale : Math.sin(angle) * radiusY * (near ? 1 : band)
+      const size = align(Math.max(6, random(near ? 6 : 6.5, near ? 9 : 12) * scale))
+      const spreadX = Math.cos(angle) * (near ? random(6, 18) : falling ? random(14, 58) : outer ? random(65, 110) : random(34, 76)) * scale
+      const spreadY = falling ? random(70, 145) * scale : Math.sin(angle) * (near ? random(7, 17) : outer ? random(30, 65) : random(20, 46)) * scale
+      const rise = (near ? random(3, 7) : random(12, 24)) * scale
+      const life = near ? random(2.25, 2.5) : falling ? random(2.15, 2.4) : random(2, 2.4)
+      const opacity = near ? random(.26, .5) : falling ? random(.22, .42) : outer ? random(.15, .3) : random(.23, .46)
+      const keyframes = Array.from({ length: 25 }, (_, step) => {
+        const progress = step / 24
+        const age = progress * life
+        const travel = smooth(0, falling ? life : 1.8, age)
+        const buoyancy = smooth(.75, 2.6, age)
+        const dx = spreadX * travel
+        const dy = spreadY * travel - (falling ? 0 : rise * buoyancy)
+        return {
+          offset: progress,
+          opacity: smooth(0, .48, age) * (1 - smooth(falling ? .7 : .62, 1, progress)) * opacity,
+          transform: `translate3d(${dx}px, ${dy}px, 0)`,
+          dy,
+        }
+      })
+
+      // The close group follows the lettering through the dive. Keep its
+      // whole journey outside the glyphs, including the soft lower flow.
+      const clearance = labelHeight / 2 + size / 2 + (near ? 4 : 8)
+      if (Math.abs(x) < labelWidth / 2 + size / 2 + (near ? 4 : 8)) {
+        const offsets = keyframes.map(keyframe => keyframe.dy)
+        if (y < 0) y = Math.min(y, -clearance - Math.max(...offsets))
+        else y = Math.max(y, clearance - Math.min(...offsets))
+      }
+      if (near) y += (y < 0 ? -1 : 1) * random(0, 12)
+      particles.push({
+        group: group.name,
+        x: align(origin.x + x - size / 2),
+        y: align(origin.y + y - size / 2),
+        size,
+        delay: near ? random(0, .3) : random(.04, .46),
+        life,
+        keyframes: keyframes.map(({ dy, ...keyframe }) => keyframe),
+      })
+    }
   }
 
-  // The dense center is attached to the cue. Only a few softer bubbles occupy
-  // the surrounding water; nothing is emitted across the viewport edges.
-  for (let i = 0; i < coreCount; i++) addBubble()
-  for (let i = 0; i < 18; i++) addBubble(true)
-  for (let i = 0; i < 12; i++) addBubble(false, true)
-  return particles
+  return { particles, groups }
 }
 
 export function startDiveFoam(link, target, onComplete) {
   const sprites = getDiveFoamSprites()
   if (!sprites) return null
-  const canvas = document.createElement('canvas')
-  let context
-  try {
-    context = canvas.getContext('2d', { alpha: true })
-  } catch {
-    return null
-  }
-  if (!context) return null
-
   const width = innerWidth
-  const height = innerHeight
-  const ratio = Math.min(devicePixelRatio || 1, 2)
   const startScroll = scrollY
   const bounds = (link.querySelector('.hero__scroll-label') ?? link).getBoundingClientRect()
-  const origin = { x: bounds.left + bounds.width / 2, y: bounds.bottom + startScroll + 10 }
-  const bubbles = makeBubbles(width, origin)
+  const origin = { x: bounds.left + bounds.width / 2, y: bounds.top + bounds.height / 2 }
+  const { particles, groups } = makeBubbles(width, origin, bounds.width, bounds.height)
   const controller = new AbortController()
-  canvas.className = 'hero-dive-foam'
-  canvas.setAttribute('aria-hidden', 'true')
-  canvas.width = Math.ceil(width * ratio)
-  canvas.height = Math.ceil(height * ratio)
-  context.setTransform(ratio, 0, 0, ratio, 0, 0)
-  context.imageSmoothingQuality = 'high'
-  document.body.append(canvas)
+  const layer = document.createElement('div')
+  layer.className = 'hero-dive-foam'
+  layer.setAttribute('aria-hidden', 'true')
+  const fields = new Map(groups.map(group => {
+    const element = document.createElement('div')
+    element.className = 'hero-dive-foam__field'
+    element.dataset.depth = group.name
+    layer.append(element)
+    return [group.name, { element, parallax: group.parallax }]
+  }))
+  const spriteURL = sprites.restingBubble.toDataURL()
+  const animations = particles.map(particle => {
+    const element = document.createElement('img')
+    element.className = 'hero-dive-foam__particle'
+    element.src = spriteURL
+    element.alt = ''
+    element.draggable = false
+    Object.assign(element.style, {
+      left: `${particle.x}px`,
+      top: `${particle.y}px`,
+      width: `${particle.size}px`,
+      height: `${particle.size}px`,
+    })
+    fields.get(particle.group).element.append(element)
+    const animation = element.animate(particle.keyframes, {
+      duration: particle.life * 1000,
+      delay: particle.delay * 1000,
+      fill: 'both',
+      easing: 'linear',
+    })
+    animation.pause()
+    return animation
+  })
+  document.body.append(layer)
   link.classList.add('is-diving')
 
   const started = performance.now()
+  animations.forEach(animation => animation.play())
   let frame = 0
   let finishFrame = 0
   let stopped = false
@@ -94,7 +144,8 @@ export function startDiveFoam(link, target, onComplete) {
     }
     stopped = true
     cancelAnimationFrame(frame)
-    canvas.remove()
+    animations.forEach(animation => animation.cancel())
+    layer.remove()
     link.classList.remove('is-diving')
     if (jumpToTarget && target.isConnected) {
       // Let the page's motion-preference handlers finish restoring layout
@@ -128,27 +179,13 @@ export function startDiveFoam(link, target, onComplete) {
       window.scrollTo({ top: startScroll + (destination - startScroll) * easeDive(progress), behavior: 'instant' })
     }
 
-    context.clearRect(0, 0, width, height)
-    const camera = scrollY
-    const fade = 1 - smooth(1.28, DURATION / 1000, elapsed)
-    for (const bubble of bubbles) {
-      const age = elapsed - bubble.delay
-      if (age < 0 || age > bubble.life) continue
-      const alpha = smooth(0, .16, age) * (1 - smooth(bubble.life * .58, bubble.life, age)) * bubble.opacity * fade
-      if (alpha < .005) continue
-      // A slight, one-way bend carries each bubble with the current. Keep its
-      // size and aspect fixed so the fine rim does not shimmer as it rises.
-      const x = bubble.x + bubble.drift * age + bubble.bend * age * age
-      // World-space particles travel with the button as the camera descends.
-      const y = bubble.y - camera - bubble.rise * age
-      const size = bubble.radius * 2 * (32 / 26)
-      if (y < -size || y > height + size) continue
-      const stretch = bubble.aspect
-      context.globalAlpha = alpha
-      context.drawImage(sprites.bubble, x - size * stretch / 2, y - size / stretch / 2, size * stretch, size / stretch)
+    const cameraTravel = scrollY - startScroll
+    const fade = 1 - smooth(2, DURATION / 1000, elapsed)
+    layer.style.opacity = `${fade}`
+    for (const { element, parallax } of fields.values()) {
+      element.style.transform = `translate3d(0, ${-cameraTravel * parallax}px, 0)`
     }
 
-    context.globalAlpha = 1
     if (now - started >= DURATION) stop(true)
     else frame = requestAnimationFrame(render)
   }
@@ -159,7 +196,6 @@ export function startDiveFoam(link, target, onComplete) {
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) stop(true)
   }, { signal: controller.signal })
-  canvas.addEventListener('contextlost', () => stop(true), { signal: controller.signal })
   window.addEventListener('wheel', () => stop(), { passive: true, signal: controller.signal })
   window.addEventListener('pointerdown', event => {
     if (!link.contains(event.target)) stop()

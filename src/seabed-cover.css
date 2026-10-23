@@ -1,6 +1,8 @@
 /* Only the opening DIPTYQUE panel becomes an underwater exhibition scene. */
 .sail-project--seabed {
-  --scene-gutter: clamp(24px, 4vw, 72px);
+  --scene-gutter: var(--container-gutter);
+  --cover-title-size: clamp(60px, 6.2vw, 112px);
+  --cover-copy-top: 32%;
   position: relative;
   isolation: isolate;
   width: 100%;
@@ -31,12 +33,12 @@
 .sail-project__water-light {
   position: absolute;
   inset: 0;
-  background: linear-gradient(180deg, #020b1d12 0%, transparent 42%, #020b1d12 64%, #020b1d6b 100%),
-    linear-gradient(90deg, #020b1d33 0%, transparent 30% 65%, #020b1d38 100%);
+  background: linear-gradient(180deg, #020b1d12 0%, transparent 42%, #020b1d38 64%, #020b1d8f 100%),
+    linear-gradient(90deg, #020b1d7a 0%, #020b1d24 36%, transparent 58% 76%, #020b1d38 100%);
 }
 .sail-project__floor-shadow {
   position: absolute;
-  left: 42%;
+  left: 52%;
   top: 76%;
   width: 28%;
   height: 8%;
@@ -60,27 +62,51 @@
 }
 .sail-project--seabed .sail-project__header { position: absolute; z-index: 4; inset: 0; pointer-events: none; }
 .sail-project--seabed .sail-project__eyebrow { position: absolute; inset: 0; display: block; margin: 0; }
-.sail-project__large-index {
+.sail-project__intro-label {
   position: absolute;
-  top: 24px;
-  left: calc(var(--scene-gutter) * .6);
-  color: #abc6d3;
-  opacity: .68;
-  font: 100 clamp(180px, 25vw, 440px)/.85 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
-  letter-spacing: -.08em;
+  top: clamp(28px, 4.5svh, 54px);
+  left: var(--scene-gutter);
+  color: #c4d6e1;
+  font: 400 11px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .2em;
 }
-.sail-project__kind { position: absolute; top: 5svh; right: var(--scene-gutter); color: #b3cad6; font-size: 9px; letter-spacing: .2em; }
-.sail-project--seabed .sail-project__heading-row { position: absolute; right: var(--scene-gutter); bottom: 12svh; display: block; text-align: right; }
-.sail-project--seabed .sail-project__title { color: #edf4f5; font-size: clamp(60px, 5.8vw, 116px); line-height: .95; letter-spacing: -.055em; }
-.sail-project--seabed .sail-project__subtitle { margin-top: 10px; color: #bad1dc; font: italic 400 clamp(32px, 3.6vw, 68px)/1.05 'Instrument Serif', Georgia, serif; letter-spacing: -.025em; }
-.sail-project--seabed .sail-project__discipline { margin-top: 22px; color: #a3bdca; font-size: 8px; text-align: right; letter-spacing: .18em; }
+.sail-project__kind {
+  position: absolute;
+  top: clamp(28px, 4.5svh, 54px);
+  right: var(--scene-gutter);
+  color: #a6becf;
+  font: 400 10px/1.65 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .14em;
+}
+.sail-project--seabed .sail-project__heading-row {
+  position: absolute;
+  top: var(--cover-copy-top);
+  left: var(--scene-gutter);
+  right: auto;
+  bottom: auto;
+  display: block;
+  max-width: 39vw;
+  text-align: left;
+}
+.sail-project--seabed .sail-project__title {
+  color: #e4edf4;
+  font: 400 var(--cover-title-size)/1.02 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -.055em;
+}
+.sail-project--seabed .sail-project__subtitle {
+  margin-top: 18px;
+  color: #a7bfce;
+  font: 400 12px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+}
 .sail-project--seabed .sail-project__screen {
   position: absolute;
   z-index: 3;
-  left: 47%;
-  top: 9%;
-  width: clamp(340px, 43vw, 700px);
-  height: min(74svh, 740px);
+  left: 66%;
+  top: 7%;
+  width: min(54vw, 78svh, 820px);
+  height: min(82svh, 900px);
   max-height: none;
   margin: 0;
   aspect-ratio: auto;
@@ -93,11 +119,7 @@
   top: 9%;
   width: 66%;
   aspect-ratio: 3 / 4;
-  transform: perspective(1200px)
-    translate3d(var(--scene-x, 0px), var(--scene-y, 0px), 0)
-    rotateX(calc(-4deg * var(--project-depth, 1) + var(--scene-rotate-x, 0deg)))
-    rotateY(calc(-12deg * var(--project-depth, 1) + var(--scene-rotate-y, 0deg)))
-    rotateZ(calc(9deg * var(--project-depth, 1)));
+  transform: translate3d(var(--scene-x, 0px), var(--scene-y, 0px), 0);
   transform-origin: center;
 }
 .sail-project__float {
@@ -118,19 +140,48 @@
   top: 56%;
   width: 50%;
   aspect-ratio: 1.6;
-  transform: perspective(1000px)
-    translate3d(calc(var(--scene-x, 0px) * 1.5), calc(var(--scene-y, 0px) * 1.3), 40px)
-    rotateX(calc(3deg * var(--project-depth, 1)))
-    rotateY(calc(-9deg * var(--project-depth, 1) + var(--scene-rotate-y, 0deg)))
-    rotateZ(calc(-7deg * var(--project-depth, 1)));
+  transform: translate3d(calc(var(--scene-x, 0px) * 1.5), calc(var(--scene-y, 0px) * 1.3), 0);
 }
 .sail-project__fragment-float { position: absolute; inset: 0; overflow: hidden; border: 1px solid #b9d8e294; border-radius: 10px; background: #143040; box-shadow: 6px 16px 28px #00091470; }
-.sail-project__fragment img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 73%; opacity: .92; }
-.sail-project--seabed .sail-project__details { position: absolute; z-index: 5; left: clamp(32px, 12vw, 220px); top: 45%; display: flex; flex-direction: column; gap: 26px; width: clamp(210px, 17vw, 280px); margin: 0; }
-.sail-project--seabed .sail-project__description { color: #c1d4de; font-size: clamp(12px, .95vw, 15px); line-height: 1.9; }
-.sail-project--seabed .sail-project__link { flex: none; flex-direction: column; align-items: flex-start; justify-content: space-between; gap: 22px; width: 116px; min-height: 112px; padding: 15px; border: 1px solid #abc9d963; border-radius: 14px; color: #e8f2f7; background: #0d2735a6; backdrop-filter: blur(10px); font-size: 9px; letter-spacing: .08em; }
-.sail-project--seabed .sail-project__link svg { align-self: flex-end; width: 19px; height: 19px; }
-.sail-project--seabed .sail-project__link:hover { border-color: #c4dee6c4; background: #1d3c4cba; }
+.sail-project__fragment img { display: block; width: 100%; height: 100%; object-fit: cover; object-position: 50% 73%; }
+.sail-project--seabed .sail-project__details {
+  position: absolute;
+  z-index: 5;
+  top: calc(var(--cover-copy-top) + var(--cover-title-size) * 1.02 + 72px);
+  left: var(--scene-gutter);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 28px;
+  width: clamp(250px, 25vw, 380px);
+  margin: 0;
+}
+.sail-project--seabed .sail-project__description {
+  color: #becbd6;
+  font: 300 clamp(14px, 1.05vw, 16px)/1.9 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.02em;
+}
+.sail-project--seabed .sail-project__link {
+  flex: none;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  width: auto;
+  min-width: 176px;
+  min-height: 48px;
+  padding: 12px 21px;
+  border: 1px solid #c1d0dc8c;
+  border-radius: 999px;
+  color: #dfe8f0;
+  background: transparent;
+  backdrop-filter: none;
+  font: 400 11px/1.3 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .04em;
+  transition: border-color .3s, background-color .3s;
+}
+.sail-project--seabed .sail-project__link svg { align-self: center; width: 16px; height: 16px; }
+.sail-project--seabed .sail-project__link:hover { border-color: #e4edf4; background: #9ab8d014; }
 .project-details--voyage[data-project-page-index="0"] .project-pages__navigation,
 .project-details--voyage[data-project-page-index="0"] .project-pages__navigation button { background: transparent; }
 .project-details--voyage[data-project-page-index="0"] .project-pages__navigation button { color: #9db8c9; }
@@ -146,16 +197,20 @@
   .sail-project--seabed.is-scene-active :is(.sail-project__float, .sail-project__fragment-float, .sail-project__silt i) { animation-play-state: running; }
 }
 @media (max-width: 1099px) and (min-width: 768px) {
-  .sail-project--seabed .sail-project__details { left: var(--scene-gutter); width: 205px; }
-  .sail-project--seabed .sail-project__screen { left: 50%; width: 53vw; }
-  .sail-project--seabed .sail-project__title { font-size: 6.5vw; }
+  .sail-project--seabed { --cover-title-size: clamp(54px, 7.8vw, 84px); }
+  .sail-project--seabed .sail-project__heading-row { top: 11svh; left: var(--scene-gutter); right: var(--scene-gutter); max-width: none; text-align: center; }
+  .sail-project--seabed .sail-project__screen { top: 25%; left: 50%; width: min(74vw, 52svh, 650px); height: 56svh; }
+  .sail-project--seabed .sail-project__details { top: auto; right: var(--scene-gutter); bottom: 84px; flex-direction: row; align-items: center; gap: 40px; width: auto; }
+  .sail-project--seabed .sail-project__description { max-width: 45vw; font-size: 14px; }
+  .sail-project__floor-shadow { top: 76%; left: 25%; width: 50%; }
 }
 @media (max-width: 767px) {
-  .sail-project--seabed { --scene-gutter: 22px; }
+  .sail-project--seabed { --scene-gutter: var(--container-gutter); --cover-title-size: clamp(44px, 12vw, 72px); }
   .sail-project__seabed { object-position: 48% 65%; }
-  .sail-project__large-index { top: 18px; left: 16px; font-size: clamp(112px, 32vw, 180px); }
-  .sail-project__kind { top: 30px; font-size: 7px; letter-spacing: .15em; }
-  .sail-project--seabed .sail-project__screen { top: 14%; left: 50%; width: min(90vw, 450px); height: clamp(330px, 48svh, 450px); }
+  .sail-project__intro-label { top: 26px; font-size: 10px; letter-spacing: .16em; }
+  .sail-project__kind { top: 26px; font-size: 8px; letter-spacing: .1em; }
+  .sail-project--seabed .sail-project__heading-row { top: 12svh; left: var(--scene-gutter); right: var(--scene-gutter); bottom: auto; max-width: none; text-align: center; }
+  .sail-project--seabed .sail-project__screen { top: 26%; left: 50%; width: min(94vw, 41svh, 500px); height: 44svh; }
   .sail-project__device { left: 27%; top: 8%; width: 62%; }
   .sail-project__float { padding: 4px; border-radius: 16px; }
   .sail-project--seabed .sail-project__image,
@@ -163,24 +218,23 @@
   .sail-project__glass { inset: 4px; }
   .sail-project__fragment { top: 55%; left: 5%; width: 54%; }
   .sail-project__fragment-float { border-radius: 7px; }
-  .sail-project--seabed .sail-project__heading-row { bottom: 28svh; }
-  .sail-project--seabed .sail-project__title { font-size: clamp(46px, 14vw, 72px); }
-  .sail-project--seabed .sail-project__subtitle { margin-top: 7px; font-size: clamp(26px, 7.7vw, 38px); }
-  .sail-project--seabed .sail-project__discipline { margin-top: 12px; font-size: 6.5px; letter-spacing: .14em; text-align: right; }
-  .sail-project--seabed .sail-project__details { top: auto; right: var(--scene-gutter); bottom: 76px; left: var(--scene-gutter); flex-direction: row; align-items: flex-end; gap: 18px; width: auto; }
-  .sail-project--seabed .sail-project__description { flex: 1; font-size: 11px; line-height: 1.8; }
-  .sail-project--seabed .sail-project__link { width: 108px; min-height: 66px; padding: 12px; gap: 10px; border-radius: 11px; font-size: 8px; }
+  .sail-project--seabed .sail-project__subtitle { margin-top: 12px; font-size: 10px; letter-spacing: .16em; }
+  .sail-project--seabed .sail-project__details { top: auto; right: var(--scene-gutter); bottom: 84px; left: var(--scene-gutter); flex-direction: column; align-items: flex-start; gap: 20px; width: auto; }
+  .sail-project--seabed .sail-project__description { max-width: 35ch; font-size: 14px; line-height: 1.8; }
+  .sail-project--seabed .sail-project__link { min-width: 166px; min-height: 44px; padding: 11px 19px; gap: 26px; font-size: 10px; }
   .sail-project--seabed .sail-project__link svg { width: 15px; height: 15px; }
-  .sail-project__floor-shadow { top: 55%; left: 20%; width: 65%; height: 5%; filter: blur(18px); }
+  .sail-project__floor-shadow { top: 64%; left: 22%; width: 56%; height: 5%; filter: blur(18px); }
 }
 @media (max-height: 699px) {
-  .sail-project--seabed { min-height: 800px; }
-  .sail-project--seabed .sail-project__screen { top: 70px; height: 560px; }
-  .sail-project--seabed .sail-project__heading-row { bottom: 95px; }
-  .sail-project--seabed .sail-project__details { top: 44%; }
+  .sail-project--seabed { --cover-title-size: clamp(52px, 5.5vw, 84px); min-height: 760px; }
+  .sail-project--seabed .sail-project__heading-row { top: 210px; left: var(--scene-gutter); right: auto; max-width: 40vw; text-align: left; }
+  .sail-project--seabed .sail-project__screen { top: 60px; left: 67%; width: min(50vw, 590px); height: 650px; }
+  .sail-project--seabed .sail-project__details { top: calc(210px + var(--cover-title-size) * 1.02 + 72px); right: auto; bottom: auto; flex-direction: column; width: min(32vw, 380px); }
+  .sail-project--seabed .sail-project__description { max-width: none; }
 }
 @media (max-height: 699px) and (max-width: 767px) {
-  .sail-project--seabed .sail-project__screen { top: 90px; height: 360px; }
-  .sail-project--seabed .sail-project__heading-row { bottom: 220px; }
-  .sail-project--seabed .sail-project__details { top: auto; bottom: 76px; }
+  .sail-project--seabed { --cover-title-size: clamp(44px, 12vw, 64px); min-height: 820px; }
+  .sail-project--seabed .sail-project__heading-row { top: 96px; left: var(--scene-gutter); right: var(--scene-gutter); max-width: none; text-align: center; }
+  .sail-project--seabed .sail-project__screen { top: 210px; left: 50%; width: min(88vw, 340px); height: 380px; }
+  .sail-project--seabed .sail-project__details { top: auto; right: var(--scene-gutter); bottom: 76px; width: auto; gap: 18px; }
 }

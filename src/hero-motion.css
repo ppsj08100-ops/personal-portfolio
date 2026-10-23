@@ -1,0 +1,17 @@
+.hero__living-art,
+.hero__star-light {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+.hero__living-art { z-index: 1; }
+.hero__star-light { z-index: 2; }
+.hero__living-art[hidden], .hero__star-light[hidden] { display: none; }
+@media (prefers-reduced-motion: reduce) {
+  .hero__living-art, .hero__star-light { display: none; }
+}

@@ -1,207 +1,260 @@
-/* Three original coral colonies unfurl above the same underwater rock outcrop. */
-.introduction:has(+ .design-process) { --introduction-padding-end: 0px; }
+/* One held frame contains three chapters of the same underwater study. */
 .design-process {
-  padding: clamp(100px, 9vw, 144px) var(--container-gutter) clamp(90px, 7vw, 128px);
-  overflow: clip;
-  background: var(--insight-color-bg);
-  color: var(--insight-color-text);
-}
-.design-process__inner { width: min(100%, 100rem); margin-inline: auto; }
-.design-process__header { position: relative; z-index: 2; }
-.design-process__eyebrow {
-  display: flex; align-items: center; gap: 14px;
-  margin: 0 0 22px;
-  color: #9cb9ce;
-  font: 400 11px/1.4 var(--insight-font-family);
-  letter-spacing: .2em;
-}
-.design-process__eyebrow::before { content: ''; width: 28px; height: 1px; background: #759bb4; }
-.design-process__statement, .design-process__copy, .design-process-dialog__header h2 {
-  font-family: 'Intro Pretendard', var(--font-family-body);
-  font-weight: 300; text-transform: none;
-  word-break: keep-all; overflow-wrap: break-word;
-}
-.design-process__statement { margin: 0; color: #eef2f7; font-size: clamp(28px, 2.65vw, 40px); line-height: 1.45; letter-spacing: -.035em; }
-.design-process__garden {
-  --reef-open: 1;
-  --coral-width: clamp(330px, 33vw, 440px);
-  --coral-height: 650px;
-  --coral-spread: clamp(245px, 25vw, 340px);
-  --coral-rest-spread: 76px;
-  --coral-root-spread: clamp(180px, 18vw, 260px);
   position: relative;
-  width: min(100%, 1200px);
-  margin: clamp(35px, 3vw, 48px) auto 0;
+  background: #020b1d;
+  color: #f0eee8;
+}
+.design-process__journey { position: relative; }
+.design-process__stage {
+  position: relative;
   isolation: isolate;
+  background: #020b1d;
 }
-.design-process__groups {
-  position: relative; z-index: 2;
-  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: end;
-  gap: 24px; margin: 0; padding: 0; list-style: none;
+.design-process__environment {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
 }
-.design-process__group { --coral-slot: 0; position: relative; min-width: 0; }
-.design-process__group--concept { --coral-slot: -1; }
-.design-process__group--detail { --coral-height: 710px; }
-.design-process__group--refine { --coral-slot: 1; --coral-height: 625px; }
-.design-process__specimen { position: relative; height: var(--coral-height, 650px); }
-.design-process__art { position: absolute; z-index: 0; inset: 0 -16%; margin: 0; pointer-events: none; }
-.design-process__art img {
-  display: block; width: 100%; height: 100%;
-  object-fit: contain; object-position: center bottom;
-  --coral-reading-mask: radial-gradient(ellipse 57% 35% at 50% 44%, rgba(0, 0, 0, .32), rgba(0, 0, 0, .82) 72%, #000 100%);
-  -webkit-mask-image: var(--coral-reading-mask); mask-image: var(--coral-reading-mask);
-  filter: saturate(.88) brightness(.86); user-select: none;
+.design-process__environment > img {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .28;
+  filter: saturate(.8) brightness(.9);
+  object-position: center;
+  mask-image: linear-gradient(180deg, transparent, #000 16%, #000 86%, transparent);
 }
-.design-process__group--concept .design-process__art img {
-  --coral-reading-mask: radial-gradient(ellipse 58% 35% at 50% 44%, rgba(0, 0, 0, .28), rgba(0, 0, 0, .82) 72%, #000 100%);
+.design-process__environment::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(2, 11, 29, .97) 0%, rgba(2, 11, 29, .93) 48%, rgba(2, 11, 29, .08) 83%);
 }
-.design-process__group--refine .design-process__art img {
-  --coral-reading-mask: radial-gradient(ellipse 53% 38% at 50% 44%, rgba(0, 0, 0, .3), rgba(0, 0, 0, .67) 70%, #000 100%);
+/* Keep the reading area quiet while the shoreline remains beside the objects.
+   The following mirror's independent water layer retains its full reveal. */
+.design-process__surface-flow {
+  -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 20%, transparent 34%, transparent 66%, #000 80%, #000 100%);
+  mask-image: linear-gradient(90deg, #000 0%, #000 20%, transparent 34%, transparent 66%, #000 80%, #000 100%);
 }
-.design-process__inscription {
-  position: absolute; z-index: 2;
-  top: 44%; left: 50%; transform: translate(-50%, -50%);
-  width: 87%; max-width: 335px; text-align: center;
-  text-shadow: 0 2px 10px #020b1d;
+.design-process__scenes { position: relative; z-index: 2; }
+.design-process__section-title {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
 }
-.design-process__number { display: block; color: #a9cbdc; font: 400 11px/1.4 var(--insight-font-family); font-variant-numeric: tabular-nums; letter-spacing: .2em; }
-.design-process__title {
-  margin: 18px 0 28px; color: #f0f6fa;
-  font-family: 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
-  font-size: clamp(43px, 4.1vw, 60px); font-weight: 100; line-height: .95; letter-spacing: -.025em;
+.design-process__scene {
+  position: relative;
+  height: 100svh;
+  min-height: 620px;
+  overflow: clip;
+  isolation: isolate;
+  background: transparent;
 }
-.design-process__copy { color: #b8c8d9; font-size: 15px; line-height: 1.8; letter-spacing: -.02em; }
-.design-process__copy p { margin: 0; }
-.design-process__copy p + p { margin-top: 18px; }
-.design-process__lead { color: #e4edf5; }
-.design-process__reef-rock, .design-process__open { display: none; }
-.design-process__seabed {
-  position: absolute; z-index: -1; right: -12%; bottom: 8px;
-  width: 124%; height: 90px; stroke: #4b779e; stroke-width: .75; stroke-opacity: .12;
-  pointer-events: none; mask-image: linear-gradient(90deg, transparent, #000 24%, #000 76%, transparent);
+.design-process.is-pinned .design-process__journey { height: 360svh; }
+.design-process.is-pinned .design-process__stage {
+  position: sticky;
+  top: 0;
+  height: 100svh;
+  min-height: 600px;
+  overflow: clip;
 }
-.design-process__seabed path:nth-child(2) { stroke-opacity: .5; }
-.design-process__seabed path:nth-child(3) { stroke-opacity: .25; }
-
-/* Roots stay attached to the rock as their crowns fan out in the current. */
-.design-process.is-enhanced .design-process__garden { height: 810px; }
-.is-enhanced .design-process__groups { position: absolute; inset: 0; display: block; pointer-events: none; }
-.is-enhanced .design-process__group {
-  position: absolute; bottom: 100px; left: 50%;
-  width: var(--coral-width); height: var(--coral-height);
-  margin-left: calc(var(--coral-width) * -.5);
+.design-process.is-pinned .design-process__scenes { position: absolute; inset: 0; }
+.design-process.is-pinned .design-process__scene {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+  opacity: 0;
+  visibility: hidden;
 }
-.is-enhanced .design-process__groups .design-process__art {
+.design-process.is-pinned .design-process__scene.is-active { opacity: 1; visibility: visible; }
+.design-process__scene-header,
+.design-process__scene-footer {
+  position: absolute;
+  z-index: 4;
+  left: var(--container-gutter);
+  right: var(--container-gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  pointer-events: none;
+}
+.design-process__scene-header { top: clamp(30px, 3.5vw, 56px); }
+.design-process__scene-footer { bottom: clamp(28px, 3.5vw, 56px); }
+.design-process__scene-header p,
+.design-process__scene-footer p,
+.design-process__pagination button {
+  margin: 0;
+  font: 400 10px/1.4 'Julius Sans One', 'Helvetica Neue', sans-serif;
+  letter-spacing: .16em;
+}
+.design-process__scene-header p { color: #a9bdce; }
+.design-process__scene-count { display: flex; align-items: center; gap: 24px; font-variant-numeric: tabular-nums; }
+.design-process__scene-count > span:last-child { color: #5c738b; }
+.design-process__object {
+  --approach-object-width: min(27vw, 450px, 52svh);
+  position: absolute;
   z-index: 1;
-  transform-origin: 50% 100%;
-  transform: translateX(calc(var(--coral-slot) * var(--coral-root-spread)))
-    rotate(calc(var(--coral-slot) * (-13deg + 20deg * var(--reef-open))))
-    scaleY(calc(.92 + .08 * var(--reef-open)));
-  will-change: transform;
+  top: 50%;
+  width: var(--approach-object-width);
+  height: calc(var(--approach-object-width) * 4 / 3);
+  overflow: visible;
+  background: transparent;
+  pointer-events: none;
+  transform-origin: 50% 50%;
 }
-.is-enhanced .design-process__group--detail .design-process__art { z-index: 3; }
-.is-enhanced .design-process__group--refine .design-process__art { z-index: 2; }
-.is-enhanced .design-process__groups .design-process__inscription {
-  z-index: 6;
-  transform: translate(-50%, -50%) translateY(calc(64px * (1 - var(--reef-open))))
-    translateX(calc(var(--coral-slot) * (var(--coral-rest-spread) + (var(--coral-spread) - var(--coral-rest-spread)) * var(--reef-open))));
+.design-process__object--left { left: 0; transform: translate(1vw, -50%) rotate(-13deg); }
+.design-process__object--right { right: 0; transform: translate(-1vw, -50%) rotate(11deg); }
+.design-process__scene--concept .design-process__object--left { top: 53%; }
+.design-process__scene--concept .design-process__object--right { top: 47%; }
+.design-process__scene--detail .design-process__object--left { top: 48%; }
+.design-process__scene--detail .design-process__object--right { top: 54%; }
+.design-process__scene--refine .design-process__object--left { top: 52%; }
+.design-process__scene--refine .design-process__object--right { top: 48%; }
+.design-process__object::before,
+.design-process__object::after {
+  content: none;
 }
-.is-enhanced .design-process__group:not(.design-process__group--detail) .design-process__inscription { opacity: var(--reef-open); }
-.is-enhanced .design-process__reef-rock {
-  display: block; position: absolute; z-index: 4; left: 50%; bottom: 54px;
-  width: min(100%, 1140px); height: 190px; margin: 0;
-  transform: translateX(-50%); pointer-events: none;
+.design-process__object-art {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  transform: translateX(var(--approach-drift-x, 0px)) rotate(var(--approach-drift-rotate, 0deg));
+  transform-origin: 50% 65%;
 }
-.design-process__reef-rock img { display: block; width: 100%; height: 100%; object-fit: contain; object-position: center bottom; filter: saturate(.8) brightness(.8); }
-.is-enhanced .design-process__open {
-  display: block; position: absolute; z-index: 5; inset: 0 0 8px; width: 100%;
-  padding: 0; border: 0; background: transparent; color: #a9c6d7;
-  cursor: pointer; -webkit-tap-highlight-color: transparent;
+.design-process__object-art > img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: block;
+  max-width: none;
+  width: 200%;
+  height: 100%;
+  object-fit: fill;
+  user-select: none;
+  opacity: 1;
+  mix-blend-mode: normal;
+  filter: saturate(.82) brightness(.94) drop-shadow(0 3px 4px rgba(0, 5, 18, .32));
 }
-.design-process__open-label { position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); white-space: nowrap; font: 400 10px/1.4 var(--insight-font-family); letter-spacing: .16em; }
-.design-process__open-label > span { margin-left: 13px; font-size: 17px; vertical-align: -1px; }
-.design-process__open:focus-visible { outline: none; }
-.design-process__open:focus-visible .design-process__open-label { outline: 1px solid #a6c8db; outline-offset: 9px; }
-
-/* Details retain the original freestanding coral silhouettes and live inscriptions. */
-.design-process-dialog {
-  position: fixed; inset: auto 0 0; width: 100%; max-width: none;
-  max-height: min(90svh, 960px); margin: 0; padding: 0; overflow: auto;
-  border: 1px solid rgba(140, 185, 208, .2); border-bottom: 0; border-radius: 27px 27px 0 0;
-  background: linear-gradient(155deg, #0a2038, #030f23 74%);
-  box-shadow: 0 -24px 80px rgba(0, 3, 12, .28); color: #edf3f8;
+.design-process__object-art > img[data-float-half='right'] { left: -100%; }
+.design-process__center {
+  position: absolute;
+  z-index: 3;
+  top: 50%;
+  left: 50%;
+  width: min(52vw, 810px);
+  transform: translate(-50%, -48%);
+  text-align: center;
 }
-.design-process-dialog::backdrop { background: rgba(0, 5, 17, .34); backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px); }
-.design-process-dialog__sheet { width: min(100%, 1440px); margin-inline: auto; padding: 30px clamp(24px, 4vw, 64px) 24px; }
-.design-process-dialog__header { position: relative; z-index: 5; display: flex; justify-content: space-between; align-items: flex-start; gap: 24px; margin-bottom: 8px; }
-.design-process-dialog__header .design-process__eyebrow { margin-bottom: 10px; font-size: 10px; }
-.design-process-dialog__header h2 { margin: 0; font-size: clamp(24px, 2.2vw, 32px); line-height: 1.4; letter-spacing: -.03em; }
-.design-process-dialog__close { display: grid; place-items: center; flex: none; width: 44px; height: 44px; padding: 11px; border: 1px solid rgba(148, 192, 211, .3); border-radius: 50%; background: rgba(25, 61, 82, .3); color: #d6e7f0; cursor: pointer; }
-.design-process-dialog__close svg { width: 100%; height: 100%; stroke: currentColor; stroke-width: 1.25; }
-.design-process-dialog__close:focus-visible { outline: 1px solid #d0e8f2; outline-offset: 5px; }
-.design-process-dialog__corals {
-  display: flex; gap: 12px; margin: 0; padding: 2px 0 16px;
-  overflow-x: auto; overscroll-behavior-x: contain; scroll-snap-type: x proximity;
-  list-style: none; scrollbar-width: thin; scrollbar-color: #44667e transparent;
+.design-process__tagline,
+.design-process__copy,
+.design-process__action,
+.design-process__title-line { overflow: hidden; }
+.design-process__tagline {
+  margin: 0 0 27px;
+  font: 300 clamp(15px, 1.15vw, 19px)/1.6 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.02em;
+  color: #c6cdd4;
 }
-.design-process-dialog__corals > li { flex: 1 0 min(30vw, 360px); min-width: 0; scroll-snap-align: start; }
-.design-process-dialog__corals:focus-visible { outline: 1px solid #9bbccd; outline-offset: 5px; }
-.design-process-dialog__corals .design-process__specimen { height: auto; min-height: clamp(430px, 51svh, 540px); }
-.design-process-dialog__corals .design-process__art { inset: 0 -7%; }
-.design-process-dialog__corals .design-process__inscription {
-  position: relative; top: auto; left: auto; transform: none; width: 100%; max-width: 350px;
-  margin-inline: auto; padding: 105px 23px 160px;
+[data-approach-reveal] { display: block; }
+.design-process__title {
+  margin: 0;
+  font: 400 clamp(72px, 7.75vw, 158px)/.99 'Julius Sans One', 'Helvetica Neue', sans-serif;
+  letter-spacing: -.065em;
 }
-.design-process-dialog__corals .design-process__title { font-size: clamp(42px, 3.8vw, 56px); }
-.design-process-dialog__corals .design-process__copy { font-size: 15px; }
-.design-process-dialog__footer { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-top: 8px; color: #789aae; font: 400 9px/1.5 var(--insight-font-family); letter-spacing: .16em; }
-.design-process-dialog__swipe { display: none; font-family: 'Intro Pretendard', var(--font-family-body); font-size: 11px; letter-spacing: -.015em; }
-@media (min-width: 701px) and (max-width: 1099px) {
-  .design-process__garden { --coral-width: 330px; --coral-height: 590px; --coral-spread: 225px; }
-  .design-process__group--detail { --coral-height: 650px; }
-  .design-process__group--refine { --coral-height: 570px; }
-  .design-process.is-enhanced .design-process__garden { height: 740px; }
-  .design-process__inscription { width: 83%; }
-  .design-process__title { font-size: 45px; }
-  .design-process__copy { font-size: 14px; }
-  .is-enhanced .design-process__group:not(.design-process__group--detail) .design-process__inscription { opacity: 0; }
+.design-process__title-line + .design-process__title-line { margin-top: 6px; }
+.design-process__copy { margin-top: clamp(28px, 3.1vw, 50px); }
+.design-process__copy p {
+  margin: 0;
+  color: #9caebf;
+  font: 300 17px/1.85 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.02em;
+  word-break: keep-all;
 }
-@media (max-width: 700px) {
-  .design-process { padding-block: 80px 90px; }
-  .design-process__statement { font-size: clamp(27px, 7vw, 32px); }
-  .design-process__eyebrow { margin-bottom: 18px; font-size: 10px; }
-  .design-process__garden {
-    --coral-width: min(84vw, 350px); --coral-height: 495px; --coral-spread: min(17vw, 75px);
-    --coral-rest-spread: 26px; --coral-root-spread: 46px; margin-top: 35px;
-  }
-  .design-process__groups { grid-template-columns: minmax(0, 1fr); gap: 32px; }
-  .design-process__group--detail { --coral-height: 550px; }
-  .design-process__group--refine { --coral-height: 490px; }
-  .design-process.is-enhanced .design-process__garden { height: 660px; }
-  .is-enhanced .design-process__group { bottom: 100px; }
-  .is-enhanced .design-process__reef-rock { width: 116%; height: 110px; bottom: 64px; }
-  .is-enhanced .design-process__groups .design-process__art { scale: .85; transform-origin: 50% 100%; }
-  .design-process__inscription { width: 82%; max-width: 290px; }
-  .design-process__title { margin-block: 16px 23px; font-size: 43px; }
-  .design-process__copy { font-size: 13px; line-height: 1.75; }
-  .design-process__copy p + p { margin-top: 15px; }
-  .is-enhanced .design-process__group:not(.design-process__group--detail) .design-process__inscription { opacity: 0; }
-  .design-process__open-label { font-size: 9px; }
-  .design-process-dialog { max-height: 88svh; border-radius: 23px 23px 0 0; }
-  .design-process-dialog__sheet { padding: 25px 24px max(20px, env(safe-area-inset-bottom)); }
-  .design-process-dialog__header { gap: 14px; }
-  .design-process-dialog__header h2 { font-size: 24px; }
-  .design-process-dialog__header .design-process__eyebrow { font-size: 9px; }
-  .design-process-dialog__corals { gap: 16px; margin-inline: -24px; padding: 2px 24px 18px; scroll-snap-type: x mandatory; scroll-padding-inline: 24px; }
-  .design-process-dialog__corals > li { flex: 0 0 min(84vw, 350px); }
-  .design-process-dialog__corals .design-process__specimen { min-height: 490px; }
-  .design-process-dialog__corals .design-process__inscription { padding: 95px 22px 150px; }
-  .design-process-dialog__corals .design-process__title { font-size: 46px; }
-  .design-process-dialog__corals .design-process__copy { font-size: 14px; }
-  .design-process-dialog__footer { font-size: 8px; letter-spacing: .08em; }
-  .design-process-dialog__swipe { display: inline; }
+.design-process__action { margin-top: clamp(28px, 3.4vw, 54px); padding: 2px; }
+.design-process__button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 28px;
+  min-width: 230px;
+  min-height: 49px;
+  padding: 13px 24px;
+  border: 1px solid rgba(218, 226, 232, .65);
+  border-radius: 999px;
+  color: #e0e5e9;
+  background: transparent;
+  font: 400 11px/1.3 'Julius Sans One', 'Helvetica Neue', sans-serif;
+  letter-spacing: .04em;
+  text-decoration: none;
+  transition: border-color .3s, background-color .3s;
+}
+.design-process__button > span { font: 300 18px/1 var(--font-family-body); }
+.design-process__button:hover { background: rgba(154, 188, 213, .08); border-color: #e7edf2; }
+.design-process__button:focus-visible,
+.design-process__pagination button:focus-visible { outline: 1px solid #e0e7ed; outline-offset: 5px; }
+.design-process__scroll-hint { color: #607b93; }
+.design-process__scroll-hint > span { display: inline-block; margin-left: 16px; color: #9fb2c3; }
+.design-process__pagination { display: flex; gap: 18px; pointer-events: auto; }
+.design-process__pagination button {
+  padding: 8px 3px;
+  border: 0;
+  background: none;
+  color: #58738c;
+  cursor: pointer;
+}
+.design-process__pagination button[aria-current='step'] { color: #d6e0e8; }
+@media (max-width: 899px) {
+  .design-process__scene-header { top: 30px; }
+  .design-process__scene-footer { bottom: 27px; }
+  .design-process__scene-header p,
+  .design-process__scene-footer p,
+  .design-process__pagination button { font-size: 9px; letter-spacing: .1em; }
+  .design-process__scene-count { gap: 17px; }
+  .design-process__center { width: min(72vw, 650px); }
+  .design-process__title { font-size: clamp(50px, 10.2vw, 90px); }
+  .design-process__tagline { margin-bottom: 24px; font-size: 15px; }
+  .design-process__copy { margin-top: 28px; }
+  .design-process__copy p { font-size: 17px; line-height: 1.8; }
+  .design-process__copy br { display: none; }
+  .design-process__action { margin-top: 32px; }
+  .design-process__button { min-width: 205px; min-height: 46px; font-size: 10px; padding: 12px 20px; gap: 20px; }
+  .design-process__object { --approach-object-width: min(46vw, 44svh); }
+  .design-process__object--left { transform: translate(-30vw, -50%) rotate(-10deg); }
+  .design-process__object--right { transform: translate(30vw, -50%) rotate(10deg); }
+  .design-process__scroll-hint { font-size: 8px !important; }
+  .design-process__pagination { gap: 14px; }
+}
+@media (max-width: 520px) {
+  .design-process__center { width: 76vw; transform: translate(-50%, -47%); }
+  .design-process__title { font-size: clamp(44px, 11.5vw, 60px); letter-spacing: -.06em; }
+  .design-process__tagline { font-size: 14px; margin-bottom: 24px; }
+  .design-process__copy { max-width: 66vw; margin-inline: auto; }
+  .design-process__copy p { font-size: 17px; }
+  .design-process__object { --approach-object-width: min(62vw, 44svh); }
+  .design-process__object--left { transform: translate(-37vw, -50%) rotate(-10deg); }
+  .design-process__object--right { transform: translate(37vw, -50%) rotate(10deg); }
+}
+@media (max-width: 360px) {
+  .design-process__object--left { transform: translate(-40vw, -50%) rotate(-10deg); }
+  .design-process__object--right { transform: translate(40vw, -50%) rotate(10deg); }
+}
+@media (max-height: 700px) {
+  .design-process__tagline { margin-bottom: 18px; }
+  .design-process__copy { margin-top: 22px; }
+  .design-process__action { margin-top: 23px; }
+  .design-process__scene-header { top: 25px; }
+  .design-process__scene-footer { bottom: 22px; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .design-process__header, .design-process__garden { opacity: 1 !important; transform: none !important; }
-  .is-enhanced .design-process__groups .design-process__art { will-change: auto; }
+  [data-approach-reveal], .design-process__button { transform: none !important; opacity: 1 !important; }
 }

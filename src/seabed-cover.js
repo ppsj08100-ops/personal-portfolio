@@ -28,7 +28,7 @@ export function initSeabedCover(article) {
     frame = 0
     lastTime = 0
     x = y = targetX = targetY = 0
-    for (const property of ['--scene-x', '--scene-y', '--scene-rotate-x', '--scene-rotate-y']) article.style.removeProperty(property)
+    for (const property of ['--scene-x', '--scene-y']) article.style.removeProperty(property)
   }
   function animate(now) {
     frame = 0
@@ -40,8 +40,6 @@ export function initSeabedCover(article) {
     y += (targetY - y) * ease
     article.style.setProperty('--scene-x', `${(x * 6).toFixed(3)}px`)
     article.style.setProperty('--scene-y', `${(y * 4).toFixed(3)}px`)
-    article.style.setProperty('--scene-rotate-x', `${(-y * 1.2).toFixed(3)}deg`)
-    article.style.setProperty('--scene-rotate-y', `${(x * 1.8).toFixed(3)}deg`)
     if (Math.abs(targetX - x) + Math.abs(targetY - y) > .001) frame = requestAnimationFrame(animate)
     else lastTime = 0
   }

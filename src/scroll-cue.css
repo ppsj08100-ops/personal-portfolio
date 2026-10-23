@@ -1,4 +1,4 @@
-/* Small rising bubbles at rest; a concentrated plume on activation. */
+/* A soft oval cloud at rest, gently diffusing outward on activation. */
 .hero__scroll-dock {
   --scroll-cue-height: 6.125rem;
   position: absolute;
@@ -48,14 +48,32 @@
   top: 1.5rem;
   left: 50%;
   display: block;
-  width: min(22.5rem, 94vw);
-  height: 10.5rem;
+  width: min(42rem, 100vw);
+  height: 16rem;
   transform: translate(-50%, -50%);
   pointer-events: none;
   opacity: 1;
   transition: opacity .5s ease;
 }
-.hero__scroll-dock:has(.is-diving) .hero-dive-bubbles { opacity: 0; }
+.hero__scroll-dock:has(.is-diving) .hero-dive-bubbles { opacity: .45; }
+.hero-dive-bubbles__particle,
+.hero-dive-foam__particle {
+  position: absolute;
+  display: block;
+  max-width: none;
+  opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  will-change: transform, opacity;
+}
+.hero-dive-bubbles__particle[hidden] { display: none; }
+.hero-dive-bubbles__extra {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity .7s ease;
+}
+.hero-dive-bubbles.is-inviting .hero-dive-bubbles__extra { opacity: 1; }
 /* Retain the small SVG as a fallback and preserve the cue's original spacing. */
 .hero__scroll-dock:has(.hero-dive-bubbles) .hero__dive-mark { visibility: hidden; }
 .hero__scroll-dock:has(.hero-dive-bubbles) .hero__dive-mark .hero__dive-bubble { animation: none; }
@@ -85,7 +103,7 @@
   .hero__scroll-dock {
     --scroll-cue-height: 3rem;
     top: auto;
-    bottom: .75rem;
+    bottom: 4.25rem;
   }
   .hero__scroll-cue {
     grid-template-columns: auto auto;
@@ -98,7 +116,7 @@
   .hero__dive-mark { width: 2.5rem; height: 1.875rem; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .hero-dive-bubbles { transition: none; }
+  .hero-dive-bubbles, .hero-dive-bubbles__extra { transition: none; }
   .hero__scroll-cue * { animation: none !important; transition: none !important; }
   .hero__dive-bubble { transform: none !important; opacity: .42 !important; }
 }
@@ -111,5 +129,12 @@
   display: block;
   width: 100%;
   height: 100%;
+  overflow: clip;
   pointer-events: none;
+}
+.hero-dive-foam__field {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  will-change: transform;
 }
