@@ -1,0 +1,177 @@
+.skill-reef__life {
+  position: absolute;
+  z-index: 0;
+  color: #d6e7ee;
+  pointer-events: none;
+  user-select: none;
+}
+.skill-reef__life svg { display: block; width: 100%; height: auto; }
+.skill-reef__specimen { display: block; width: 100%; overflow: hidden; }
+.skill-reef__specimen image { pointer-events: none; }
+
+/* Each resident stays close to a particular branch or rock ledge. */
+.skill-reef__resident-fish {
+  left: calc(var(--fish-left) * 1%);
+  top: calc(var(--fish-top) * 1%);
+  width: calc(var(--fish-size) * 1px);
+  opacity: .92;
+  filter: saturate(.68) brightness(.94) drop-shadow(0 2px 2px #020b2055);
+}
+.skill-reef__resident-fish[data-habitat-index='0'][data-fish-slot='1'] { --fish-left: 36; --fish-top: 43; --fish-size: 88; }
+.skill-reef__resident-fish[data-habitat-index='0'][data-fish-slot='2'] { --fish-left: 14; --fish-top: 74; --fish-size: 62; }
+.skill-reef__resident-fish[data-habitat-index='0'][data-fish-slot='3'] { --fish-left: 66; --fish-top: 82; --fish-size: 64; }
+.skill-reef__resident-fish[data-habitat-index='1'][data-fish-slot='1'] { --fish-left: 50; --fish-top: 45; --fish-size: 82; }
+.skill-reef__resident-fish[data-habitat-index='1'][data-fish-slot='2'] { --fish-left: 6; --fish-top: 82; --fish-size: 64; }
+.skill-reef__resident-fish[data-habitat-index='1'][data-fish-slot='3'] { --fish-left: 74; --fish-top: 60; --fish-size: 64; }
+.skill-reef__resident-fish[data-habitat-index='2'][data-fish-slot='1'] { --fish-left: 22; --fish-top: 30; --fish-size: 78; }
+.skill-reef__resident-fish[data-habitat-index='2'][data-fish-slot='2'] { --fish-left: 50; --fish-top: 67; --fish-size: 64; }
+.skill-reef__resident-fish[data-fish-slot='2'] { opacity: .84; }
+.skill-reef__rock .skill-reef__resident-fish[data-fish-species='wrasse'] { --fish-size: 82; }
+.skill-reef__rock .skill-reef__resident-fish[data-fish-species='angelfish'] { --fish-size: 66; }
+.skill-reef__rock .skill-reef__resident-fish[data-fish-species='goby'] { --fish-size: 78; }
+.skill-reef__resident-fish[data-habitat-index='0'][data-fish-slot='2'] { --fish-top: 76; }
+.skill-reef__resident-fish[data-habitat-index='1'][data-fish-slot='2'] { --fish-top: 86; }
+.skill-reef__swimmer--butterfly { transform-origin: 46% 50%; will-change: transform; }
+
+.skill-reef__starfish {
+  left: 47%;
+  top: 93%;
+  width: clamp(66px, 5.7vw, 82px);
+  color: #dce2d4;
+  opacity: .9;
+  transform: translate(-50%, -50%) rotate(12deg) scaleY(.74);
+  pointer-events: auto;
+  filter: drop-shadow(0 2px 2px #020b2070);
+}
+.skill-reef__starfish + .skill-reef__starfish {
+  left: 86%;
+  top: 95%;
+  width: 45px;
+  opacity: .7;
+  transform: translate(-50%, -50%) rotate(-29deg) scaleY(.72);
+}
+.skill-reef__starfish-outline { stroke-width: .9; }
+.skill-reef__starfish-body { fill: #bccbcde0; }
+.skill-reef__starfish-veins { stroke-width: .65; opacity: .55; }
+.skill-reef__starfish-ridges { stroke-width: .6; opacity: .55; }
+.skill-reef__starfish-dots { opacity: .85; }
+.skill-reef__starfish svg { transition: color .8s ease, filter .8s ease; }
+@media (hover: hover) {
+  .skill-reef__starfish:hover svg {
+    color: #a4d5ed;
+    filter: drop-shadow(0 0 3px #8ecbec70);
+  }
+}
+
+.skill-reef__hermit {
+  left: 72%;
+  top: 93%;
+  width: clamp(72px, 6.4vw, 92px);
+  opacity: .94;
+  transform: translate(-50%, -50%) rotate(3deg);
+  filter: saturate(.7) brightness(.93) drop-shadow(0 2px 2px #020b2080);
+}
+.skill-reef__hermit-walk { transform-origin: 55% 85%; }
+
+.skill-reef__clam-wrap {
+  left: 31%;
+  top: 91%;
+  width: clamp(86px, 7.2vw, 102px);
+  transform: translate(-50%, -50%) rotate(-4deg);
+  pointer-events: auto;
+}
+.skill-reef__clam-wrap:has(.skill-reef__clam[aria-expanded='true']) { z-index: 5; }
+.skill-reef__clam {
+  position: relative;
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+  filter: saturate(.65) brightness(.93) drop-shadow(0 2px 2px #020b2080);
+}
+.skill-reef__specimen--clam {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 575 / 525;
+  overflow: visible;
+  perspective: 360px;
+}
+.skill-reef__clam-base, .skill-reef__clam-lid { position: absolute; inset: 0; width: 100%; height: 100% !important; overflow: hidden; }
+.skill-reef__clam-lid {
+  transform-origin: 50% 58%;
+  transform: rotateX(-72deg);
+  transition: transform 1.5s cubic-bezier(.22,.7,.24,1), filter 1.2s ease;
+}
+.skill-reef__clam[aria-expanded='true'] .skill-reef__clam-lid { transform: rotateX(0deg); filter: brightness(1.08); }
+.skill-reef__clam:focus-visible { outline: 1px solid #cadfe9b3; outline-offset: 5px; border-radius: 50%; }
+.skill-reef__clam-note {
+  position: absolute;
+  z-index: 1;
+  bottom: calc(100% + 4px);
+  left: 50%;
+  width: min(236px, calc(100vw - 48px));
+  padding: 14px 17px;
+  border: 1px solid #b4cfd82e;
+  border-radius: 5px;
+  background: #04152bea;
+  color: #c3d7df;
+  box-shadow: 0 8px 24px #00081445;
+  font: 300 11px/1.8 'Intro Pretendard', var(--font-family-body);
+  word-break: keep-all;
+  transform: translateX(-50%) rotate(4deg);
+  backdrop-filter: blur(12px);
+  pointer-events: auto;
+}
+.skill-reef__clam-note[hidden] { display: none; }
+.skill-reef__clam-note strong { display: block; margin-bottom: 4px; color: #e1ebed; font-weight: 400; }
+.skill-reef__clam-note p { margin: 0; }
+.skill-reef__clam-close { margin: 8px 0 0; padding: 2px 0; border: 0; border-bottom: 1px solid #a9c6d344; background: transparent; color: #a9c6d3; font: inherit; cursor: pointer; }
+.skill-reef__clam-close:focus-visible { outline: 1px solid #cadfe9b3; outline-offset: 3px; }
+
+/* Sparse air from coral crevices follows one continuous, slow ascent. */
+.skill-reef__bubble-plume { inset: 0; overflow: visible; }
+.skill-reef__air-bubble {
+  position: absolute;
+  left: 24%;
+  top: 84%;
+  display: block;
+  width: var(--bubble-size, 7px);
+  aspect-ratio: 1;
+  border: 1px solid #c5e3efc2;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 24%, #e9f8fc59, transparent 33%), radial-gradient(circle at 65% 75%, #87bfd82b, transparent 65%);
+  box-shadow: inset 0 -1px 1px #c3e9f32b;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+.skill-reef__air-bubble[data-bubble-source='2'] { left: 74%; top: 66%; }
+.skill-reef__air-bubble[data-bubble-source='3'] { left: 52%; top: 77%; }
+.skill-reef__rock--workflow .skill-reef__air-bubble[data-bubble-source='1'] { left: 24%; top: 86%; }
+.skill-reef__rock--workflow .skill-reef__air-bubble[data-bubble-source='2'] { left: 83%; top: 76%; }
+.skill-reef__rock--workflow .skill-reef__air-bubble[data-bubble-source='3'] { left: 55%; top: 81%; }
+.skill-reef__rock--creative .skill-reef__air-bubble[data-bubble-source='1'] { left: 20%; top: 83%; }
+.skill-reef__rock--creative .skill-reef__air-bubble[data-bubble-source='2'] { left: 71%; top: 65%; }
+.skill-reef__rock--creative .skill-reef__air-bubble[data-bubble-source='3'] { left: 45%; top: 73%; }
+
+@media (min-width: 768px) and (max-width: 1199px) {
+  .skill-reef__resident-fish { width: calc(var(--fish-size) * .92px); }
+  .skill-reef__hermit { width: 78px; }
+  .skill-reef__clam-wrap { width: 88px; }
+}
+@media (max-width: 767px) {
+  .skill-reef__resident-fish { width: calc(var(--fish-size) * .85px); }
+  .skill-reef__starfish { width: 64px; }
+  .skill-reef__starfish + .skill-reef__starfish { width: 38px; }
+  .skill-reef__hermit { left: 68%; top: 93%; width: 74px; }
+  .skill-reef__clam-wrap { width: 82px; }
+  .skill-reef__clam-note { width: 214px; font-size: 10px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .skill-reef__life * { animation: none; }
+  .skill-reef__clam-lid, .skill-reef__starfish svg { transition: none; }
+}

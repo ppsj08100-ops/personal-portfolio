@@ -10,25 +10,26 @@
 .has-fish-canvas .about-fish img { visibility: hidden; }
 .about-fish {
   position: absolute;
-  width: clamp(172px, 17vw, 292px);
+  width: clamp(340px, 32vw, 548px);
   opacity: .8;
   transform: translate(-50%, -50%);
   transform-origin: center;
   pointer-events: none;
 }
 .about-fish--blue { left: 17%; top: 260px; rotate: -18deg; }
-.about-fish--white { left: 83%; top: 410px; rotate: 22deg; width: clamp(164px, 16vw, 278px); }
+.about-fish--white { left: 83%; top: 410px; rotate: 22deg; width: clamp(328px, 31vw, 528px); }
 .about-fish img { display: block; width: 100%; height: auto; object-fit: contain; filter: drop-shadow(0 5px 6px #00061970); user-select: none; pointer-events: none; }
+.about-fish--white img { scale: -1 1; }
 .is-fish-swimming .about-fish { left: 0; top: 0; rotate: none; transform: none; will-change: transform, opacity; }
 @media (max-width: 991px) {
-  .about-fish { width: clamp(142px, 18vw, 194px); }
+  .about-fish { width: clamp(270px, 35vw, 388px); }
   .about-fish--blue { left: 7%; }
-  .about-fish--white { left: 93%; width: clamp(134px, 17vw, 184px); }
+  .about-fish--white { left: 93%; width: clamp(256px, 34vw, 370px); }
 }
 @media (max-width: 479px) {
-  .about-fish { width: clamp(116px, 31vw, 148px); }
+  .about-fish { width: clamp(200px, 52vw, 256px); }
   .about-fish--blue { left: 14%; top: 180px; }
-  .about-fish--white { left: 86%; top: 450px; width: clamp(110px, 29vw, 140px); }
+  .about-fish--white { left: 86%; top: 450px; width: clamp(190px, 50vw, 244px); }
 }
 @media (prefers-reduced-motion: reduce) {
   .about-fish { will-change: auto; }

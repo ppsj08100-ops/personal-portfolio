@@ -66,6 +66,7 @@ import { initReviews } from './reviews.js'
 import { initContactIntro } from './contact-intro.js'
 import { initContactForm } from './contact-form.js'
 import { initFooter } from './footer.js'
+import { initPortfolioChat } from './portfolio-chat.js'
 
 const destroyHero = initHero(document.querySelector('.hero'))
 const destroyHeroStars = initHeroStars(document.querySelector('.hero'))
@@ -98,6 +99,7 @@ const destroyCapabilityCards = initCapabilityCards(document.querySelector('.capa
 const destroyCapabilities = initCapabilities(document.querySelector('.capabilities'))
 const destroyContactForm = initContactForm(document.querySelector('[data-contact-form]'))
 const destroyFooter = initFooter(document.querySelector('.site-footer'))
+const destroyPortfolioChat = initPortfolioChat()
 let destroyBenefits = () => {}
 let destroyClientsTitle = () => {}
 let destroyReviews = () => {}
@@ -151,5 +153,6 @@ if (import.meta.hot) {
   import.meta.hot.dispose(() => destroyContactIntro())
   import.meta.hot.dispose(() => destroyContactForm())
   import.meta.hot.dispose(() => destroyFooter())
+  import.meta.hot.dispose(destroyPortfolioChat)
   import.meta.hot.dispose(() => { galleryDisposed = true; destroyPortfolioGallery() })
 }

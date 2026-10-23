@@ -4,20 +4,45 @@ const vertexSource = `
   uniform vec2 u_center;
   uniform vec2 u_size;
   uniform float u_angle;
-  uniform float u_time;
-  uniform float u_phase;
-  uniform float u_speed;
+  uniform float u_stroke;
+  uniform vec2 u_spineSpan;
+  uniform float u_waveStrength;
+  uniform float u_bends[17];
+  uniform float u_mirror;
   varying vec2 v_uv;
+  float spineAngle(float distance) {
+    float q = clamp(distance, 0.0, 1.0);
+    float station = q * 16.0;
+    int bone = int(min(floor(station), 15.0));
+    float history = mix(u_bends[bone], u_bends[bone + 1], station - float(bone));
+    return history
+         + u_waveStrength * smoothstep(0.12, 1.0, q) * sin(u_stroke - 4.6 * q);
+  }
   void main() {
     v_uv = a_uv;
-    vec2 p = (a_uv - 0.5) * u_size;
-    // Both sprites point down: top UVs are the tail, bottom UVs are the head.
-    float tail = 1.0 - a_uv.y;
-    float envelope = pow(smoothstep(0.13, 1.0, tail), 1.7);
-    float stroke = tail * 6.1 - u_time * u_speed + u_phase;
-    p.x += sin(stroke) * envelope * u_size.x * 0.09;
-    float fin = pow(abs(a_uv.x - 0.5) * 2.0, 1.8);
-    p.y += sin(stroke + 0.7) * fin * u_size.y * 0.005;
+    // A neutral drawing follows a travelling spine wave. Integrating unit
+    // tangents keeps its length; placing each cross-section on the unit normal
+    // keeps its width instead of stretching a permanently bent illustration.
+    float head = u_spineSpan.x, tail = u_spineSpan.y;
+    float distance = (head - a_uv.y) / (head - tail);
+    float length = (head - tail) * u_size.y;
+    vec2 spine = vec2(0.0, (head - 0.5) * u_size.y);
+    for (int i = 0; i < 16; i++) {
+      float q = distance * (float(i) + 0.5) / 16.0;
+      float bend = spineAngle(q);
+      spine += length * distance / 16.0 * vec2(sin(bend), -cos(bend));
+    }
+    float bend = spineAngle(distance);
+    vec2 normal = vec2(cos(bend), sin(bend));
+    vec2 tangent = vec2(sin(bend), -cos(bend));
+    float radius = (a_uv.x - 0.5) * u_size.x;
+    float fin = smoothstep(0.16, 0.34, abs(a_uv.x - 0.5))
+              * smoothstep(0.52, 0.62, a_uv.y)
+              * (1.0 - smoothstep(0.78, 0.83, a_uv.y));
+    radius += sign(radius) * sin(u_stroke * 2.0 - 0.65) * fin * u_size.x * 0.012;
+    vec2 p = spine + normal * radius
+           + tangent * cos(u_stroke * 2.0 - 0.65) * fin * u_size.y * 0.003;
+    p.x *= u_mirror;
     float c = cos(u_angle), s = sin(u_angle);
     p = mat2(c, s, -s, c) * p + u_center;
     gl_Position = vec4(p.x / u_viewport.x * 2.0 - 1.0,
@@ -32,7 +57,7 @@ const fragmentSource = `
   void main() { gl_FragColor = texture2D(u_image, v_uv) * u_opacity; }
 `
 
-// One transparent GPU layer deforms both original illustrations continuously.
+// One transparent GPU layer carries a full-body wave through both fish.
 export function createFishSwimmer(layer, images) {
   const canvas = document.createElement('canvas')
   canvas.className = 'about-fish-canvas'
@@ -40,20 +65,18 @@ export function createFishSwimmer(layer, images) {
   const gl = canvas.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: true, depth: false, stencil: false })
   if (!gl) return null
   const shaders = [], buffers = [], textures = []
+  const straightBends = new Float32Array(17)
   let program
   let disposed = false
-  let frame = 0
-  let lastTime = 0
-  let elapsed = 0
   let visible = false
   let poses = []
   let width = 0
   let height = 0
+  let painted = false
 
   function destroy() {
     if (disposed) return
     disposed = true
-    cancelAnimationFrame(frame)
     canvas.removeEventListener('webglcontextlost', onContextLost)
     layer.classList.remove('has-fish-canvas')
     canvas.remove()
@@ -81,7 +104,7 @@ export function createFishSwimmer(layer, images) {
     gl.linkProgram(program)
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Fish shader could not link')
     gl.useProgram(program)
-    const columns = 16, rows = 64, vertices = [], indices = []
+    const columns = 24, rows = 64, vertices = [], indices = []
     for (let y = 0; y <= rows; y++) for (let x = 0; x <= columns; x++) vertices.push(x / columns, y / rows)
     for (let y = 0; y < rows; y++) for (let x = 0; x < columns; x++) {
       const i = y * (columns + 1) + x
@@ -96,7 +119,8 @@ export function createFishSwimmer(layer, images) {
     const uv = gl.getAttribLocation(program, 'a_uv')
     gl.enableVertexAttribArray(uv)
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0)
-    const uniforms = Object.fromEntries(['viewport', 'center', 'size', 'angle', 'time', 'phase', 'speed', 'opacity', 'image'].map(key => [key, gl.getUniformLocation(program, `u_${key}`)]))
+    const uniforms = Object.fromEntries(['viewport', 'center', 'size', 'angle', 'stroke', 'spineSpan', 'waveStrength', 'mirror', 'opacity', 'image'].map(key => [key, gl.getUniformLocation(program, `u_${key}`)]))
+    uniforms.bends = gl.getUniformLocation(program, 'u_bends[0]')
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true)
     images.forEach(image => {
@@ -115,12 +139,15 @@ export function createFishSwimmer(layer, images) {
     gl.clearColor(0, 0, 0, 0)
     layer.prepend(canvas)
 
-    function clear() { gl.clear(gl.COLOR_BUFFER_BIT) }
+    function clear() {
+      if (!painted) return
+      gl.clear(gl.COLOR_BUFFER_BIT)
+      painted = false
+    }
     function draw() {
       if (disposed || !width || !height) return
       clear()
       gl.uniform2f(uniforms.viewport, width, height)
-      gl.uniform1f(uniforms.time, elapsed)
       gl.uniform1i(uniforms.image, 0)
       poses.forEach((pose, index) => {
         if (pose.opacity < .002) return
@@ -128,26 +155,16 @@ export function createFishSwimmer(layer, images) {
         gl.uniform2f(uniforms.center, pose.x, pose.y)
         gl.uniform2f(uniforms.size, pose.width, pose.height)
         gl.uniform1f(uniforms.angle, pose.angle * Math.PI / 180)
-        gl.uniform1f(uniforms.phase, index * 2.1)
-        gl.uniform1f(uniforms.speed, index ? 2.1 : 2.45)
+        gl.uniform1f(uniforms.stroke, pose.stroke)
+        gl.uniform2f(uniforms.spineSpan, index ? .85 : .865, index ? .117 : .087)
+        gl.uniform1f(uniforms.waveStrength, pose.waveStrength ?? .42)
+        gl.uniform1fv(uniforms.bends, pose.bends || straightBends)
+        gl.uniform1f(uniforms.mirror, index ? -1 : 1)
         gl.uniform1f(uniforms.opacity, pose.opacity)
         gl.drawElements(gl.TRIANGLES, indices.length, gl.UNSIGNED_SHORT, 0)
+        painted = true
       })
       layer.classList.add('has-fish-canvas')
-    }
-    function tick(now) {
-      frame = 0
-      if (disposed) return
-      if (lastTime) elapsed += Math.min(.06, (now - lastTime) / 1000)
-      lastTime = now
-      draw()
-      frame = requestAnimationFrame(tick)
-    }
-    function sync() {
-      if (disposed) return
-      const running = visible && poses.some(pose => pose.opacity > .002)
-      if (running && !frame) { lastTime = 0; frame = requestAnimationFrame(tick) }
-      if (!running) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; clear() }
     }
     return {
       resize(w, h) {
@@ -157,10 +174,15 @@ export function createFishSwimmer(layer, images) {
         canvas.width = Math.round(w * ratio)
         canvas.height = Math.round(h * ratio)
         gl.viewport(0, 0, canvas.width, canvas.height)
-        draw()
+        if (visible) draw()
       },
-      update(next) { if (!disposed) { poses = next; sync() } },
-      setVisible(value) { visible = value; sync() },
+      update(next) { if (!disposed) { poses = next; if (visible) draw() } },
+      setVisible(value) {
+        if (disposed || visible === value) return
+        visible = value
+        if (visible) draw()
+        else clear()
+      },
       destroy,
     }
   } catch {

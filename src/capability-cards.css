@@ -132,7 +132,113 @@
   min-height: 100svh;
   background: var(--insight-color-bg);
 }
-.is-immersive .capability-scene__background { z-index: 0; min-height: 100svh; }
+.is-immersive .capability-scene__background { z-index: 0; min-height: 100svh; overflow: clip; background: var(--hero-sky); }
+.is-immersive .capability-scene__background::before {
+  content: '';
+  position: absolute;
+  /* Open water shares the HERO's midnight blue. Broad, low-contrast volumes
+     rise past the camera; no illustrated contours are drawn over the water. */
+  inset: -8svh -10% -124svh;
+  background:
+    radial-gradient(ellipse 40% 20% at 48% 2%, #315f803b, transparent 76%),
+    radial-gradient(ellipse 38% 29% at 36% 34%, #234b6833, transparent 75%),
+    radial-gradient(ellipse 46% 25% at 70% 64%, #244e692b, transparent 78%),
+    linear-gradient(180deg, #000b2f 3%, #010d2d 46%, #010a24 79%, #00081e);
+  transform: translateY(var(--about-depth-y, 0svh)) scale(var(--about-depth-scale, 1.02));
+  transform-origin: 50% 0%;
+  opacity: var(--about-depth-alpha, .9);
+  will-change: transform;
+  pointer-events: none;
+}
+.is-immersive .capability-scene__background::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, #000b2f0d, transparent 23%, #000b2f0d 78%, #000b2f9c),
+    radial-gradient(ellipse at 50% 35%, transparent 25%, #000b2f38 76%, #000b2f73);
+  pointer-events: none;
+}
+.capability-depth__shafts,
+.capability-depth__haze,
+.capability-depth__motes {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform;
+}
+.capability-depth__shafts {
+  inset: -20svh -20% -90svh;
+  transform: translateY(var(--about-shaft-y, 0svh));
+  background:
+    radial-gradient(ellipse 15% 62% at 45% -5%, #b9d6e548, #729bb72a 37%, transparent 75%),
+    radial-gradient(ellipse 32% 58% at 48% -3%, #467d9e3b, transparent 80%);
+  filter: blur(28px);
+  opacity: var(--about-light-alpha, .8);
+}
+.capability-depth__haze {
+  inset-inline: -24%;
+  height: 98svh;
+  border-radius: 50%;
+  filter: blur(48px);
+}
+.capability-depth__haze--far {
+  top: -8svh;
+  background: radial-gradient(ellipse 43% 36% at 61% 50%, #365c7b33, transparent 78%);
+  transform: translateY(var(--about-haze-far-y, 0svh));
+}
+.capability-depth__haze--mid {
+  top: 62svh;
+  height: 120svh;
+  background: radial-gradient(ellipse 44% 43% at 28% 52%, #46698433, transparent 77%);
+  transform: translateY(var(--about-haze-mid-y, 0svh));
+}
+.capability-depth__haze--near {
+  top: 166svh;
+  height: 140svh;
+  background: radial-gradient(ellipse 44% 38% at 77% 49%, #6a889b2b, transparent 78%);
+  transform: translateY(var(--about-haze-near-y, 0svh));
+}
+.capability-depth__motes { inset-inline: 0; top: -30svh; }
+.capability-depth__motes::before {
+  content: '';
+  position: absolute;
+  inset: -620px 0;
+  background-repeat: repeat;
+  animation: about-depth-motes 42s linear infinite;
+}
+.capability-depth__motes--far {
+  --about-mote-cycle: -426px;
+  height: 340svh;
+  transform: translateY(var(--about-far-y, 0svh));
+  opacity: .18;
+}
+.capability-depth__motes--far::before {
+  background-image:
+    radial-gradient(ellipse 1px 1.4px at 17% 12%, #b5d8e0 90%, transparent),
+    radial-gradient(ellipse 1px 1.5px at 63% 44%, #a8d3e4 90%, transparent),
+    radial-gradient(ellipse .7px 1px at 80% 73%, #a4cddd 90%, transparent),
+    radial-gradient(ellipse 1px 1.6px at 39% 90%, #c4e0e5 90%, transparent);
+  background-size: 420px 426px;
+}
+.capability-depth__motes--near {
+  --about-mote-cycle: -610px;
+  height: 520svh;
+  transform: translateY(var(--about-near-y, 0svh));
+  opacity: .15;
+  -webkit-mask-image: linear-gradient(90deg, transparent 2%, #000 23% 78%, transparent 98%);
+  mask-image: linear-gradient(90deg, transparent 2%, #000 23% 78%, transparent 98%);
+}
+.capability-depth__motes--near::before {
+  background-image:
+    radial-gradient(ellipse 1.5px 3px at 19% 19%, #d0e9ed8f 25%, transparent 100%),
+    radial-gradient(ellipse 2px 4px at 76% 59%, #c3e6eb8f 25%, transparent 100%),
+    radial-gradient(ellipse 1.3px 2.8px at 46% 87%, #bbdce78f 25%, transparent 100%);
+  background-size: 690px 610px;
+  animation-duration: 39s;
+}
+@keyframes about-depth-motes {
+  to { transform: translateY(var(--about-mote-cycle)); }
+}
 .is-immersive .capability-scene__veil {
   display: block;
   position: absolute;
@@ -167,7 +273,12 @@
 .is-immersive .capability-step.is-active { pointer-events: auto; }
 .is-immersive .capability-step:not(.is-active) { pointer-events: none; }
 /* ABOUT keeps the four-card choreography, with readable questions inside it. */
-.capability-cards--about { font-family: var(--font-family-body); }
+.capability-cards--about {
+  background:
+    radial-gradient(ellipse at 48% 0, #23496c24, transparent 48%),
+    linear-gradient(var(--hero-sky), var(--insight-color-bg));
+  font-family: var(--font-family-body);
+}
 .capability-cards--about .capability-cards__header { font-size: 11px; line-height: 1.6; }
 .capability-cards--about .capability-card { display: flex; flex-direction: column; padding: 8% 8% 7%; }
 .capability-cards--about .capability-card__top {
@@ -270,4 +381,5 @@
 }
 @media (prefers-reduced-motion: reduce) {
   .capability-card, .capability-card__toggle, .about-question__toggle { transition: none; }
+  .capability-depth__motes::before { animation: none; }
 }

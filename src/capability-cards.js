@@ -137,6 +137,14 @@ export function initCapabilityCards(section) {
     if (!scene || !viewport || !background || !veil || !steps.length) return
     scene.classList.add('is-immersive')
     const fish = initAboutFish(section)
+    // Separate nearby suspension from distant light so downward scrolling reads
+    // as a camera descent even while a card pauses in the middle of the screen.
+    const depthLayers = ['shafts', 'haze haze--far', 'haze haze--mid', 'haze haze--near', 'motes motes--far', 'motes motes--near'].map(names => {
+      const layer = document.createElement('div')
+      layer.className = names.split(' ').map(name => `capability-depth__${name}`).join(' ')
+      background.append(layer)
+      return layer
+    })
     // The added typography precedes this deck; keep its original card pacing.
     const pixelsPerUnit = () => (innerHeight * 11 - artwork.offsetHeight) / sourceDuration
     const contactDistance = () => pixelsPerUnit() * (referenceCards[0].gone - portfolioEntry.start)
@@ -166,6 +174,27 @@ export function initCapabilityCards(section) {
       filter: 'blur(5px)',
     }))
     contents.forEach(content => gsap.set(content, { opacity: 1 }))
+
+    // Pass through softly lit water layers during the incoming cards, then keep
+    // descending into darker water. Near particles pass faster than distant rays.
+    // These tracks share the deck's duration and never alter its choreography.
+    const depthSettle = at(26)
+    timeline.fromTo(background, {
+      '--about-depth-y': '0svh', '--about-depth-scale': 1.02, '--about-depth-alpha': .9,
+      '--about-shaft-y': '0svh', '--about-far-y': '0svh', '--about-near-y': '0svh',
+      '--about-haze-far-y': '0svh', '--about-haze-mid-y': '0svh', '--about-haze-near-y': '0svh', '--about-light-alpha': .85,
+    }, {
+      '--about-depth-y': '-38svh', '--about-depth-scale': .99, '--about-depth-alpha': .86,
+      '--about-shaft-y': '-22svh', '--about-far-y': '-68svh', '--about-near-y': '-124svh',
+      '--about-haze-far-y': '-20svh', '--about-haze-mid-y': '-59svh', '--about-haze-near-y': '-111svh', '--about-light-alpha': .7,
+      duration: depthSettle, immediateRender: false,
+    }, 0)
+    timeline.to(background, {
+      '--about-depth-y': '-92svh', '--about-depth-scale': .94, '--about-depth-alpha': .72,
+      '--about-shaft-y': '-56svh', '--about-far-y': '-168svh', '--about-near-y': '-350svh',
+      '--about-haze-far-y': '-50svh', '--about-haze-mid-y': '-147svh', '--about-haze-near-y': '-288svh', '--about-light-alpha': .32,
+      duration: sourceDuration - depthSettle,
+    }, depthSettle)
 
     // The mirror and complete voyage have already scrolled past. Keep their
     // native sticky scenes outside this pin, preserving the card choreography.
@@ -255,6 +284,7 @@ export function initCapabilityCards(section) {
       timeline = undefined
       scene.classList.remove('is-immersive')
       fish.destroy()
+      depthLayers.forEach(layer => layer.remove())
       contact.revert()
       background.inert = false
       header.inert = false

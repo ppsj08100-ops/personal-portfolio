@@ -1,0 +1,27 @@
+.skill-reef__coral-current {
+  position: absolute;
+  inset: 0 auto auto 0;
+  display: block;
+  width: 100%;
+  max-width: none;
+  pointer-events: none;
+  user-select: none;
+}
+
+.skill-reef__coral-current[hidden] {
+  display: none;
+}
+
+.skill-reef__art.is-coral-current-ready > img {
+  visibility: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-reef__coral-current {
+    display: none;
+  }
+
+  .skill-reef__art.is-coral-current-ready > img {
+    visibility: visible;
+  }
+}

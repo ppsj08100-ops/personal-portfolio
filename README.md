@@ -1,5 +1,15 @@
 # BEYOND THE SURFACE
 
+## DEEPER 포트폴리오 챗봇
+
+오른쪽 아래 `ASK DEEPER` 버블에서 대표 작업, 딥디크 기여 내용, 사용 도구, 소개와 연락 방법을 질문할 수 있습니다. 추천 질문과 직접 입력을 모두 지원하며 답변의 링크는 사이트 내 해당 작업으로 이동합니다. 이 안내 기능은 API 키 없이 동작합니다.
+
+자유로운 AI 대화는 `api/chat.js`에서 AI SDK와 Vercel AI Gateway를 통해 스트리밍합니다. 현재 키가 없으면 연결 전임을 알리고 포트폴리오 안내를 계속 제공합니다. 모델 답변이나 문의 전송 성공을 흉내 내지 않습니다.
+
+AI를 연결하려면 `.env.example`을 `.env.local`로 복사하고 `AI_GATEWAY_API_KEY`를 설정한 뒤 개발 서버를 다시 시작합니다. 선택 항목 `AI_GATEWAY_MODEL`로 모델을 바꿀 수 있습니다. 키에는 `VITE_` 접두사를 붙이지 마세요. Vite 개발·프리뷰 서버에서는 같은 `/api/chat` 엔드포인트를 사용하며, Vercel 배포 시 프로젝트 환경 변수에 서버 키를 등록합니다. 정적 파일만 호스팅하는 환경에서는 기본 안내 기능만 동작합니다. 키 발급은 [Vercel AI Gateway 설정 문서](https://vercel.com/docs/ai-gateway/getting-started)를 참고하세요.
+
+사이트 정보와 기본 답변은 `src/portfolio-chat-knowledge.js`, 화면과 동작은 `src/portfolio-chat.js`와 `src/portfolio-chat.css`에서 수정할 수 있습니다. 대화는 현재 열린 페이지 메모리에만 유지하며 브라우저 저장소에 기록하지 않습니다.
+
 **박서진 · Park Seojin | UI/UX · Web · Visual Design Portfolio**
 
 화면에 보이는 결과와 그 뒤의 생각을 함께 소개하는 개인 포트폴리오입니다. 디자인 기획, 사용자 조사, 화면 설계, 웹 구현, 영상 작업을 하나의 스크롤 경험으로 연결합니다.

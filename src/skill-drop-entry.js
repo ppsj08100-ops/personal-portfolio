@@ -1,132 +1,192 @@
 import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
-// Observe stationary landing points so a travelling bubble cannot trigger itself.
+gsap.registerPlugin(ScrollTrigger)
+
+const clamp = gsap.utils.clamp(0, 1)
+const smooth = value => value * value * (3 - 2 * value)
+
+// The anchors stay on the coral while the bubbles travel from the side currents.
 export function initSkillDropEntry(scene, buttons) {
   const controller = new AbortController()
-  let disposed = false
-  let resizeFrame = 0
   const records = new Map()
-  const byAnchor = new Map()
+  let disposed = false
+  let refreshFrame = 0
+  const hadEntryClass = scene.classList.contains('has-skill-side-entry')
+  const originalProgress = scene.style.getPropertyValue('--skill-entry-progress')
+  const originalPriority = scene.style.getPropertyPriority('--skill-entry-progress')
+  scene.classList.add('has-skill-side-entry')
 
-  function clear(record) {
-    record.button.classList.remove('is-skill-arriving')
-    gsap.set(record.button, { clearProps: 'transform,opacity' })
-    gsap.set(record.label, { clearProps: 'opacity' })
+  function draw(record) {
+    if (disposed) return
+    const progress = record.forced ? 1 : smooth(clamp(record.motion.progress))
+    const remaining = 1 - progress
+    const current = Math.sin(progress * Math.PI)
+
+    record.x(record.fromX * remaining)
+    record.y(record.fromY * remaining + current * record.side * 5)
+    record.rotation(record.side * 5 * remaining)
+    record.scaleX(.94 + .06 * progress)
+    record.scaleY(.94 + .06 * progress)
+    record.opacity(1)
+    record.button.classList.toggle('is-skill-arriving', progress < .999)
+    record.button.dataset.skillArrival = progress >= .999 ? 'settled' : record.side < 0 ? 'left' : 'right'
+    if (record.index === 0) scene.style.setProperty('--skill-entry-progress', progress.toFixed(4))
   }
+
+  function measure() {
+    if (disposed) return
+    const sceneRect = scene.getBoundingClientRect()
+    const viewportWidth = document.documentElement.clientWidth
+    const rails = { left: [], right: [] }
+
+    records.forEach(record => {
+      const rect = record.anchor.getBoundingClientRect()
+      const normalizedX = (rect.left - sceneRect.left) / Math.max(sceneRect.width, 1)
+      const side = viewportWidth < 768
+        ? record.index % 2 ? 1 : -1
+        : normalizedX < .43 ? -1 : normalizedX > .57 ? 1 : record.index % 2 ? 1 : -1
+      record.side = side
+      record.targetX = rect.left
+      record.targetY = rect.top + window.scrollY
+      record.width = record.button.offsetWidth
+      record.height = record.button.offsetHeight
+      rails[side < 0 ? 'left' : 'right'].push(record)
+    })
+
+    Object.values(rails).forEach(rail => {
+      const distance = record => record.side < 0 ? record.targetX : viewportWidth - record.targetX
+      const distances = rail.map(distance)
+      const minimum = Math.min(...distances)
+      const spread = Math.max(1, Math.max(...distances) - minimum)
+      const previousInLane = new Map()
+      rail.sort((a, b) => a.targetY - b.targetY || a.index - b.index).forEach(record => {
+        // Keep the lane order consistent with destination order so adjacent
+        // bubbles do not cross each other on the way into the same coral.
+        record.lane = Math.min(2, Math.floor((distance(record) - minimum) / spread * 3))
+        const inset = Math.max(14, Math.min(32, viewportWidth * .025)) + record.width / 2
+        const laneInset = Math.min(record.lane * record.width * .96, Math.max(0, viewportWidth * .43 - inset))
+        const railX = record.side < 0 ? inset + laneInset : viewportWidth - inset - laneInset
+        record.fromX = railX - record.targetX
+        record.fromY = 0
+        const previous = previousInLane.get(record.lane)
+        if (previous && record.targetY - previous.targetY < record.height * .9) {
+          previous.fromY = -20
+          record.fromY = 20
+        }
+        previousInLane.set(record.lane, record)
+      })
+      rail.forEach(draw)
+    })
+  }
+
   function finish(button) {
     const record = records.get(button)
-    if (!record || record.done) return
-    record.done = true
-    record.timeline?.kill()
-    record.timeline = null
-    observer.unobserve(record.anchor)
-    clear(record)
+    if (!record || disposed) return
+    record.forced = true
+    draw(record)
   }
 
-  function measure(record) {
-    const rock = record.button.offsetParent
-    const targetX = rock.getBoundingClientRect().left + record.button.offsetLeft
-    const side = targetX < innerWidth / 2 ? -1 : 1
-    const inset = Math.max(18, record.button.offsetWidth / 2 + 6)
-    record.fromX = (side < 0 ? inset : innerWidth - inset) - targetX
-    record.fromY = 24 + record.index % 4 * 9
-    record.curveY = (record.index % 2 ? -1 : 1) * (28 + record.index % 3 * 12)
-    record.side = side
+  function scheduleRefresh() {
+    cancelAnimationFrame(refreshFrame)
+    refreshFrame = requestAnimationFrame(() => {
+      if (disposed) return
+      ScrollTrigger.refresh()
+    })
   }
-  function draw(record, p) {
-    const remaining = 1 - p
-    const bow = Math.sin(p * Math.PI)
-    record.x(remaining * remaining * record.fromX + 2 * remaining * p * record.fromX * .32)
-    record.y(remaining * remaining * record.fromY + 2 * remaining * p * record.curveY)
-    record.scaleX(.86 + .14 * p + .18 * bow)
-    record.scaleY(.86 + .14 * p - .065 * bow)
-    record.rotation(-record.side * remaining * 7)
-    record.opacity(.24 + .76 * Math.min(1, p * 3))
-  }
-  function park(record) {
-    measure(record)
-    gsap.set(record.button, { xPercent: -50, yPercent: -50, x: 0, y: 0 })
-    gsap.set(record.label, { opacity: 0 })
-    record.button.classList.add('is-skill-arriving')
-    draw(record, 0)
-  }
-  function arrive(record, order) {
-    if (disposed || record.started || record.done) return
-    record.started = true
-    observer.unobserve(record.anchor)
-    measure(record)
-    const state = { p: 0 }
-    record.timeline = gsap.timeline({
-      delay: Math.min(order, 7) * .032,
-      onComplete: () => finish(record.button),
-    }).to(state, {
-      p: 1, duration: .68, ease: 'power3.out',
-      onUpdate: () => draw(record, state.p),
-    }, 0).to(record.label, { opacity: 1, duration: .23, ease: 'sine.out' }, .36)
-    if (document.hidden) record.timeline.pause()
-  }
-
-  const observer = new IntersectionObserver(entries => {
-    entries.filter(entry => entry.isIntersecting)
-      .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top || a.boundingClientRect.left - b.boundingClientRect.left)
-      .forEach((entry, order) => arrive(byAnchor.get(entry.target), order))
-  }, { rootMargin: '0px 0px -55px 0px' })
 
   buttons.forEach((button, index) => {
     const anchor = document.createElement('span')
     anchor.className = 'skill-drop-anchor'
+    anchor.dataset.skillAnchor = button.dataset.skill
     anchor.setAttribute('aria-hidden', 'true')
-    anchor.style.left = button.style.getPropertyValue('--drop-x')
-    anchor.style.top = button.style.getPropertyValue('--drop-y')
+    Object.assign(anchor.style, {
+      position: 'absolute',
+      left: 'var(--drop-x)',
+      top: 'var(--drop-y)',
+      width: '0px',
+      height: '0px',
+      pointerEvents: 'none',
+    })
+    anchor.style.setProperty('--drop-x', button.style.getPropertyValue('--drop-x'))
+    anchor.style.setProperty('--drop-y', button.style.getPropertyValue('--drop-y'))
     button.parentElement.append(anchor)
+
+    const saved = ['transform', 'opacity'].map(property => ({
+      property,
+      value: button.style.getPropertyValue(property),
+      priority: button.style.getPropertyPriority(property),
+    }))
     const record = {
-      button, index, anchor, label: button.lastElementChild,
-      done: false, started: false, timeline: null,
+      button, anchor, index, saved,
+      motion: { progress: 0 },
+      forced: false,
+      side: index % 2 ? 1 : -1,
+      fromX: 0,
+      fromY: 0,
       x: gsap.quickSetter(button, 'x', 'px'),
       y: gsap.quickSetter(button, 'y', 'px'),
+      rotation: gsap.quickSetter(button, 'rotation', 'deg'),
       scaleX: gsap.quickSetter(button, 'scaleX'),
       scaleY: gsap.quickSetter(button, 'scaleY'),
-      rotation: gsap.quickSetter(button, 'rotation', 'deg'),
       opacity: gsap.quickSetter(button, 'opacity'),
     }
+    // Keep CSS's centre anchor explicit; x/y are the travel offsets only.
+    gsap.quickSetter(button, 'xPercent')(-50)
+    gsap.quickSetter(button, 'yPercent')(-50)
     records.set(button, record)
-    byAnchor.set(anchor, record)
-    park(record)
-    observer.observe(anchor)
+  })
+
+  measure()
+  ScrollTrigger.addEventListener('refreshInit', measure)
+
+  records.forEach(record => {
+    record.tween = gsap.fromTo(record.motion, { progress: 0 }, {
+      progress: 1,
+      duration: 1,
+      ease: 'none',
+      immediateRender: false,
+      onUpdate: () => draw(record),
+      scrollTrigger: {
+        trigger: record.anchor,
+        start: 'top 92%',
+        end: 'top 50%',
+        scrub: .6,
+      },
+    })
   })
   finish(document.activeElement)
 
-  window.addEventListener('resize', () => {
-    cancelAnimationFrame(resizeFrame)
-    resizeFrame = requestAnimationFrame(() => {
-      if (disposed) return
-      records.forEach(record => {
-        if (record.done) return
-        if (record.started) finish(record.button)
-        else park(record)
-      })
-    })
-  }, { signal: controller.signal })
-  document.addEventListener('visibilitychange', () => {
-    records.forEach(record => {
-      if (record.started && !record.done) record.timeline?.paused(document.hidden)
-    })
-  }, { signal: controller.signal })
+  window.addEventListener('resize', scheduleRefresh, { signal: controller.signal })
+  document.fonts?.addEventListener('loadingdone', scheduleRefresh, { signal: controller.signal })
+  document.fonts?.ready.then(() => {
+    if (!disposed) scheduleRefresh()
+  })
 
   return {
     finish,
     destroy() {
       disposed = true
-      observer.disconnect()
       controller.abort()
-      cancelAnimationFrame(resizeFrame)
+      cancelAnimationFrame(refreshFrame)
+      ScrollTrigger.removeEventListener('refreshInit', measure)
       records.forEach(record => {
-        record.timeline?.kill()
-        clear(record)
+        record.tween.scrollTrigger?.kill()
+        record.tween.kill()
+        record.button.classList.remove('is-skill-arriving')
+        delete record.button.dataset.skillArrival
+        record.saved.forEach(({ property, value, priority }) => {
+          if (value) record.button.style.setProperty(property, value, priority)
+          else record.button.style.removeProperty(property)
+        })
+        // Reparse the restored CSS transform if this media query is enabled again.
+        if (record.button._gsap) record.button._gsap.uncache = 1
         record.anchor.remove()
       })
       records.clear()
-      byAnchor.clear()
+      if (!hadEntryClass) scene.classList.remove('has-skill-side-entry')
+      if (originalProgress) scene.style.setProperty('--skill-entry-progress', originalProgress, originalPriority)
+      else scene.style.removeProperty('--skill-entry-progress')
     },
   }
 }

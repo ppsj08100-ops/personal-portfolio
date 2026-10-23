@@ -1,8 +1,11 @@
 import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { initSkillsWaterlight } from './skills-waterlight.js'
+import { initSkillsCurrentTitle } from './skills-current-title.js'
 import { initSkillDropEntry } from './skill-drop-entry.js'
-
-gsap.registerPlugin(ScrollTrigger)
+import { initSkillReefLife } from './skill-reef-life.js'
+import { initSkillsCoralCurrent } from './skills-coral-current.js'
+import './skill-reef-life.css'
+import './skills-coral-current.css'
 
 const skills = {
   figma: {
@@ -47,11 +50,11 @@ const skills = {
   },
   gsap: {
     name: 'GSAP', category: 'INTERACTION',
-    description: '장면의 움직임과 전환을 조절해, 화면에 자연스러운 흐름을 더합니다.',
+    description: '요소의 등장 순서와 속도를 조절해, 작업 화면에 자연스러운 움직임과 전환을 더합니다.',
   },
   scrolltrigger: {
     name: 'ScrollTrigger', category: 'INTERACTION',
-    description: '스크롤 위치와 화면 전환을 연결해, 콘텐츠가 이어지는 타이밍을 조절합니다.',
+    description: '스크롤 위치와 장면의 전환을 연결해, 콘텐츠가 이어지는 타이밍을 조절합니다.',
   },
   scrolla: {
     name: 'Scrolla.js', category: 'INTERACTION',
@@ -89,30 +92,46 @@ export function initToolsSkills(section) {
   const name = section.querySelector('[data-skill-name]')
   const category = section.querySelector('[data-skill-category]')
   const description = section.querySelector('[data-skill-description]')
-  const title = section.querySelector('.tools-skills__title')
-  const voyage = section.querySelector('[data-tools-title-voyage]')
-  const stage = section.querySelector('[data-tools-title-stage]')
-  const track = section.querySelector('[data-tools-title-track]')
-  const first = section.querySelector('[data-tools-title-first]')
-  const final = section.querySelector('[data-tools-title-final]')
-  const tide = section.querySelector('[data-tools-title-tide]')
+  const detail = section.querySelector('.skill-reef__detail')
   const controller = new AbortController()
   const { signal } = controller
   const media = gsap.matchMedia()
+  let finishArrival = () => {}
+  const glints = buttons.map(button => {
+    const glint = document.createElement('span')
+    glint.className = 'skill-drop__glint'
+    glint.setAttribute('aria-hidden', 'true')
+    button.querySelector('.skill-drop__water')?.append(glint)
+    return glint
+  })
   let selected = buttons.find(button => button.dataset.skill === 'figma')?.dataset.skill || buttons[0].dataset.skill
   let previewed = ''
   let focused = ''
-  let visible = false
-  let disposed = false
-  let refreshFrame = 0
-  let finishArrival = () => {}
 
-  function refreshLayout() {
-    cancelAnimationFrame(refreshFrame)
-    refreshFrame = requestAnimationFrame(() => {
-      refreshFrame = 0
-      if (!disposed) ScrollTrigger.refresh()
-    })
+  function positionDetail(active) {
+    if (!detail) return
+    delete section.dataset.skillContextual
+    detail.style.removeProperty('--skill-detail-left')
+    detail.style.removeProperty('--skill-detail-top')
+    if (!section.dataset.skillEngaged || innerWidth >= 1200) return
+    const bounds = detail.getBoundingClientRect()
+    if (bounds.top >= 16 && bounds.bottom <= innerHeight - 16) return
+    const button = buttons.find(item => item.dataset.skill === active)
+    const water = button?.querySelector('.skill-drop__water')
+    if (!water) return
+
+    // On the stacked reef, keep the explanation beside the chosen tool rather
+    // than leaving it above the viewport. It travels with that tool on scroll.
+    section.dataset.skillContextual = 'true'
+    const panel = detail.getBoundingClientRect()
+    const tool = water.getBoundingClientRect()
+    const reef = scene.getBoundingClientRect()
+    const left = Math.max(0, Math.min(reef.width - panel.width, tool.left + tool.width / 2 - reef.left - panel.width / 2))
+    const above = tool.top - panel.height - 20
+    const below = tool.bottom + 20
+    const top = above >= 16 ? above : Math.min(below, innerHeight - panel.height - 16)
+    detail.style.setProperty('--skill-detail-left', `${left}px`)
+    detail.style.setProperty('--skill-detail-top', `${Math.max(16, top) - reef.top}px`)
   }
 
   function renderPanel() {
@@ -129,16 +148,14 @@ export function initToolsSkills(section) {
       button.classList.toggle('is-skill-selected', key === selected)
       button.classList.toggle('is-skill-preview', key === active)
     })
-  }
-
-  function syncPlayback() {
-    section.classList.toggle('is-tools-in-view', visible && !document.hidden)
+    positionDetail(active)
   }
 
   buttons.forEach(button => {
     const key = button.dataset.skill
     button.addEventListener('pointerenter', event => {
       if (event.pointerType === 'touch') return
+      section.dataset.skillEngaged = 'true'
       previewed = key
       renderPanel()
     }, { signal })
@@ -147,6 +164,8 @@ export function initToolsSkills(section) {
       renderPanel()
     }, { signal })
     button.addEventListener('click', () => {
+      finishArrival(button)
+      section.dataset.skillEngaged = 'true'
       selected = key
       previewed = ''
       focused = button.matches(':focus-visible') ? key : ''
@@ -159,7 +178,8 @@ export function initToolsSkills(section) {
   }, { signal })
   scene.addEventListener('focusin', event => {
     const button = event.target.closest('[data-skill-node]')
-    if (button) finishArrival(button)
+    if (button?.matches(':focus-visible')) finishArrival(button)
+    if (button) section.dataset.skillEngaged = 'true'
     // Pointer focus must not hide the next hover preview; keyboard focus takes priority.
     focused = button?.matches(':focus-visible') ? button.dataset.skill : ''
     renderPanel()
@@ -168,125 +188,34 @@ export function initToolsSkills(section) {
     focused = ''
     renderPanel()
   }, { signal })
-  document.addEventListener('visibilitychange', syncPlayback, { signal })
-
-  const observer = new IntersectionObserver(entries => {
-    visible = entries.some(entry => entry.isIntersecting)
-    syncPlayback()
-  })
-  observer.observe(scene)
   renderPanel()
-  syncPlayback()
-
+  window.addEventListener('resize', renderPanel, { signal, passive: true })
   media.add('(prefers-reduced-motion: no-preference)', () => {
-    const arrivals = initSkillDropEntry(scene, buttons)
-    finishArrival = arrivals.finish
+    const arrival = initSkillDropEntry(scene, buttons)
+    finishArrival = arrival.finish
     return () => {
       finishArrival = () => {}
-      arrivals.destroy()
+      arrival.destroy()
     }
   })
-
-  if (title && voyage && stage && track && first && final && tide) {
-    media.add('(min-width: 1024px) and (prefers-reduced-motion: no-preference)', () => {
-      section.classList.add('is-title-voyage')
-      let active = true
-      const originalFirst = first.textContent
-      const originalFinal = final.textContent
-      const split = run => {
-        const letters = Array.from(run.textContent, character => {
-          const letter = document.createElement('span')
-          letter.className = 'tools-skills__title-char'
-          letter.textContent = character
-          return letter
-        })
-        run.replaceChildren(...letters)
-        return letters
-      }
-      const letters = [...split(first), ...split(final)]
-      const renderers = letters.map(letter => ({
-        letter, center: 0,
-        blur: gsap.quickSetter(letter, 'filter'),
-        opacity: gsap.quickSetter(letter, 'opacity'),
-        y: gsap.quickSetter(letter, 'y', 'px'),
-      }))
-      const positionTrack = gsap.quickSetter(track, 'x', 'px')
-      const ink = gsap.utils.interpolate('#b9d1e1', '#edf4f5')
-      const state = { progress: 0, tide: 0 }
-      let startX = 0
-      let endX = 0
-      let width = 0
-      let height = 0
-      let inset = 0
-
-      function measure() {
-        width = stage.clientWidth
-        height = stage.clientHeight
-        inset = parseFloat(getComputedStyle(stage).paddingLeft) || 0
-        const baseSize = Math.min(width * .20833, height * .48)
-        title.style.fontSize = `${baseSize}px`
-        const fit = Math.min(1, (width - inset * 2) / final.offsetWidth)
-        title.style.fontSize = `${baseSize * fit}px`
-        startX = (width - first.offsetWidth) / 2 - inset
-        endX = (width - final.offsetWidth) / 2 - inset - final.offsetLeft
-        renderers.forEach(item => {
-          item.center = item.letter.parentElement.offsetLeft + item.letter.offsetLeft + item.letter.offsetWidth / 2
-        })
-      }
-
-      function render() {
-        const progress = state.progress
-        const x = startX + (endX - startX) * progress
-        const wipe = gsap.utils.clamp(0, 1, (state.tide - .4) / .2)
-        positionTrack(x)
-        tide.style.clipPath = `inset(0 0 0 ${(1 - wipe) * 100}%)`
-        stage.style.setProperty('--tools-title-ink', ink(wipe))
-        renderers.forEach(item => {
-          const center = inset + x + item.center
-          const gone = gsap.utils.clamp(0, 1, (width * .06 - center) / (width * .15))
-          item.blur(`blur(${gone * Math.min(56, width * .03)}px)`)
-          item.opacity(1 - gone)
-          item.y(-height * .13 * gone)
-        })
-      }
-
-      measure()
-      render()
-      gsap.timeline({
-        scrollTrigger: {
-          id: 'tools-skills-title', trigger: voyage,
-          start: 'top top', end: 'bottom bottom', scrub: .5,
-          invalidateOnRefresh: true,
-          onRefreshInit: measure,
-          onRefresh: render,
-        },
-      }).to(state, { progress: 1, duration: .65, ease: 'none', onUpdate: render }, 0)
-        .to(state, { tide: 1, duration: 1, ease: 'none', onUpdate: render }, 0)
-      refreshLayout()
-      document.fonts.ready.then(() => { if (active && !disposed) refreshLayout() })
-
-      return () => {
-        active = false
-        section.classList.remove('is-title-voyage')
-        title.style.removeProperty('font-size')
-        track.style.removeProperty('transform')
-        tide.style.removeProperty('clip-path')
-        stage.style.removeProperty('--tools-title-ink')
-        first.textContent = originalFirst
-        final.textContent = originalFinal
-        refreshLayout()
-      }
-    })
-  }
+  const destroyWaterlight = initSkillsWaterlight(section)
+  const destroyTitle = initSkillsCurrentTitle(section)
+  const destroyLife = initSkillReefLife(scene)
+  const destroyCoral = initSkillsCoralCurrent(scene)
 
   return () => {
-    disposed = true
     controller.abort()
-    observer.disconnect()
     media.revert()
-    cancelAnimationFrame(refreshFrame)
-    section.classList.remove('is-tools-in-view')
+    destroyWaterlight()
+    destroyTitle()
+    destroyLife()
+    destroyCoral()
+    glints.forEach(glint => glint.remove())
     delete section.dataset.skillActive
+    delete section.dataset.skillEngaged
+    delete section.dataset.skillContextual
+    detail?.style.removeProperty('--skill-detail-left')
+    detail?.style.removeProperty('--skill-detail-top')
     delete scene.dataset.skillActive
     buttons.forEach(button => {
       button.classList.remove('is-skill-selected', 'is-skill-preview')

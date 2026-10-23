@@ -31,3 +31,4 @@ output/
 !.env.example
 .vercel
 .env*
+!.env.example
