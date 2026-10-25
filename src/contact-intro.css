@@ -1,3 +1,8 @@
+/* Typography shared by the contact section and footer. */
+@font-face { font-family: 'Reviews Helvetica'; src: url('/fonts/reviews-helvetica-roman.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Reviews Helvetica'; src: url('/fonts/clients-helvetica-thin.woff2') format('woff2'); font-weight: 100; font-style: normal; font-display: swap; }
+@font-face { font-family: 'Clients Carl'; src: url('/fonts/clients-carl-brown.woff2') format('woff2'); font-weight: 400; font-style: normal; font-display: swap; }
+
 .contact-intro {
   --contact-divider-height: 1.6vw;
   --contact-spark-size: min(1.6vw, 32px);
@@ -5,8 +10,8 @@
   --contact-label-gap: 3.5vw;
   position: relative;
   z-index: 3;
-  /* The reviews section already supplies 15.625vw of the source's 20vw gap. */
-  padding-top: 4.375vw;
+  /* Give the contact divider its full height after the gallery. */
+  padding-top: 20vw;
   padding-bottom: 15.625vw;
   color: var(--insight-color-text);
   background: var(--insight-color-bg);
@@ -119,8 +124,8 @@
     --contact-divider-height: 5.3vw;
     --contact-spark-size: min(5.3vw, 32px);
     --contact-label-gap: 17vw;
-    /* Reuse the preceding 32vw inset for the reference's 45vw pause. */
-    padding-top: 13vw;
+    /* Keep the divider clear of the gallery on narrow screens. */
+    padding-top: 45vw;
     padding-bottom: 21vw;
   }
   .contact-intro__vertical { width: max(1px, .26vw); height: 48.5333vw; }

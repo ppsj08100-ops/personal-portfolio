@@ -28,11 +28,6 @@ import './about-title.css'
 import './capability-cards.css'
 import './about-fish.css'
 import './portfolio.css'
-import './benefits.css'
-import './clients-title.css'
-import './reviews.css'
-import './contact-intro.css'
-import './contact-form.css'
 import './footer.css'
 import { initHero } from './hero.js'
 import { initHeroStars } from './hero-stars.js'
@@ -60,11 +55,6 @@ import { initShortForm } from './short-form.js'
 import { initToolsSkills } from './tools-skills.js'
 import { initAboutTitle } from './about-title.js'
 import { initCapabilityCards } from './capability-cards.js'
-import { initBenefits } from './benefits.js'
-import { initClientsTitle } from './clients-title.js'
-import { initReviews } from './reviews.js'
-import { initContactIntro } from './contact-intro.js'
-import { initContactForm } from './contact-form.js'
 import { initFooter } from './footer.js'
 import { initPortfolioChat } from './portfolio-chat.js'
 
@@ -97,23 +87,14 @@ const destroyToolsSkills = initToolsSkills(document.querySelector('.tools-skills
 const destroyAboutTitle = initAboutTitle(document.querySelector('.about-title'))
 const destroyCapabilityCards = initCapabilityCards(document.querySelector('.capability-cards'))
 const destroyCapabilities = initCapabilities(document.querySelector('.capabilities'))
-const destroyContactForm = initContactForm(document.querySelector('[data-contact-form]'))
 const destroyFooter = initFooter(document.querySelector('.site-footer'))
 const destroyPortfolioChat = initPortfolioChat()
-let destroyBenefits = () => {}
-let destroyClientsTitle = () => {}
-let destroyReviews = () => {}
-let destroyContactIntro = () => {}
 let destroyPortfolioGallery = () => {}
 let galleryDisposed = false
 // Load the gallery renderer separately so the opening scenes keep their small bundle.
 import('./portfolio-gallery.js').then(({ initPortfolioGallery }) => {
   if (!galleryDisposed) {
     destroyPortfolioGallery = initPortfolioGallery(document.querySelector('.portfolio'))
-    destroyBenefits = initBenefits(document.querySelector('.benefits'))
-    destroyClientsTitle = initClientsTitle(document.querySelector('.clients-title'))
-    destroyReviews = initReviews(document.querySelector('.reviews'))
-    destroyContactIntro = initContactIntro(document.querySelector('.contact-intro'))
   }
 })
 
@@ -147,11 +128,6 @@ if (import.meta.hot) {
   import.meta.hot.dispose(destroyAboutTitle)
   import.meta.hot.dispose(destroyCapabilityCards)
   import.meta.hot.dispose(destroyCapabilities)
-  import.meta.hot.dispose(() => destroyBenefits())
-  import.meta.hot.dispose(() => destroyClientsTitle())
-  import.meta.hot.dispose(() => destroyReviews())
-  import.meta.hot.dispose(() => destroyContactIntro())
-  import.meta.hot.dispose(() => destroyContactForm())
   import.meta.hot.dispose(() => destroyFooter())
   import.meta.hot.dispose(destroyPortfolioChat)
   import.meta.hot.dispose(() => { galleryDisposed = true; destroyPortfolioGallery() })
