@@ -1,5 +1,8 @@
 ﻿import { createAmbientAudio } from './ambient-audio.js'
 
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { footerContent } from './footer-content.js'
+
 function tokenDuration(element, name) {
   const value = getComputedStyle(element).getPropertyValue(name).trim()
   const amount = Number.parseFloat(value) || 0
@@ -22,9 +25,46 @@ export function initHero(hero) {
   let returnFocus
   let closeTimer
   let closing = false
-  let focusHeroOnClose = false
+  let pendingDestination = null
+  let navigationFrame = 0
+  const focusAttributes = new Map()
   let soundEnabled = false
   let soundBusy = false
+
+  dialog.querySelectorAll('[data-menu-contact="phone"]').forEach(link => {
+    link.href = footerContent.phone.href
+    link.textContent = footerContent.phone.label
+  })
+  dialog.querySelectorAll('[data-menu-contact="email"]').forEach(link => {
+    link.href = `mailto:${footerContent.email}`
+    link.textContent = footerContent.email
+  })
+
+  function navigateTo(href) {
+    const target = document.getElementById(href.slice(1))
+    if (!target) return
+    ScrollTrigger.refresh()
+    const clocks = {
+      '#design-code': ['work-tidal-type', 'work-tidal-native'],
+      '#tools-skills': ['skills-current-title'],
+      '#about': ['about-title'],
+    }
+    const trigger = clocks[href]?.map(id => ScrollTrigger.getById(id)).find(Boolean)
+    const top = trigger ? trigger.start + 1 : target.getBoundingClientRect().top + scrollY
+    if (location.hash !== href) history.pushState(null, '', href)
+    // A menu jump skips the long pinned exhibitions. Native smooth scrolling
+    // through them can be interrupted by their layout refreshes along the way.
+    const nearby = Math.abs(top - scrollY) < innerHeight * 1.5
+    scrollTo({ top: Math.max(0, top), behavior: !reducedMotion.matches && nearby ? 'smooth' : 'instant' })
+    ScrollTrigger.update()
+    // The footer's only h2 lives inside its closed contact dialog.
+    const focus = href === '#contact' || href === '#hero' ? target : target.querySelector('h2') || target
+    if (!focus.hasAttribute('tabindex')) {
+      focusAttributes.set(focus, null)
+      focus.setAttribute('tabindex', '-1')
+    }
+    focus.focus({ preventScroll: true })
+  }
 
   hero.classList.add('is-loading')
 
@@ -76,7 +116,7 @@ export function initHero(hero) {
   function openMenu(event) {
     if (dialog.open) return
     returnFocus = event.currentTarget
-    focusHeroOnClose = false
+    pendingDestination = null
     dialog.classList.remove('is-closing')
     document.body.classList.add('has-menu-open')
     setMenuExpanded(true)
@@ -115,10 +155,13 @@ export function initHero(hero) {
     dialog.classList.remove('is-closing', 'is-opening')
     document.body.classList.remove('has-menu-open')
     setMenuExpanded(false)
-    if (focusHeroOnClose) {
-      hero.focus({ preventScroll: true })
-      hero.scrollIntoView({ behavior: reducedMotion.matches ? 'instant' : 'smooth', block: 'start' })
-      focusHeroOnClose = false
+    if (pendingDestination) {
+      const href = pendingDestination
+      pendingDestination = null
+      navigationFrame = requestAnimationFrame(() => {
+        navigationFrame = 0
+        navigateTo(href)
+      })
     } else {
       const focusTarget = returnFocus?.getClientRects().length
         ? returnFocus
@@ -127,11 +170,23 @@ export function initHero(hero) {
     }
   }, { signal })
   dialog.querySelector('[data-menu-home]').addEventListener('click', (event) => {
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
     event.preventDefault()
-    focusHeroOnClose = true
+    pendingDestination = '#hero'
     closeMenu()
   }, { signal })
-  dialog.querySelectorAll('a:not([data-menu-home])').forEach((link) => {
+  document.querySelectorAll('[data-nav-link]').forEach(link => {
+    link.addEventListener('click', event => {
+      if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return
+      if (!document.getElementById(link.hash.slice(1))) return
+      event.preventDefault()
+      if (dialog.contains(link) && dialog.open) {
+        pendingDestination = link.hash
+        closeMenu()
+      } else navigateTo(link.hash)
+    }, { signal })
+  })
+  dialog.querySelectorAll('a:not([data-menu-home]):not([data-nav-link])').forEach((link) => {
     link.addEventListener('click', closeMenu, { signal })
   })
 
@@ -163,6 +218,7 @@ export function initHero(hero) {
 
   return () => {
     clearTimeout(closeTimer)
+    cancelAnimationFrame(navigationFrame)
     controller.abort()
     reducedMotion.removeEventListener('change', motionPreferenceChanged)
     if (dialog.open) dialog.close()
@@ -174,6 +230,7 @@ export function initHero(hero) {
       button.setAttribute('aria-label', '배경 사운드 켜기')
     })
     audio.dispose()
+    for (const [element] of focusAttributes) element.removeAttribute('tabindex')
     hero.classList.remove('is-loading', 'is-ready')
   }
 }

@@ -1,0 +1,166 @@
+/* The three real viewports share one still, pearly shell bed. */
+#diptyque-details.is-project-paged .project-pages__navigation {
+  right: max(var(--container-gutter), 184px);
+}
+@media (min-width: 768px) {
+  #diptyque-details:not(.is-project-paged) .project-pages__navigation {
+    padding-inline-end: 136px;
+  }
+}
+#team-projects.has-project-exhibition .sail-project__screen {
+  --cover-stand: 0px;
+  top: 8%;
+  left: 68%;
+  width: min(62vw, 102svh, 1100px);
+  height: auto;
+  max-height: none;
+  aspect-ratio: 3 / 2;
+  overflow: visible;
+}
+#team-projects.has-project-exhibition .sail-project__surface {
+  overflow: visible;
+}
+#team-projects.has-project-exhibition .sail-project__floor-shadow {
+  left: 45%;
+  top: 68%;
+  width: 50%;
+  height: 6%;
+  filter: blur(18px);
+  opacity: .4;
+  transform: none;
+}
+#team-projects .project-exhibition-cover__computer,
+#team-projects .project-exhibition-cover__tablet,
+#team-projects .project-exhibition-cover__phone {
+  position: absolute;
+  display: block;
+  bottom: 26%;
+  color: inherit;
+  text-decoration: none;
+}
+#team-projects .project-exhibition-cover__computer {
+  z-index: 2;
+  left: 25%;
+  width: 59%;
+  padding-bottom: var(--cover-stand);
+}
+#team-projects .project-exhibition-cover__computer:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: 8px;
+  border-radius: 12px;
+}
+#team-projects .project-exhibition-cover__tablet {
+  z-index: 3;
+  left: 9%;
+  width: 20%;
+}
+#team-projects .project-exhibition-cover__phone {
+  z-index: 4;
+  left: 73%;
+  bottom: 25%;
+  width: 9.5%;
+}
+#team-projects [data-exhibition-device]::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 5%;
+  right: 5%;
+  bottom: -4px;
+  height: 12px;
+  border-radius: 50%;
+  background: #001024c2;
+  filter: blur(5px);
+  pointer-events: none;
+}
+#team-projects .project-overview__monitor {
+  padding: 7px 7px 20px;
+  border-radius: 12px;
+  background: #11263b;
+  border-color: #a8c5da9c;
+  box-shadow: inset 0 0 0 1px #bed5e33b, 0 12px 22px #0010253d;
+}
+#team-projects .project-overview__monitor::after {
+  height: var(--cover-stand);
+  background: linear-gradient(90deg, #29445c, #9eb5c5 48%, #29445c);
+}
+#team-projects .project-overview__tablet,
+#team-projects .project-overview__phone {
+  background: #14293f;
+  border-color: #a8c5da9c;
+  box-shadow: 0 7px 16px #0010254d;
+}
+#team-projects .project-overview__screen img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+#team-projects .project-overview__monitor .project-overview__screen { aspect-ratio: 1.6; }
+
+@media (min-width: 768px) and (max-width: 1099px) {
+  #team-projects.has-project-exhibition .sail-project__screen {
+    top: 24%;
+    left: 50%;
+    width: min(90vw, 93svh, 900px);
+  }
+}
+@media (max-width: 767px) {
+  body.has-project-exhibition-in-view .portfolio-chat__launcher-label { display: none; }
+  #diptyque-details.is-project-paged .project-pages__navigation,
+  #diptyque-details .project-pages__navigation {
+    right: 84px;
+    left: var(--container-gutter);
+    width: auto;
+    max-width: calc(100% - var(--container-gutter) - 84px);
+    margin-inline: 0;
+    justify-content: flex-end;
+  }
+  #diptyque-details .project-pages__navigation button {
+    width: clamp(24px, calc((100vw - var(--container-gutter) - 84px) / 8), 36px);
+    min-width: 24px;
+    min-height: 44px;
+  }
+  #team-projects.has-project-exhibition .sail-project__screen {
+    top: 25%;
+    left: 50%;
+    width: min(118vw, 65svh, 560px);
+  }
+  #team-projects .project-overview__monitor {
+    padding: 4px 4px 12px;
+    border-radius: 8px;
+  }
+  #team-projects .project-overview__tablet {
+    padding: 4px;
+    border-radius: 10px;
+  }
+  #team-projects .project-overview__tablet .project-overview__screen { border-radius: 6px; }
+  #team-projects .project-overview__phone {
+    padding: 3px;
+    border-radius: 10px;
+  }
+  #team-projects .project-overview__phone .project-overview__screen { border-radius: 7px; }
+  #team-projects .project-overview__phone::before { top: 3px; height: 4px; }
+  #team-projects.has-project-exhibition .sail-project__floor-shadow {
+    top: 56%;
+    left: 8%;
+    width: 84%;
+    height: 4%;
+    filter: blur(14px);
+  }
+}
+@media (max-height: 699px) and (min-width: 768px) {
+  #team-projects.has-project-exhibition .sail-project__screen {
+    top: 90px;
+    left: 68%;
+    width: min(56vw, 720px);
+  }
+}
+@media (max-height: 699px) and (max-width: 767px) {
+  #team-projects.has-project-exhibition .sail-project__screen {
+    top: 210px;
+    left: 50%;
+    width: min(118vw, 460px);
+  }
+}

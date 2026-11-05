@@ -1,6 +1,5 @@
 import { initProjectResearch } from './project-research.js'
-
-const fileUrl = 'https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-'
+import { DIPTYQUE_PROPOSAL_URL } from './project-links.js'
 const documents = {
   meeting: {
     title: '딥디크 팀 회의록', caption: '구조 설계 회의록 · 2026.09.03', node: '463-1564',
@@ -60,7 +59,7 @@ export function initProjectStructure(section) {
     const flow = flows[selectedFlow]
     flowControls.hidden = key !== 'flow'
     sourceCaption.textContent = doc.source
-    sourceLink.href = `${fileUrl}?node-id=${key === 'flow' ? flow.node : doc.node}`
+    sourceLink.href = DIPTYQUE_PROPOSAL_URL
     sourceLink.setAttribute('aria-label', `${doc.title}${key === 'flow' ? ` — ${flow.name}` : ''} Figma 원본 열기 (새 탭)`)
     section.querySelector('[data-structure-document-number]').textContent = doc.label.slice(0, 2)
     if (key === 'flow') {

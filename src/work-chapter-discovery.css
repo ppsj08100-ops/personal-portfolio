@@ -1,0 +1,107 @@
+/* One sticky painting spans the original full-height chapter and first work.
+   The scene's negative margin reserves no additional scroll space. */
+.chapter-discovery-bridge { position: relative; isolation: isolate; display: flow-root; }
+.chapter-discovery__scene {
+  position: sticky;
+  z-index: 0;
+  top: 0;
+  height: 100svh;
+  margin-bottom: -100svh;
+  overflow: clip;
+  pointer-events: none;
+  background: var(--work-ocean-deep, #020b1d);
+}
+.chapter-discovery-bridge[data-discovery-state='complete'] > .chapter-discovery__scene { visibility: hidden; }
+.chapter-discovery-bridge > .work-chapter.has-chapter-discovery { z-index: 1; overflow: visible; background: transparent !important; }
+.chapter-discovery-bridge > #personal-projects-intro.has-chapter-discovery > .work-chapter__stage {
+  overflow: visible;
+  background: transparent !important;
+}
+.chapter-discovery-bridge > .work-chapter.has-chapter-discovery::before,
+.chapter-discovery-bridge > #personal-projects-intro.has-chapter-discovery > .work-chapter__stage::before { background: none; }
+.work-chapter.has-chapter-discovery :is(.ocean-continuity__water, .work-water-atmosphere__blue) { opacity: 0; }
+
+.chapter-discovery__room {
+  position: absolute;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  -webkit-mask-image: var(--discovery-ink-mask, var(--ocean-edge-fade));
+  mask-image: var(--discovery-ink-mask, var(--ocean-edge-fade));
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+.chapter-discovery__room picture,
+.chapter-discovery__room img { display: block; width: 100%; height: 100%; }
+.chapter-discovery__room img { object-fit: cover; object-position: center; }
+.chapter-discovery__room::after { content: ''; position: absolute; inset: 0; }
+[data-discovery-kind='personal'] .chapter-discovery__room img { filter: url(#personal-cabin-ocean-grade); }
+[data-discovery-kind='personal'] .chapter-discovery__room::after {
+  background: linear-gradient(90deg, #020b1dfc 0%, #020b1df5 29%, #020b1dcc 40%, #020b1d40 56%, transparent 74%),
+    linear-gradient(180deg, #020b1d1f, transparent 30% 67%, #020b1d40);
+}
+[data-discovery-kind='film'] .chapter-discovery__room { opacity: .94; }
+[data-discovery-kind='film'] .chapter-discovery__room img { filter: url(#short-form-ocean-grade); }
+[data-discovery-kind='film'] .chapter-discovery__room::after {
+  background: radial-gradient(ellipse at 13% 19%, #020b1df5 0%, #020b1de6 17%, #020b1d70 33%, transparent 51%),
+    linear-gradient(180deg, #020b1d1f, transparent 30% 67%, #020b1d40);
+}
+
+/* The original copy keeps TEAM's position as the shared art stays still. */
+.work-chapter.has-chapter-discovery .work-chapter__copy {
+  top: 29%;
+  left: var(--container-gutter, 48px);
+  width: min(340px, 33vw);
+  text-align: left;
+  opacity: calc(var(--chapter-copy-opacity, 1) * var(--discovery-copy-opacity, 1));
+  transform: translateY(calc(var(--chapter-copy-y, 0px) + var(--discovery-copy-shift, 0px)));
+}
+.work-chapter.has-chapter-discovery[data-work-chapter='film'] .work-chapter__copy { top: 29%; }
+.work-chapter.has-chapter-discovery .work-chapter__eyebrow { margin-bottom: 18px; color: #91adc3; font-size: 9px; letter-spacing: .16em; }
+.work-chapter.has-chapter-discovery .work-chapter__title { font-size: clamp(30px, 3vw, 48px); line-height: 1.12; letter-spacing: .025em; }
+.work-chapter.has-chapter-discovery .work-chapter__description { max-width: 27ch; margin: 22px 0 0; font-size: 13px; line-height: 1.9; }
+.work-chapter.has-chapter-discovery .work-route {
+  opacity: calc(var(--chapter-copy-opacity, 1) * var(--discovery-copy-opacity, 1));
+  transform: translateY(calc(var(--chapter-copy-y, 0px) + var(--discovery-copy-shift, 0px)));
+}
+
+/* Only the repeated room is hidden during the seam. Real gallery media enter
+   in their original flow, with their original reveal and controls. */
+.chapter-discovery-bridge > .has-discovery-handoff.is-discovery-arriving,
+.chapter-discovery-bridge > .has-discovery-handoff.is-discovery-arriving > .project-details__stage { background: transparent !important; }
+.has-discovery-handoff.is-discovery-arriving :is(.brand-gallery__room, .short-form__room) { opacity: 0 !important; }
+.has-discovery-handoff.is-discovery-arriving > .project-details__stage > .ocean-continuity__water { opacity: 0 !important; }
+.has-discovery-handoff.is-discovery-arriving > .project-details__stage::before,
+.has-discovery-handoff.is-discovery-arriving > .project-details__stage::after,
+.has-discovery-handoff.is-discovery-arriving .brand-archive::before { opacity: 0; }
+[data-discovery-motion='full'] > .is-discovery-arriving :is(.brand-archive__header, .brand-archive__body, .brand-archive__footer),
+[data-discovery-motion='full'] > .is-discovery-arriving .short-form__caption,
+[data-discovery-motion='full'] > .is-discovery-arriving .project-pages__navigation {
+  opacity: var(--discovery-info-opacity, 0) !important;
+  visibility: visible !important;
+}
+
+@media (min-width: 768px) and (max-height: 699px) {
+  .work-chapter.has-chapter-discovery .work-chapter__copy,
+  .work-chapter.has-chapter-discovery[data-work-chapter='film'] .work-chapter__copy { top: 20%; }
+  .work-chapter.has-chapter-discovery .work-chapter__title { font-size: clamp(30px, 3vw, 40px); }
+}
+@media (max-width: 767px) {
+  .work-chapter.has-chapter-discovery .work-chapter__copy,
+  .work-chapter.has-chapter-discovery[data-work-chapter='film'] .work-chapter__copy { top: 14%; left: 20px; width: calc(100% - 40px); }
+  .work-chapter.has-chapter-discovery .work-chapter__eyebrow { margin-bottom: 14px; font-size: 8px; }
+  .work-chapter.has-chapter-discovery .work-chapter__title { font-size: 28px; }
+  .work-chapter.has-chapter-discovery .work-chapter__description { max-width: 28ch; margin-top: 16px; font-size: 12px; }
+  [data-discovery-kind='personal'] .chapter-discovery__room::after {
+    background: linear-gradient(180deg, #020b1deb 0%, #020b1dc7 38%, #020b1de8 64%, #020b1df5 100%);
+  }
+  [data-discovery-kind='film'] .chapter-discovery__room::after {
+    background: linear-gradient(180deg, #020b1df0 0%, #020b1dc7 30%, transparent 57%);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .work-chapter.has-chapter-discovery .work-chapter__copy { opacity: 1; transform: none; }
+  .work-chapter.has-chapter-discovery .work-route { opacity: 1; transform: none; }
+}

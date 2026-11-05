@@ -1,0 +1,102 @@
+/* Different source material shares the water without covering the live main
+   document. The shared air layer supplies only restrained, tiny pockets. */
+#diptyque-process.has-simple-process-exhibition .process-exhibit[data-process-support='air'] {
+  --process-art: 0px;
+  --process-air-lift: calc(var(--process-scene-height) * .17);
+  --process-air-caption-clearance: 60px;
+  --process-readout-height: 72px;
+  margin-bottom: max(12px, calc(var(--process-readout-height) - var(--process-air-lift) + var(--process-air-caption-clearance)));
+}
+#diptyque-process.has-simple-process-exhibition .process-exhibit__scenery::before,
+#diptyque-process.has-simple-process-exhibition .process-exhibit__scenery::after,
+#diptyque-process.has-simple-process-exhibition .process-device::after { display: none; }
+#diptyque-process.has-simple-process-exhibition .process-device--monitor {
+  left: 0;
+  width: 70%;
+  bottom: var(--process-air-lift);
+  filter: drop-shadow(0 9px 9px #000b2533);
+}
+#diptyque-process.has-simple-process-exhibition .process-device > .process-device__viewport {
+  position: relative;
+  inset: auto;
+  padding: 4px;
+  border: 1px solid #9ab9d16b;
+  border-radius: 6px;
+  background: #08182b;
+  box-shadow: inset 0 0 0 1px #8caac51c;
+}
+#diptyque-process.has-simple-process-exhibition .process-device > .process-device__viewport::after { display: none; }
+#diptyque-process.has-simple-process-exhibition .process-device--monitor > .process-device__viewport > .process-device__screen {
+  height: auto;
+  aspect-ratio: 8 / 5;
+  border-radius: 2px;
+}
+#diptyque-process.has-simple-process-exhibition [data-process-exhibit='1'] .process-device--monitor > .process-device__viewport > .process-device__screen { aspect-ratio: 4 / 3; }
+#diptyque-process.has-simple-process-exhibition [data-process-exhibit='1'] .process-device--monitor { left: 19%; width: 62%; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__companion {
+  left: 72%;
+  width: 28%;
+  bottom: calc(var(--process-air-lift) + 64px);
+  aspect-ratio: auto;
+  pointer-events: none;
+  filter: drop-shadow(0 6px 8px #000b2526);
+}
+#diptyque-process.has-simple-process-exhibition .process-exhibit__companion > .process-device__viewport > .process-device__screen { height: auto; aspect-ratio: 8 / 5; border-radius: 2px; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__companion[data-process-preview-key='mindmap'] > .process-device__viewport > .process-device__screen { aspect-ratio: 1; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__companion:is([data-process-preview-key='flow'], [data-process-preview-key='requirements'], [data-process-preview-key='meeting']) > .process-device__viewport > .process-device__screen { aspect-ratio: 3 / 4; }
+#diptyque-process.has-simple-process-exhibition .process-mini-document--image { display: grid; place-items: center; padding: 0; }
+#diptyque-process.has-simple-process-exhibition .process-mini-document--image > img { width: 100%; height: 100%; max-width: 100%; max-height: 100%; object-fit: contain; }
+#diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-device--monitor { width: 64%; }
+#diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit__companion { left: 68%; width: 32%; bottom: calc(var(--process-air-lift) + 164px); }
+#diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit__companion.process-device--phone { bottom: calc(var(--process-air-lift) - 16px); }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card { left: 0; width: 18%; bottom: calc(var(--process-air-lift) + 20px); aspect-ratio: 4 / 5; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card.process-device--tablet { left: 82%; bottom: calc(var(--process-air-lift) + 108px); }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card > .process-device__viewport { position: absolute; inset: 0; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .process-device__screen { border-radius: 2px; background: #eef1f1; }
+#diptyque-process.has-simple-process-exhibition .process-device__chin { display: none; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__readout { left: 2%; right: 2%; top: calc(100% - var(--process-air-lift) + var(--process-air-caption-clearance)); }
+#diptyque-process.has-simple-process-exhibition .process-exhibit .process-exhibit__note-card .project-planning__note {
+  position: static;
+  width: auto;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  color: #52697b;
+  background: transparent;
+  box-shadow: none;
+}
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .process-device__note-fit { width: calc(100% - 18px); }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note-label { color: #7c94a6; font: 400 7px/1.7 'Julius Sans One', sans-serif; letter-spacing: .07em; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note h3 { margin-top: 8px; color: #354e63; font: 300 12px/1.65 'Intro Pretendard', var(--font-family-body); }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note h3 + p { margin-top: 7px; font-size: 11px; line-height: 1.8; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note > span { margin-top: 9px; padding-top: 9px; font-size: 10px; line-height: 1.7; border-color: #7891a22e; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note ol { gap: 8px; margin-top: 9px; font-size: 11px; }
+#diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note ol span { color: #7c94a6; font-size: 8px; }
+@media (max-width: 899px) {
+  #diptyque-process.has-simple-process-exhibition .process-exhibit[data-process-support='air'] {
+    --process-scene-height: max(440px, 115vw);
+    margin-bottom: max(12px, calc(var(--process-readout-height) - 52px));
+  }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='1'] .process-exhibit { --process-scene-height: max(580px, 145vw); }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='5'] .process-exhibit { --process-scene-height: max(580px, 148vw); }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='6'] .process-exhibit { --process-scene-height: max(530px, 136vw); }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit { --process-scene-height: max(420px, 108vw); }
+  #diptyque-process.has-simple-process-exhibition .process-device--monitor,
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='1'] .process-device--monitor,
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-device--monitor { left: 4%; top: 16px; bottom: auto; width: 92%; }
+  #diptyque-process.has-simple-process-exhibition .process-device > .process-device__viewport { padding: 3px; border-radius: 5px; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__companion,
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit__companion { left: 40%; top: calc(52px + 57.5cqw); bottom: auto; width: 56%; }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit__companion { left: 4%; width: 44%; }
+  #diptyque-process.has-simple-process-exhibition [data-process-exhibit='7'] .process-exhibit__companion.process-device--phone { left: 52%; bottom: auto; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card,
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card.process-device--tablet { left: 4%; top: calc(50px + 69cqw); bottom: auto; width: 44%; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card.process-device--tablet { left: 52%; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note h3 { font-size: 13px; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note-label { font-size: 8px; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note h3 + p,
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__note-card .project-planning__note ol { font-size: 12px; }
+  #diptyque-process.has-simple-process-exhibition .process-exhibit__readout { top: calc(100% - 52px); }
+}

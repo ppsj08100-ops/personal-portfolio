@@ -116,7 +116,7 @@ export function createSilhouettes(source, clean) {
   return { width, height, pixels }
 }
 
-/** R is open water; G is water directly below the forearm and fingers. */
+/** R: open water; G: arm-contact water; B: the soft outside hair contour. */
 export function createWaterMask(source) {
   const width = source.naturalWidth
   const height = source.naturalHeight
@@ -175,6 +175,24 @@ export function createWaterMask(source) {
   ;[figure, leftShore, rightIsland, foregroundIsland].forEach(path => context.fill(path))
   const protectedPixels = context.getImageData(0, 0, width, height).data
 
+  // A soft band follows the outside curls. Warping the painting through this
+  // band moves the real edge and its surrounding sea together, without a
+  // second outline or a cutout behind the hair.
+  context.clearRect(0, 0, 1672, 941)
+  context.lineWidth = 44
+  context.lineCap = 'round'
+  context.lineJoin = 'round'
+  context.filter = `blur(${8 * Math.min(width / 1672, height / 941)}px)`
+  context.strokeStyle = '#fff'
+  context.stroke(new Path2D(`
+    M1070 400 C1098 401 1121 416 1135 441
+    C1143 451 1135 463 1153 474 C1171 488 1167 514 1188 533
+    C1206 549 1209 576 1239 586 C1260 592 1273 600 1285 616
+    C1320 622 1338 641 1365 649 C1386 647 1402 655 1415 666
+    C1435 676 1452 670 1458 685
+  `))
+  const hairBand = context.getImageData(0, 0, width, height).data
+
   // A distance transform keeps the whole safety margin opaque. Feathering
   // starts only beyond that margin on the water side, unlike a blurred mask
   // which can partially reopen pixels belonging to a rock or a hair strand.
@@ -216,12 +234,14 @@ export function createWaterMask(source) {
   const safety = 8 * scale
   const feather = 6 * scale
   // Sampled from the original forearm's lower silver contour, then the
-  // lowest finger pads. The right taper ends before the hair at x1150.
+  // lowest finger pads and the raised arm's elbow. The right taper stops
+  // before the first curl, keeping its wet endpoint anchored to the sea.
   const armUnderside = [
     [835, 676], [848, 679], [858, 682], [880, 684], [910, 686],
     [940, 686], [970, 685], [995, 685], [1007, 687], [1020, 690],
     [1047, 690], [1057, 692], [1075, 695], [1084, 695], [1095, 695],
     [1106, 694], [1116, 692], [1128, 691], [1140, 691],
+    [1148, 690], [1154, 691],
   ]
   const smooth = amount => {
     const bounded = Math.min(1, Math.max(0, amount))
@@ -232,7 +252,7 @@ export function createWaterMask(source) {
   let segment = 0
   for (let x = Math.max(0, Math.floor(835 * width / 1672)); x < width; x++) {
     const referenceX = (x + 0.5) * 1672 / width
-    if (referenceX >= 1140) break
+    if (referenceX >= 1154) break
     while (segment + 1 < armUnderside.length - 1
       && referenceX > armUnderside[segment + 1][0]) segment++
     const left = armUnderside[segment]
@@ -243,12 +263,15 @@ export function createWaterMask(source) {
   for (let i = 0; i < distance.length; i++) {
     const amount = Math.min(1, Math.max(0, (distance[i] / 3 - safety) / feather))
     pixels[i * 4] = Math.round(255 * amount * amount * (3 - 2 * amount))
+    const referenceY = (Math.floor(i / width) + 0.5) * 941 / height
+    const hairSupport = smooth((referenceY - 432) / 70) * (1 - smooth((referenceY - 644) / 46))
+    pixels[i * 4 + 2] = Math.round(hairBand[i * 4 + 3] * hairSupport)
     pixels[i * 4 + 3] = 255
   }
   const contactTop = Math.max(0, Math.floor(682 * height / 941))
   const contactBottom = Math.min(height, Math.ceil(745 * height / 941))
   const contactLeft = Math.max(0, Math.floor(835 * width / 1672))
-  const contactRight = Math.min(width, Math.ceil(1140 * width / 1672))
+  const contactRight = Math.min(width, Math.ceil(1154 * width / 1672))
   for (let y = contactTop; y < contactBottom; y++) {
     const referenceY = (y + 0.5) * 941 / height
     const bottomFade = 1 - smooth((referenceY - 718) / 27)
@@ -258,7 +281,7 @@ export function createWaterMask(source) {
       if (boundary < 0) continue
       const belowArm = smooth((referenceY - boundary - 2) / 3)
       const sideFade = smooth((referenceX - 835) / 20)
-        * (1 - smooth((referenceX - 1110) / 30))
+        * (1 - smooth((referenceX - 1135) / 19))
       pixels[(y * width + x) * 4 + 1] = Math.round(255 * belowArm * sideFade * bottomFade)
     }
   }

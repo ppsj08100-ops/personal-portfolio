@@ -14,10 +14,9 @@ const referenceCards = [
   { entry: 22, mid: 24, opaque: 25, land: 26, rotation: 9, landRotation: 4, turn: 37, turnRotation: 0, exit: 37, gone: 39 },
 ]
 const sourceDuration = referenceCards[0].gone - referenceCards[0].entry
+const finalContact = { start: 81.80, touch: 81.92, end: 82.55 }
 const portfolioEntry = {
   start: referenceCards[1].gone,
-  fade: 3,
-  contact: referenceCards[0].exit - 2,
 }
 
 export function initCapabilityCards(section) {
@@ -32,8 +31,6 @@ export function initCapabilityCards(section) {
   const steps = [...section.querySelectorAll('.capability-step')]
   const remainingCard = steps[0]?.querySelector('.capability-card')
   const portfolio = scene?.nextElementSibling?.matches('.portfolio') ? scene.nextElementSibling : null
-  const star = portfolio?.querySelector('.portfolio__star')
-  const portfolioIntro = portfolio?.querySelector('.portfolio__intro')
   const contents = steps.map(step => [...step.querySelectorAll('.capability-card__top, .capability-card__body')])
   const current = section.querySelector('.capability-cards__current')
   const previous = section.querySelector('.capability-cards__previous')
@@ -48,53 +45,31 @@ export function initCapabilityCards(section) {
   const readingTimes = [14, 20, 24, 31].map(percent => percent - 7)
 
   function prepareContact(scrollLead) {
-    if (!portfolio || !star || !portfolioIntro || !remainingCard) return { align() {}, occlude() {}, revert() {} }
+    if (!portfolio || !remainingCard) return { align() {}, revert() {} }
     const property = '--portfolio-contact-overlap'
     const original = portfolio.style.getPropertyValue(property)
     const runwayProperty = '--portfolio-contact-runway'
     const originalRunway = portfolio.style.getPropertyValue(runwayProperty)
-    const maskProperty = '--portfolio-axis-occlusion'
-    const originalMask = portfolio.style.getPropertyValue(maskProperty)
     portfolio.classList.add('is-contact-ready')
     function align() {
-      // 01 is the final remaining card. Its rotation reaches zero at departure;
-      // register the star to that lower edge without moving or resizing the card.
+      // Leave a clear-water gap between the final card and the gallery.
+      // The card's own dimensions and departure timing remain independent.
       const height = parseFloat(getComputedStyle(remainingCard).height)
-      const inset = parseFloat(getComputedStyle(portfolioIntro).paddingTop)
       const contactBottom = innerHeight - parseFloat(getComputedStyle(stage).height) / 2 + height / 2
-      const overlap = innerHeight + scrollLead() + inset - star.getBoundingClientRect().height / 2 - contactBottom
+      const clearance = Math.min(40, innerHeight * .04)
+      const overlap = innerHeight + scrollLead() - contactBottom - clearance
       portfolio.style.setProperty(runwayProperty, `${scrollLead()}px`)
       portfolio.style.setProperty(property, `${Math.max(0, overlap)}px`)
-      occlude()
-    }
-    function occlude() {
-      // Keep the axis behind every remaining surface. Reveal the upper stem as
-      // the final surface leaves, without fading the stack or moving the star.
-      const starTip = star.getBoundingClientRect().top
-      const axisTop = portfolioIntro.getBoundingClientRect().top + parseFloat(getComputedStyle(portfolioIntro, '::before').top)
-      let coveredBottom = axisTop
-      steps.forEach(step => {
-        const opacity = Number(gsap.getProperty(step, 'opacity'))
-        const rect = step.getBoundingClientRect()
-        if (opacity > .01 && rect.bottom > 0 && rect.top < innerHeight) {
-          // A rotated corner must never hide the lower stem below the star.
-          coveredBottom = Math.max(coveredBottom, Math.min(starTip, rect.bottom))
-        }
-      })
-      portfolio.style.setProperty(maskProperty, `${Math.max(0, coveredBottom - axisTop)}px`)
     }
     align()
     return {
       align,
-      occlude,
       revert() {
         portfolio.classList.remove('is-contact-ready')
         if (original) portfolio.style.setProperty(property, original)
         else portfolio.style.removeProperty(property)
         if (originalRunway) portfolio.style.setProperty(runwayProperty, originalRunway)
         else portfolio.style.removeProperty(runwayProperty)
-        if (originalMask) portfolio.style.setProperty(maskProperty, originalMask)
-        else portfolio.style.removeProperty(maskProperty)
       },
     }
   }
@@ -136,7 +111,7 @@ export function initCapabilityCards(section) {
     if (!context.conditions.motion || !context.conditions.tall || !context.conditions.fits) return
     if (!scene || !viewport || !background || !veil || !steps.length) return
     scene.classList.add('is-immersive')
-    const fish = initAboutFish(section)
+    const fish = initAboutFish(section, portfolio)
     // Separate nearby suspension from distant light so downward scrolling reads
     // as a camera descent even while a card pauses in the middle of the screen.
     const depthLayers = ['shafts', 'haze haze--far', 'haze haze--mid', 'haze haze--near', 'motes motes--far', 'motes motes--near'].map(names => {
@@ -149,15 +124,6 @@ export function initCapabilityCards(section) {
     const pixelsPerUnit = () => (innerHeight * 11 - artwork.offsetHeight) / sourceDuration
     const contactDistance = () => pixelsPerUnit() * (referenceCards[0].gone - portfolioEntry.start)
     const contact = prepareContact(contactDistance)
-    gsap.set(portfolioIntro, { y: 0, autoAlpha: 0, '--portfolio-entry-y': () => `${innerHeight * .18}px` })
-    const placeIntro = gsap.quickSetter(portfolioIntro, 'y', 'px')
-    function holdContactPoint(self) {
-      // Start the independent screen-position hold only once 01 remains. The
-      // reveal offset is separate, so the group can approach the card from below.
-      const distance = contactDistance()
-      placeIntro(Math.max(0, Math.min(distance, self.scroll() - (self.end - distance))))
-      contact.occlude()
-    }
     timeline = gsap.timeline({ paused: true, defaults: { ease: 'none' } })
     const at = percent => percent - 7
     gsap.set(veil, { opacity: 0 })
@@ -227,10 +193,18 @@ export function initCapabilityCards(section) {
       }
       // Move only this foreground card. Underlying cards stay in the stack until
       // their own turn; no scale, opacity or shared-parent exit animation.
-      timeline.to(step, {
-        yPercent: () => -Math.max(170, ((stage.clientHeight + step.offsetHeight) / 2 + 2) / step.offsetHeight * 100),
-        rotation: 0, duration: card.gone - card.exit,
-      }, at(card.exit))
+      const departure = () => -Math.max(170, ((stage.clientHeight + step.offsetHeight) / 2 + 2) / step.offsetHeight * 100)
+      if (index === 0) {
+        // A short dip touches the cave roof before the final card springs
+        // away. Keep the full deck clock and all other card tracks unchanged.
+        timeline.to(step, { yPercent: 2.4, duration: finalContact.touch - finalContact.start, ease: 'power1.in' }, at(finalContact.start))
+        timeline.to(step, {
+          yPercent: departure, rotation: 0,
+          duration: finalContact.end - finalContact.touch, ease: 'power1.out',
+        }, at(finalContact.touch))
+      } else {
+        timeline.to(step, { yPercent: departure, rotation: 0, duration: card.gone - card.exit }, at(card.exit))
+      }
       if (context.conditions.phone) {
         // On a narrow screen the rising card crosses the navigation. Retire the
         // whole header before that crossing, then restore it after the card clears.
@@ -239,17 +213,17 @@ export function initCapabilityCards(section) {
       }
     })
     if (!context.conditions.phone) timeline.to(header, { autoAlpha: 0, duration: 2 }, at(81))
-    // One entry group controls both lines, the star and the label. Nothing is
-    // exposed while 02 or any higher card remains in the stack.
-    timeline.fromTo(portfolioIntro, { autoAlpha: 0 }, {
-      autoAlpha: 1, duration: portfolioEntry.fade, immediateRender: false,
-    }, at(portfolioEntry.start))
-    timeline.fromTo(portfolioIntro, {
-      '--portfolio-entry-y': () => `${innerHeight * .18}px`,
-    }, {
-      '--portfolio-entry-y': '0px', duration: portfolioEntry.contact - portfolioEntry.start,
-      immediateRender: false,
-    }, at(portfolioEntry.start))
+    function publishContact(percent) {
+      if (!portfolio) return
+      // Both the cave contact and gallery lift use the card's exact clock.
+      const progress = Math.max(0, Math.min(1, (percent - finalContact.start) / (finalContact.end - finalContact.start)))
+      const rise = Math.max(0, Math.min(1, (percent - finalContact.touch) / (finalContact.end - finalContact.touch)))
+      const voyage = Math.max(0, Math.min(1, (percent - 7) / sourceDuration))
+      portfolio.dataset.cardImpact = progress.toFixed(4)
+      portfolio.dataset.cardVoyage = voyage.toFixed(4)
+      portfolio.dataset.cardRise = rise.toFixed(4)
+      portfolio.dispatchEvent(new CustomEvent('portfolio:card-impact', { detail: { progress, voyage, rise } }))
+    }
     // Derive input state from the same reversible sequence as card transforms.
     function syncState() {
       const percent = timeline.time() + 7
@@ -258,10 +232,10 @@ export function initCapabilityCards(section) {
         if (percent >= card.land && percent < card.gone) index = i
       })
       activate(index)
-      header.inert = percent < 11 || percent >= referenceCards[0].exit ||
+      header.inert = percent < 11 || percent >= finalContact.start ||
         (context.conditions.phone && referenceCards.some(card => percent >= card.exit && percent < card.gone + .25))
       background.inert = percent > 7.2
-      contact.occlude()
+      publishContact(percent)
       fish.render((percent - 7) / sourceDuration)
     }
     timeline.eventCallback('onUpdate', syncState)
@@ -274,8 +248,13 @@ export function initCapabilityCards(section) {
       pin: viewport, pinSpacing: true, anticipatePin: 1,
       animation: timeline, scrub: .35, invalidateOnRefresh: true,
       onRefreshInit: () => { contact.align(); fish.measure() },
-      onUpdate: holdContactPoint,
-      onRefresh: self => { holdContactPoint(self); fish.measure() },
+      onRefresh: self => {
+        fish.measure()
+        // Refresh restores the scrubbed animation without an update callback.
+        // Keep the fish at that restored position during the gallery handoff.
+        fish.render(self.progress)
+        publishContact(7 + self.progress * sourceDuration)
+      },
     })
     activeIndex = -2
     syncState()
@@ -286,6 +265,12 @@ export function initCapabilityCards(section) {
       fish.destroy()
       depthLayers.forEach(layer => layer.remove())
       contact.revert()
+      if (portfolio) {
+        delete portfolio.dataset.cardImpact
+        delete portfolio.dataset.cardVoyage
+        delete portfolio.dataset.cardRise
+        portfolio.dispatchEvent(new CustomEvent('portfolio:card-impact', { detail: { progress: 0, voyage: 0, rise: 0 } }))
+      }
       background.inert = false
       header.inert = false
       activeIndex = -2

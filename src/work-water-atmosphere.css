@@ -1,0 +1,112 @@
+.work-water-atmosphere {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: linear-gradient(transparent, #000 14% 85%, transparent);
+  mask-image: linear-gradient(transparent, #000 14% 85%, transparent);
+}
+.work-water-atmosphere__blue {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 44% 38% at 10% 30%, #184c9840 0%, #02256b26 42%, transparent 78%),
+    radial-gradient(ellipse 39% 44% at 91% 58%, #184c9838 0%, #02256b24 45%, transparent 79%),
+    radial-gradient(ellipse 38% 29% at 35% 94%, #0a337a33 0%, #02256b1f 44%, transparent 80%);
+}
+.work-water-atmosphere__bubble {
+  position: absolute;
+  top: 0;
+  display: block;
+  border: 1px solid #b2dbf59c;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 28% 24%, #e5f6ff5c, transparent 30%),
+    radial-gradient(circle at 68% 76%, #75b9ec1c, transparent 65%);
+  box-shadow: inset -.5px -.5px 1.5px #88c3ec33;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+/* Light filters through the water beside the lettering, without introducing
+   a waterline or a bright ceiling into an already submerged scene. */
+.work-water-atmosphere--selected .work-water-atmosphere__blue {
+  background:
+    radial-gradient(ellipse 61% 68% at 14% 30%, #02256b42, transparent 77%),
+    radial-gradient(ellipse 55% 68% at 86% 69%, #184c9826, transparent 76%);
+}
+.work-water-atmosphere__submerged-light {
+  position: absolute;
+  inset: -20% -15%;
+  background:
+    linear-gradient(112deg, transparent 16%, #8eabc708 22%, #02256b0a 29%, transparent 36%),
+    linear-gradient(112deg, transparent 48%, #8eabc705 54%, transparent 65%);
+  -webkit-mask-image: radial-gradient(ellipse at 45% 35%, #000 10%, transparent 72%);
+  mask-image: radial-gradient(ellipse at 45% 35%, #000 10%, transparent 72%);
+}
+.work-water-atmosphere__current {
+  position: absolute;
+  left: 0;
+  width: 150%;
+  height: 18%;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.work-water-atmosphere__current-texture {
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: .75;
+  filter: blur(.35px);
+  -webkit-mask-image: radial-gradient(ellipse 50% 48% at 50% 50%, #000 20%, transparent 100%);
+  mask-image: radial-gradient(ellipse 50% 48% at 50% 50%, #000 20%, transparent 100%);
+}
+.work-water-atmosphere__foam-cluster {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: clamp(130px, 18vw, 240px);
+  height: 24px;
+  opacity: 0;
+  will-change: transform, opacity;
+}
+.work-water-atmosphere__microfoam {
+  position: absolute;
+  display: block;
+  border-radius: 43% 57% 60% 40%;
+  background: #8eabc7;
+}
+.work-water-atmosphere--selected .work-water-atmosphere__bubble {
+  border-color: #8eabc76b;
+  background: radial-gradient(circle at 28% 24%, #a6c3e530, transparent 37%);
+  box-shadow: none;
+}
+@media (max-width: 767px) {
+  .work-water-atmosphere__bubble:nth-of-type(n + 7) { display: none; }
+  .work-water-atmosphere__blue {
+    background:
+      radial-gradient(ellipse 72% 35% at 0% 25%, #184c9840 0%, #02256b26 40%, transparent 80%),
+      radial-gradient(ellipse 70% 40% at 100% 62%, #184c9838 0%, #02256b24 42%, transparent 80%),
+      radial-gradient(ellipse 65% 26% at 29% 96%, #0a337a33 0%, #02256b1f 44%, transparent 80%);
+  }
+  .work-water-atmosphere--selected .work-water-atmosphere__blue {
+    background:
+      radial-gradient(ellipse 95% 61% at 0% 28%, #02256b3b, transparent 78%),
+      radial-gradient(ellipse 90% 67% at 100% 73%, #184c9821, transparent 80%);
+  }
+  .work-water-atmosphere--selected .work-water-atmosphere__foam-cluster {
+    width: 130px;
+  }
+  .work-water-atmosphere--selected .work-water-atmosphere__microfoam:nth-child(n + 9) {
+    display: none;
+  }
+  .work-water-atmosphere--selected .work-water-atmosphere__foam-cluster[data-cluster='2'],
+  .work-water-atmosphere--selected .work-water-atmosphere__foam-cluster[data-cluster='3'] {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .work-water-atmosphere__bubble { display: none; }
+  .work-water-atmosphere--selected .work-water-atmosphere__foam-cluster { display: none; }
+}

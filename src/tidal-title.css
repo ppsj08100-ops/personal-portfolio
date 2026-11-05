@@ -1,0 +1,31 @@
+/* A shared type scale keeps all three title scenes in the same system. */
+:root {
+  --tidal-single-title-size: min(10.8vw, 25svh);
+  --tidal-title-size: min(11.5vw, 25svh);
+  --tidal-title-line: 1.08;
+  --tidal-title-tracking: -.035em;
+  --tidal-title-gap: .06em;
+}
+@media (max-width: 767px) {
+  :root {
+    --tidal-single-title-size: min(10.6vw, 18svh);
+    --tidal-title-size: min(17.5vw, 18svh);
+  }
+}
+/* One open-water wave and the same letter response across all three titles. */
+.tidal-title__sea { position: absolute; z-index: 0; inset: 0; overflow: hidden; pointer-events: none; }
+.tidal-title__sea > img { display: block; width: 357.1429%; max-width: none; height: 100%; object-fit: fill; transform: translateX(-72%); filter: none; opacity: .28; user-select: none; }
+.tidal-title__sea::after { content: ''; position: absolute; inset: 0; background: linear-gradient(180deg, #000b2f40, transparent 22% 72%, var(--work-ocean-deep, #000b2f)), linear-gradient(90deg, #000b2f26, transparent 28% 78%, #000b2f26); }
+.tidal-title__wave { position: absolute; inset: 0; display: none; width: 100%; height: 100%; }
+.has-tidal-wave-canvas .tidal-title__wave { display: block; }
+.has-tidal-wave-canvas .tidal-title__sea > img { visibility: hidden; }
+.tidal-letter { position: relative; display: inline-block; white-space: pre; }
+.has-tidal-wave-canvas .tidal-letter { color: transparent; }
+.tidal-title__ink,
+.tidal-title__foreground { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
+.tidal-title__ink { z-index: 2; }
+.tidal-title__foreground { z-index: 4; }
+@media (prefers-reduced-motion: reduce) {
+  .tidal-title__wave, .tidal-title__ink, .tidal-title__foreground { display: none; }
+  .tidal-title__sea > img { visibility: visible; }
+}

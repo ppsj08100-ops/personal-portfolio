@@ -1,6 +1,5 @@
 import { initProjectResearch } from './project-research.js'
-
-const fileUrl = 'https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-'
+import { DIPTYQUE_PROPOSAL_URL } from './project-links.js'
 const documents = {
   wireframe: {
     title: '딥디크 와이어프레임', caption: '와이어프레임 · 정보의 순서를 화면의 흐름으로',
@@ -49,7 +48,7 @@ export function initProjectScreens(section) {
       }))
       section.querySelector('[data-screens-source-caption]').textContent = doc.source
       section.querySelector('[data-screens-document-number]').textContent = doc.label.slice(0, 2)
-      sourceLink.href = `${fileUrl}?node-id=${doc.node}`
+      sourceLink.href = DIPTYQUE_PROPOSAL_URL
       sourceLink.setAttribute('aria-label', `${doc.title} Figma 원본 보기 (새 탭)`)
     },
   })
@@ -75,7 +74,7 @@ export function initProjectScreens(section) {
 
   section.querySelector('[data-research-open]').addEventListener('click', () => {
     const doc = documents[section.dataset.researchActive]
-    originalLink.href = doc.original ?? `${fileUrl}?node-id=${doc.node}`
+    originalLink.href = doc.original ?? DIPTYQUE_PROPOSAL_URL
     originalLink.querySelector('span').textContent = doc.original ? '원본 이미지 열기 ↗' : 'Figma 컴포넌트 보기 ↗'
     originalLink.setAttribute('aria-label', `${doc.title} 원본 보기 (새 탭)`)
     dialog.scrollTop = 0

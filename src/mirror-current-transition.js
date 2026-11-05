@@ -87,9 +87,13 @@ export function initMirrorCurrentTransition(section) {
       const rect = image.getBoundingClientRect()
       const top = rect.top + window.scrollY
       const end = Math.max(boundary, Math.min(boundary + height * .45, top + rect.height - height * .96))
+      // Let the next sea peek beneath the coral hold before its mirror and
+      // full-screen water cover the foreground helm.
+      const approachEnd = ScrollTrigger.getById('design-process-pinned')?.end
+      const start = Math.max(boundary - height * 1.45, approachEnd ?? -Infinity)
       const fitHeight = Math.min(rect.height, height * .76)
       geometry = {
-        width, height, start: boundary - height * 1.45, end,
+        width, height, start, end,
         target: { x: rect.left, top, width: rect.width, height: rect.height },
         origin: { x: (width - fitHeight * 2 / 3) / 2, y: height * .43 - fitHeight / 2, width: fitHeight * 2 / 3, height: fitHeight },
       }

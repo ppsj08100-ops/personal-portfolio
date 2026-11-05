@@ -1,0 +1,39 @@
+/* Keep the team's original 3C chart readable without altering its pixels. */
+#diptyque-research .project-research__tabs > [data-research-tab='threec'] { min-width: 44px; }
+.research-document.research-threec {
+  display: block;
+  width: 1920px;
+  height: 1400px;
+  padding: 0;
+  background: #fafaf8;
+}
+.research-threec > img { display: block; width: 100%; height: auto; max-width: none; }
+.research-threec-tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 10px 20px; margin-bottom: 18px; }
+.research-threec-tools[hidden] { display: none; }
+.research-threec-tools > div { display: flex; gap: 8px; }
+.research-threec-tools button { min-width: 44px; min-height: 44px; padding: 9px 16px; border: 1px solid #8b9fb6; border-radius: 999px; color: #304a64; background: transparent; font: 400 12px/1.5 var(--font-family-body); cursor: pointer; }
+.research-threec-tools button[aria-pressed='true'] { color: #eef5fa; background: #29435c; }
+.research-threec-tools a { display: inline-flex; align-items: center; min-height: 44px; color: #304a64; font-size: 12px; text-underline-offset: 4px; }
+.research-threec-tools :is(button, a):focus-visible { outline: 2px solid #536e83; outline-offset: 3px; }
+#diptyque-research .project-research__dialog .research-threec {
+  width: 100%;
+  height: auto;
+  min-height: 0;
+  max-height: max(160px, calc(100svh - 260px));
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+#diptyque-research .project-research__dialog .research-threec:focus-visible { outline: 2px solid #536e83; outline-offset: -3px; }
+#diptyque-research .project-research__dialog .research-threec > img {
+  width: auto;
+  max-width: 100%;
+  max-height: max(160px, calc(100svh - 260px));
+  margin-inline: auto;
+}
+#diptyque-research .project-research__dialog[data-threec-zoom='original'] .research-threec > img { width: 1920px; max-width: none; max-height: none; }
+@media (max-width: 767px) {
+  .research-threec-tools { gap: 6px 10px; margin-bottom: 14px; }
+  .research-threec-tools button { padding-inline: 12px; font-size: 11px; }
+  .research-threec-tools a { font-size: 11px; }
+}

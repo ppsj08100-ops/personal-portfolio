@@ -1,0 +1,1 @@
+export const DIPTYQUE_PROPOSAL_URL = 'https://www.figma.com/proto/CkalEh8YyM5C94tEJrbXyt/%EB%94%A5%EB%94%94%ED%81%AC%EC%9E%A5%ED%91%9C?node-id=1-37&viewport=514%2C353%2C0.13&t=TyArleuobLq7eVqf-1&scaling=min-zoom&content-scaling=fixed&page-id=0%3A1'

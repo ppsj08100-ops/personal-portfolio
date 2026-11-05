@@ -1,0 +1,335 @@
+/* Each chapter is a quiet change in the same body of water. */
+.work-chapter {
+  --chapter-opacity: 1;
+  --chapter-copy-opacity: 1;
+  --chapter-copy-y: 0px;
+  --chapter-join: 1;
+  --chapter-tail: 1;
+  --chapter-thread-opacity: .78;
+  position: relative;
+  isolation: isolate;
+  height: 100svh;
+  min-height: 680px;
+  max-height: none;
+  overflow: clip;
+  color: #e4edf4;
+  background: var(--work-ocean-deep, #000b2f);
+  opacity: var(--chapter-opacity);
+  scroll-margin-top: 0;
+}
+
+.work-chapter::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    var(--work-ocean-field);
+}
+
+.work-chapter[data-work-chapter='team'] {
+  height: 65svh;
+  min-height: 520px;
+}
+
+/* The team chapter shares the selected-works sticky scene and its artwork. */
+.is-descent-ready .work-chapter[data-work-chapter='team'] {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+  height: 100%;
+  min-height: 0;
+  max-height: none;
+  background: transparent;
+  pointer-events: none;
+}
+
+.work-chapter[data-work-chapter='personal'] {
+  height: 100svh;
+  min-height: 680px;
+  max-height: none;
+  background: var(--work-ocean-deep, #000b2f);
+}
+
+.work-chapter[data-work-chapter='personal']::before { content: none; }
+.work-chapter[data-work-chapter='personal'] > .work-chapter__stage {
+  position: relative;
+  isolation: isolate;
+  height: 100%;
+  min-height: 0;
+  overflow: clip;
+  background: var(--work-ocean-field);
+}
+.work-chapter[data-work-chapter='personal'] > .work-chapter__stage::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse at 15% 43%, #184c981a, transparent 58%),
+    radial-gradient(ellipse at 82% 64%, #02256b26, transparent 55%);
+}
+
+.work-chapter[data-work-chapter='personal'] .work-chapter__copy { top: 24%; }
+.work-chapter[data-work-chapter='personal'] .work-chapter__title { font-size: clamp(56px, 6.1vw, 94px); }
+
+.work-chapter[data-work-chapter='film'] {
+  height: 100svh;
+  min-height: 680px;
+  max-height: none;
+  background: var(--work-ocean-field);
+}
+.work-chapter[data-work-chapter='film'] .work-chapter__copy { top: 24%; }
+.work-chapter[data-work-chapter='film'] .work-chapter__title { font-size: clamp(56px, 6.1vw, 94px); }
+
+.work-chapter__currents {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  color: #b2cbdc;
+  opacity: var(--chapter-thread-opacity);
+  pointer-events: none;
+}
+
+.work-current__haze,
+.work-current__thread,
+.work-current__outflow {
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.work-current__haze {
+  stroke: #8baccc;
+  stroke-width: 5;
+  opacity: .055;
+}
+
+.work-current__thread {
+  stroke: currentColor;
+  stroke-width: .8;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  opacity: .72;
+}
+
+.work-current__thread:nth-of-type(3n) { stroke: #d4e0e6; }
+
+.work-current__outflow {
+  stroke: #a8c5dc;
+  stroke-width: .85;
+  opacity: var(--chapter-tail);
+}
+
+.work-current__signal {
+  fill: #dde9ef;
+  opacity: var(--chapter-join);
+}
+
+.work-current__junction {
+  fill: #e2edf2;
+  opacity: calc(var(--chapter-join) * .8);
+}
+
+.work-chapter__copy {
+  position: absolute;
+  z-index: 2;
+  top: 18%;
+  left: 50%;
+  width: min(720px, calc(100% - 48px));
+  text-align: center;
+  opacity: var(--chapter-copy-opacity);
+  transform: translate(-50%, var(--chapter-copy-y));
+}
+
+.is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__copy { top: 24%; }
+
+.work-chapter__eyebrow {
+  margin: 0 0 clamp(22px, 3svh, 32px);
+  color: #8ca7bd;
+  font: 400 9px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .21em;
+  text-transform: uppercase;
+}
+
+.work-chapter__title {
+  margin: 0;
+  color: #e0eaf2;
+  font: 400 clamp(56px, 6.1vw, 78px)/1.03 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  font-kerning: normal;
+  letter-spacing: .015em;
+  text-transform: uppercase;
+}
+
+.work-chapter__title > span { display: block; }
+.work-chapter[data-work-chapter='film'] .work-chapter__title > span:first-child { white-space: nowrap; }
+.is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__title {
+  font-size: clamp(56px, 6.1vw, 94px);
+}
+
+.work-chapter__description {
+  max-width: 36ch;
+  margin: clamp(22px, 3svh, 32px) auto 0;
+  color: #a9bfd0;
+  font: 400 clamp(13px, .95vw, 15px)/1.85 var(--font-family-body, 'Pretendard', 'Helvetica Neue', sans-serif);
+  letter-spacing: -.025em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+}
+
+.work-route {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 8%;
+  left: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(16px, 2.8vw, 34px);
+  width: min(560px, calc(100% - 48px));
+  margin: 0 auto;
+  padding: 0;
+  list-style: none;
+  opacity: var(--chapter-copy-opacity);
+  transform: translateY(var(--chapter-copy-y));
+}
+
+.work-route > li {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 0;
+  min-height: 44px;
+  padding-top: 8px;
+  color: #72899e;
+  font: 400 9px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .11em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.work-route > li::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 1px;
+  background: currentColor;
+  opacity: .24;
+}
+
+.work-route > li[aria-current='step'] { color: #d1e0eb; }
+.work-route > li[aria-current='step']::before { opacity: .72; }
+.work-route__number { color: #7897b1; font-size: 8px; letter-spacing: .05em; }
+.work-route > li[aria-current='step'] .work-route__number { color: #b8d0e2; }
+
+@media (max-width: 767px) {
+  .work-chapter { height: 100svh; min-height: 600px; max-height: none; }
+  .work-chapter[data-work-chapter='team'] { height: 68svh; min-height: 510px; }
+  .work-chapter[data-work-chapter='personal'] { height: 100svh; min-height: 600px; max-height: none; }
+  .work-chapter[data-work-chapter='film'] { height: 100svh; min-height: 600px; max-height: none; }
+  .work-chapter__copy { top: 22%; width: calc(100% - 40px); }
+  .is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__copy { top: 25%; }
+  .work-chapter[data-work-chapter='personal'] .work-chapter__copy { top: 25%; }
+  .work-chapter[data-work-chapter='film'] .work-chapter__copy { top: 25%; }
+  .work-chapter__eyebrow { margin-bottom: 24px; font-size: 8px; letter-spacing: .17em; }
+  .work-chapter__title { font-size: clamp(41px, 10.8vw, 64px); letter-spacing: .005em; }
+  .is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__title { font-size: clamp(41px, 10.8vw, 64px); }
+  .work-chapter[data-work-chapter='personal'] .work-chapter__title { font-size: clamp(41px, 10.8vw, 64px); }
+  .work-chapter[data-work-chapter='film'] .work-chapter__title { font-size: clamp(41px, 10.8vw, 64px); }
+  .work-chapter__description { max-width: 27ch; margin-top: 24px; font-size: 13px; line-height: 1.9; }
+  .work-route { bottom: 7%; width: calc(100% - 40px); gap: 14px; }
+  .is-descent-ready .work-chapter[data-work-chapter='team'] .work-route { bottom: max(7%, 88px); }
+  .work-chapter[data-work-chapter='personal'] .work-route { bottom: max(7%, 88px); }
+  .work-chapter[data-work-chapter='film'] .work-route { bottom: max(7%, 88px); }
+  .work-route > li { gap: 6px; font-size: 8px; letter-spacing: .055em; }
+  .work-route__number { font-size: 8px; }
+  .work-current__thread { stroke-width: 1.8; }
+  .work-current__outflow { stroke-width: 1.8; }
+}
+
+/* Without the held scene, each category remains a readable native chapter. */
+@media (max-height: 699px) {
+  .work-chapter,
+  .work-chapter[data-work-chapter='team'] { height: 520px; min-height: 520px; max-height: none; }
+  .work-chapter__copy { top: 19%; }
+  .work-chapter__eyebrow { margin-bottom: 20px; }
+  .work-chapter__title { font-size: clamp(44px, 6vw, 68px); }
+  .work-chapter__description { margin-top: 20px; }
+  .work-chapter[data-work-chapter='personal'] { height: 100svh; min-height: 540px; max-height: none; }
+  .work-chapter[data-work-chapter='personal'] .work-chapter__copy { top: 19%; }
+  .work-chapter[data-work-chapter='personal'] .work-chapter__title { font-size: clamp(44px, 6vw, 68px); }
+  .work-chapter[data-work-chapter='film'] { height: 100svh; min-height: 540px; max-height: none; }
+  .work-chapter[data-work-chapter='film'] .work-chapter__copy { top: 19%; }
+  .work-chapter[data-work-chapter='film'] .work-chapter__title { font-size: clamp(44px, 6vw, 68px); }
+}
+
+@media (max-width: 360px) {
+  .work-chapter[data-work-chapter='film'] .work-chapter__title { font-size: clamp(34px, 11.8vw, 41px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .work-chapter,
+  .work-chapter.is-chapter-animated { opacity: 1; }
+  .work-chapter__copy { opacity: 1; transform: translateX(-50%); }
+  .work-route { opacity: 1; transform: none; }
+  .work-chapter__currents { opacity: .7; }
+  .work-current__thread { stroke-dashoffset: 0 !important; }
+  .work-current__outflow { opacity: 1; }
+  .work-current__signal,
+  .work-current__junction { opacity: .8; }
+}
+
+/* The first category names the exhibit beside it, rather than repeating the
+   large central title. Its existing chapter and shared scroll space remain. */
+.work-chapter[data-work-chapter='team'] .work-chapter__copy,
+.is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__copy {
+  top: 29%;
+  left: var(--container-gutter, 48px);
+  width: min(340px, 33vw);
+  text-align: left;
+  transform: translateY(var(--chapter-copy-y));
+}
+.work-chapter[data-work-chapter='team'] .work-chapter__eyebrow {
+  margin-bottom: 18px;
+  color: #91adc3;
+  font-size: 9px;
+  letter-spacing: .16em;
+}
+.work-chapter[data-work-chapter='team'] .work-chapter__title,
+.is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__title {
+  font-size: clamp(30px, 3vw, 48px);
+  line-height: 1.12;
+  letter-spacing: .025em;
+}
+.work-chapter[data-work-chapter='team'] .work-chapter__description {
+  max-width: 27ch;
+  margin: 22px 0 0;
+  font-size: 13px;
+  line-height: 1.9;
+}
+@media (max-width: 767px) {
+  .work-chapter[data-work-chapter='team'] .work-chapter__copy,
+  .is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__copy {
+    top: 14%;
+    left: 20px;
+    width: calc(100% - 40px);
+  }
+  .work-chapter[data-work-chapter='team'] .work-chapter__eyebrow { margin-bottom: 14px; font-size: 8px; }
+  .work-chapter[data-work-chapter='team'] .work-chapter__title,
+  .is-descent-ready .work-chapter[data-work-chapter='team'] .work-chapter__title { font-size: 28px; }
+  .work-chapter[data-work-chapter='team'] .work-chapter__description { max-width: 24ch; margin-top: 16px; font-size: 12px; }
+}
+@media (min-width: 768px) and (max-height: 699px) {
+  .work-chapter[data-work-chapter='team'] .work-chapter__copy { top: 20%; }
+  .work-chapter[data-work-chapter='team'] .work-chapter__title { font-size: clamp(30px, 3vw, 40px); }
+}

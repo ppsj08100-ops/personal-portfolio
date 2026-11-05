@@ -1,0 +1,94 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2000" height="1000" viewBox="0 0 2000 1000" fill="none">
+  <title>Engraved underwater currents</title>
+  <desc>Three fine interweaving bundles of silver-blue filaments and a few suspended particles, on a transparent background.</desc>
+  <defs>
+    <linearGradient id="current-silver" x1="-200" y1="560" x2="2160" y2="420" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7995B8" stop-opacity="0"/>
+      <stop offset=".16" stop-color="#8DA8CC" stop-opacity=".55"/>
+      <stop offset=".38" stop-color="#BDD0E8"/>
+      <stop offset=".64" stop-color="#8AA7CD" stop-opacity=".62"/>
+      <stop offset=".84" stop-color="#B0C6E0" stop-opacity=".85"/>
+      <stop offset="1" stop-color="#7995B8" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="current-near" x1="-200" y1="680" x2="2160" y2="580" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#708CB3" stop-opacity="0"/>
+      <stop offset=".22" stop-color="#809EC5" stop-opacity=".55"/>
+      <stop offset=".51" stop-color="#B5CBE6"/>
+      <stop offset=".77" stop-color="#89A7CE" stop-opacity=".65"/>
+      <stop offset="1" stop-color="#708CB3" stop-opacity="0"/>
+    </linearGradient>
+    <linearGradient id="current-far" x1="-200" y1="470" x2="2160" y2="390" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7190BA" stop-opacity="0"/>
+      <stop offset=".28" stop-color="#91AFD2" stop-opacity=".7"/>
+      <stop offset=".55" stop-color="#B9CCE6"/>
+      <stop offset=".8" stop-color="#839FC4" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#7190BA" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+
+  <g stroke="url(#current-far)" stroke-linecap="round">
+    <path d="M-202 454C74 601 272 473 485 394C681 322 806 379 1004 451C1217 529 1386 463 1556 380C1755 283 1941 318 2170 422" stroke-width=".48" opacity=".07"/>
+    <path d="M-202 460C77 603 273 481 485 401C681 327 809 382 1008 451C1224 525 1387 462 1558 382C1754 291 1946 323 2170 426" stroke-width=".6" opacity=".11"/>
+    <path d="M-202 467C80 606 275 490 486 409C681 334 812 386 1012 451C1231 522 1388 462 1560 385C1753 300 1950 329 2170 431" stroke-width=".42" opacity=".09"/>
+    <path d="M-202 475C83 610 277 500 487 418C681 342 816 390 1017 452C1239 518 1389 462 1563 389C1752 310 1955 335 2170 437" stroke-width=".7" opacity=".15"/>
+    <path d="M-202 483C87 614 279 511 488 428C682 351 819 395 1022 453C1247 515 1391 463 1566 394C1751 321 1960 342 2170 444" stroke-width=".5" opacity=".1"/>
+    <path d="M-202 492C91 618 281 523 490 439C683 361 823 400 1027 455C1255 512 1394 465 1569 399C1750 333 1965 350 2170 451" stroke-width=".8" opacity=".17"/>
+    <path d="M-202 501C95 623 284 535 492 451C684 372 827 406 1033 458C1264 509 1397 468 1573 405C1749 346 1970 358 2170 459" stroke-width=".46" opacity=".08"/>
+    <path d="M-202 511C100 628 287 548 495 464C686 384 832 413 1039 462C1273 507 1401 471 1577 412C1749 360 1975 366 2170 468" stroke-width=".62" opacity=".13"/>
+    <path d="M-202 521C105 633 290 561 498 478C688 397 837 420 1045 467C1282 506 1405 475 1581 420C1749 375 1980 375 2170 478" stroke-width=".4" opacity=".06"/>
+    <path d="M-202 532C110 639 294 575 502 493C691 411 842 428 1052 473C1291 506 1409 480 1586 429C1749 391 1985 385 2170 489" stroke-width=".56" opacity=".12"/>
+    <path d="M-202 543C115 645 298 589 506 509C694 426 848 437 1059 480C1301 507 1414 486 1591 439C1750 408 1990 395 2170 501" stroke-width=".43" opacity=".07"/>
+    <path d="M-202 555C121 651 302 604 511 526C698 442 854 447 1067 488C1311 509 1420 493 1597 450C1751 426 1995 406 2170 514" stroke-width=".5" opacity=".05"/>
+  </g>
+
+  <g stroke="url(#current-silver)" stroke-linecap="round">
+    <path d="M-210 520C35 350 266 385 492 467C729 553 855 635 1061 598C1309 554 1342 317 1581 329C1802 340 1915 483 2170 413" stroke-width=".5" opacity=".08"/>
+    <path d="M-210 526C37 357 268 390 494 471C731 556 858 628 1064 593C1309 551 1345 324 1585 333C1805 342 1918 478 2170 416" stroke-width=".65" opacity=".13"/>
+    <path d="M-210 532C40 365 270 396 496 476C733 560 861 622 1067 589C1309 549 1348 332 1589 338C1808 345 1921 474 2170 420" stroke-width=".48" opacity=".1"/>
+    <path d="M-210 539C43 374 273 403 499 482C736 565 865 617 1071 586C1310 548 1352 341 1594 344C1812 349 1925 471 2170 425" stroke-width=".85" opacity=".19"/>
+    <path d="M-210 547C46 384 276 411 502 489C739 571 869 613 1075 584C1311 548 1356 351 1599 351C1816 354 1929 469 2170 431" stroke-width=".52" opacity=".12"/>
+    <path d="M-210 556C50 395 280 420 506 497C743 578 874 610 1080 583C1313 549 1361 362 1605 359C1821 360 1934 468 2170 438" stroke-width="1.1" opacity=".23"/>
+    <path d="M-210 566C54 407 284 430 510 506C747 586 879 608 1085 584C1315 551 1366 374 1611 368C1826 367 1939 469 2170 446" stroke-width=".6" opacity=".14"/>
+    <path d="M-210 577C59 420 289 441 515 516C752 595 885 607 1091 586C1318 554 1372 387 1618 378C1832 375 1945 471 2170 455" stroke-width=".9" opacity=".21"/>
+    <path d="M-210 589C64 434 294 453 520 527C757 605 891 608 1097 590C1321 558 1378 401 1625 389C1838 384 1951 474 2170 465" stroke-width=".45" opacity=".1"/>
+    <path d="M-210 602C70 449 300 466 526 539C763 616 898 610 1104 595C1325 563 1385 416 1633 401C1845 394 1958 478 2170 476" stroke-width="1.2" opacity=".25"/>
+    <path d="M-210 616C76 465 306 480 532 552C769 628 905 614 1111 602C1329 570 1392 432 1641 414C1852 405 1965 483 2170 488" stroke-width=".56" opacity=".12"/>
+    <path d="M-210 631C83 482 313 495 539 566C776 641 913 619 1119 610C1334 578 1400 449 1650 428C1860 417 1973 489 2170 501" stroke-width=".8" opacity=".18"/>
+    <path d="M-210 647C90 500 320 511 546 581C783 655 921 625 1127 620C1339 588 1408 467 1659 443C1868 430 1981 496 2170 515" stroke-width=".5" opacity=".09"/>
+    <path d="M-210 664C98 519 328 528 554 597C791 670 930 633 1136 631C1345 599 1417 486 1669 459C1877 444 1990 504 2170 530" stroke-width=".65" opacity=".13"/>
+    <path d="M-210 682C106 539 336 546 562 614C799 686 939 642 1145 644C1351 612 1426 506 1679 476C1886 459 1999 513 2170 546" stroke-width=".4" opacity=".06"/>
+  </g>
+
+  <g stroke="url(#current-near)" stroke-linecap="round">
+    <path d="M-220 657C43 814 285 690 506 616C715 546 845 608 1065 655C1284 702 1430 558 1619 534C1833 507 1965 643 2174 580" stroke-width=".48" opacity=".06"/>
+    <path d="M-220 663C46 814 288 695 509 623C718 555 849 608 1069 651C1287 694 1433 560 1622 540C1835 517 1968 642 2174 585" stroke-width=".64" opacity=".1"/>
+    <path d="M-220 670C50 815 292 701 513 631C722 565 854 609 1074 648C1291 687 1437 563 1626 547C1838 528 1972 642 2174 591" stroke-width=".44" opacity=".08"/>
+    <path d="M-220 678C54 817 296 708 517 640C726 576 859 611 1079 646C1295 681 1441 567 1630 555C1841 540 1976 643 2174 598" stroke-width=".92" opacity=".19"/>
+    <path d="M-220 687C59 820 301 716 522 650C731 588 865 614 1085 645C1300 676 1446 572 1635 564C1845 553 1981 645 2174 606" stroke-width=".5" opacity=".11"/>
+    <path d="M-220 697C64 824 306 725 527 661C736 601 871 618 1091 645C1305 672 1451 578 1640 574C1849 567 1986 648 2174 615" stroke-width="1.1" opacity=".24"/>
+    <path d="M-220 708C70 829 312 735 533 673C742 615 878 623 1098 646C1311 669 1457 585 1646 585C1854 582 1992 652 2174 625" stroke-width=".58" opacity=".14"/>
+    <path d="M-220 720C76 835 318 746 539 686C748 630 885 629 1105 648C1317 667 1463 593 1652 597C1859 598 1998 657 2174 636" stroke-width=".85" opacity=".18"/>
+    <path d="M-220 733C83 842 325 758 546 700C755 646 893 636 1113 651C1324 666 1470 602 1659 610C1865 615 2005 663 2174 648" stroke-width=".4" opacity=".07"/>
+    <path d="M-220 747C90 850 332 771 553 715C762 663 901 644 1121 655C1331 666 1477 612 1666 624C1871 633 2012 670 2174 661" stroke-width=".7" opacity=".15"/>
+    <path d="M-220 762C98 859 340 785 561 731C770 681 910 653 1130 660C1339 667 1485 623 1674 639C1878 652 2020 678 2174 675" stroke-width=".48" opacity=".09"/>
+    <path d="M-220 778C106 869 348 800 569 748C778 700 919 663 1139 666C1347 669 1493 635 1682 655C1885 672 2028 687 2174 690" stroke-width=".6" opacity=".11"/>
+    <path d="M-220 795C115 880 357 816 578 766C787 720 929 674 1149 673C1356 672 1502 648 1691 672C1893 693 2037 697 2174 706" stroke-width=".42" opacity=".05"/>
+    <path d="M-220 813C124 892 366 833 587 785C796 741 939 686 1159 681C1365 676 1511 662 1700 690C1901 715 2046 708 2174 723" stroke-width=".5" opacity=".04"/>
+  </g>
+
+  <g fill="#9BB5D6">
+    <circle cx="129" cy="613" r=".8" opacity=".12"/>
+    <circle cx="238" cy="420" r=".55" opacity=".08"/>
+    <circle cx="397" cy="697" r="1.1" opacity=".1"/>
+    <circle cx="586" cy="391" r=".65" opacity=".14"/>
+    <circle cx="693" cy="566" r=".45" opacity=".08"/>
+    <circle cx="829" cy="756" r=".8" opacity=".12"/>
+    <circle cx="957" cy="515" r=".55" opacity=".09"/>
+    <circle cx="1132" cy="728" r=".65" opacity=".13"/>
+    <circle cx="1287" cy="451" r="1" opacity=".1"/>
+    <circle cx="1448" cy="586" r=".5" opacity=".08"/>
+    <circle cx="1609" cy="344" r=".85" opacity=".12"/>
+    <circle cx="1743" cy="621" r=".55" opacity=".14"/>
+    <circle cx="1868" cy="477" r=".7" opacity=".09"/>
+  </g>
+</svg>

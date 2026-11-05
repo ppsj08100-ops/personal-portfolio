@@ -20,12 +20,11 @@ export function initOceanDescent(section) {
   const environment = article?.querySelector('.sail-project__environment')
   const surface = article?.querySelector('.sail-project__surface')
   const opening = section.querySelector('.ocean-type__opening')
-  const nightScene = opening?.querySelector('.ocean-entry__scene')
-  const chapter = scene?.querySelector('.ocean-descent__chapter')
+  const entryScene = opening?.querySelector('.ocean-entry__scene')
   const typeWindow = section.querySelector('.ocean-type__type-window')
   const label = section.querySelector('.ocean-type__label')
   const explore = section.querySelector('.ocean-type__explore')
-  if (!stage || !scene || !ceiling || !shade || !environment || !surface || !opening || !nightScene || !chapter || !typeWindow || !label || !explore) return () => {}
+  if (!stage || !scene || !ceiling || !shade || !environment || !surface || !opening || !entryScene || !typeWindow || !label || !explore) return () => {}
   const text = [...article.querySelectorAll('[data-project-reveal]')]
   const media = gsap.matchMedia()
   const controller = new AbortController()
@@ -107,7 +106,8 @@ export function initOceanDescent(section) {
     let observedSize = ''
     // Keep the existing chapter's trigger and runway hooks so its eight
     // horizontal pages begin exactly after the descent is complete.
-    const runway = () => Math.round(innerHeight * (context.conditions.phone ? 2 : 2.3))
+    const hasChapter = Boolean(section.querySelector('[data-work-chapter="team"]'))
+    const runway = () => Math.round(innerHeight * (hasChapter ? context.conditions.phone ? 1.95 : 1.85 : context.conditions.phone ? 1.25 : 1.15))
 
     function measure() {
       section.style.setProperty('--sail-runway', `${runway()}px`)
@@ -116,8 +116,7 @@ export function initOceanDescent(section) {
       if (layout && needsRestore(layout, { width, height })) rememberProgress()
       layout = { width, height }
       particles.resize(width, height)
-      // Keep the painted moon path and the underwater light at the same part
-      // of the viewport, including the narrow crop on portrait screens.
+      // Keep the existing light direction on narrow portrait screens too.
       if (ceilingImage) {
         const crop = Math.min(1, ceiling.clientWidth / ceiling.clientHeight / 2)
         const left = Math.max(0, Math.min(1 - crop, .25 - .375 * crop))
@@ -133,69 +132,65 @@ export function initOceanDescent(section) {
     }
     function render() {
       if (!layout || disposed) return
-      const p = clamp(state.progress)
-      const { width, height } = layout
-      lastProgress = p
-      const leaveType = smooth(range(p, .05, .23))
-      const immersed = smooth(range(p, .32, .51))
-      const recede = smooth(range(p, .42, .90))
-      const approach = smooth(range(p, .68, .96))
-      const reveal = smooth(range(p, .72, .98))
-      const sceneAlpha = smooth(range(p, .30, .40)) * (1 - smooth(range(p, .76, .97)))
+      const raw = clamp(state.progress)
+      const p = hasChapter ? range(raw, .4, 1) : raw
+      lastProgress = raw
+      const leaveType = hasChapter ? smooth(range(raw, .02, .17)) : smooth(range(p, .12, .52))
+      const approach = smooth(hasChapter ? range(raw, .10, .68) : range(p, .20, .90))
+      const reveal = smooth(hasChapter ? range(raw, .63, .92) : range(p, .20, .90))
+      const sceneAlpha = smooth(range(p, .18, .40)) * (1 - smooth(range(p, .64, .96)))
 
-      // First look down toward the reflected moon. As the lens passes through
-      // the surface, that whole plane tilts away into the ceiling above us.
-      section.dispatchEvent(new CustomEvent('ocean-entry-camera', { detail: { progress: p } }))
-      nightScene.style.transform = `perspective(${(height * 2.8).toFixed(1)}px) translate3d(0,${(-height * .31 * immersed).toFixed(3)}px,0) rotateX(${(-48 * immersed).toFixed(3)}deg) scale(${mix(1, 1.35, immersed).toFixed(4)})`
-      const feather = `linear-gradient(#000 0%,#000 ${(100 - immersed * 40).toFixed(3)}%,transparent 100%)`
-      nightScene.style.maskImage = feather
-      nightScene.style.webkitMaskImage = feather
-      opening.style.opacity = (1 - smooth(range(p, .37, .54))).toFixed(4)
-      opening.style.visibility = p >= .54 ? 'hidden' : 'visible'
+      // Continue downward through the same water. No horizon, camera tilt,
+      // or second immersion interrupts the mirror-to-exhibition connection.
+      section.style.setProperty('--work-depth', p.toFixed(4))
+      section.dataset.workChapterProgress = raw.toFixed(4)
+      section.dispatchEvent(new CustomEvent('work-chapter-change', { detail: { progress: raw } }))
+      section.dispatchEvent(new CustomEvent('work-depth-change', { detail: { progress: hasChapter ? range(raw, 0, .68) : p, descent: p } }))
+      entryScene.style.transform = `translate3d(0,${(-24 * p).toFixed(3)}px,0)`
+      opening.style.opacity = (1 - smooth(hasChapter ? range(raw, .03, .34) : range(p, .55, .94))).toFixed(4)
+      opening.style.visibility = (hasChapter ? raw >= .36 : p >= .98) ? 'hidden' : 'visible'
       opening.inert = p >= .31
       scene.style.opacity = sceneAlpha.toFixed(4)
-      ceiling.style.transform = `translate3d(0,${mix(0, -height * .22, recede).toFixed(3)}px,0) scale(${mix(1.08, 1, recede).toFixed(4)})`
-      ceiling.style.opacity = (1 - smooth(range(p, .70, .96))).toFixed(4)
-      shade.style.opacity = mix(.12, .62, smooth(range(p, .43, .86))).toFixed(4)
-      const chapterAlpha = smooth(range(p, .50, .60)) * (1 - smooth(range(p, .66, .76)))
-      fade(chapter, chapterAlpha, (1 - smooth(range(p, .50, .62))) * 20)
-      if (p > .39 && p < .97) {
-        particles.render(range(p, .34, 1), p * 3)
+      ceiling.style.transform = `translate3d(0,${(-32 * p).toFixed(3)}px,0)`
+      ceiling.style.opacity = (.32 * (1 - p)).toFixed(4)
+      shade.style.opacity = mix(.06, .32, p).toFixed(4)
+      if (p > .08 && p < .97) {
+        particles.render(mix(.15, .90, p), p * 1.5)
         particlesVisible = true
       } else if (particlesVisible) {
         particles.render(0, 0)
         particlesVisible = false
       }
 
-      // The seabed rises out of the blue distance, then settles into the exact
-      // existing cover composition. Keep the project's screen pixels rigid.
+      // Reveal the first exhibit through the light while keeping every project
+      // screen rigid and its final cover composition unchanged.
       article.style.setProperty('--seabed-reveal', approach.toFixed(4))
-      article.style.setProperty('--project-depth', smooth(range(p, .78, .98)).toFixed(4))
-      // The overscan covers the viewport throughout the small rise, so both
-      // images can crossfade in full without a mask cutting through the rays.
-      environment.style.transform = `translate3d(0,${((1 - approach) * height * .08).toFixed(3)}px,0) scale(${mix(1.2, 1, approach).toFixed(4)})`
-      surface.style.transform = `translate3d(0,${((1 - reveal) * height * .1).toFixed(3)}px,0) scale(${mix(.9, 1, reveal).toFixed(4)})`
+      article.style.setProperty('--project-depth', smooth(range(p, .60, .95)).toFixed(4))
+      // Keep the background plane full bleed while the exhibit rises inside it.
+      environment.style.transform = 'none'
+      surface.style.transform = `translate3d(0,${((1 - reveal) * 28).toFixed(3)}px,0)`
       surface.style.opacity = reveal.toFixed(4)
       surface.style.visibility = reveal > 0 ? 'visible' : 'hidden'
-      surface.style.filter = reveal < 1 ? `blur(${((1 - reveal) * 3).toFixed(3)}px)` : 'none'
+      surface.style.filter = 'none'
 
-      fade(typeWindow, 1 - leaveType, -height * .10 * leaveType)
-      fade(label, 1 - leaveType, -height * .04 * leaveType)
-      fade(explore, 1 - leaveType, -height * .04 * leaveType)
-      const ranges = [[.80, .94], [.82, .96], [.84, .98], [.86, 1]]
+      fade(typeWindow, 1 - leaveType, -18 * leaveType)
+      fade(label, 1 - leaveType, -8 * leaveType)
+      fade(explore, 1 - leaveType, -8 * leaveType)
+      const ranges = hasChapter ? [[.58, .78], [.62, .84], [.68, .9], [.78, .98]]
+        : [[.42, .66], [.46, .78], [.58, .86], [.65, .94]]
       text.forEach((element, index) => {
-        const amount = smooth(range(p, ...ranges[index]))
+        const amount = smooth(range(hasChapter ? raw : p, ...ranges[index]))
         fade(element, amount, 16 * (1 - amount))
       })
       const readable = p >= .995
       article.inert = !readable
       article.classList.toggle('is-readable', readable)
       section.dataset.descentProgress = p.toFixed(4)
-      const mode = p <= 0 ? 'surface' : p < .43 ? 'immersing' : 'deep'
+      const mode = p <= 0 ? 'intro' : p < .7 ? 'approaching' : 'exhibition'
       if (mode !== lastMode) {
         lastMode = mode
         section.classList.toggle('is-descending', p > 0)
-        section.classList.toggle('is-submerged', p >= .43)
+        section.classList.toggle('is-submerged', p > 0)
         section.dispatchEvent(new Event('depth-statechange'))
       }
     }
@@ -217,7 +212,7 @@ export function initOceanDescent(section) {
       jumpAnimation?.kill()
       const position = { y: scrollY }
       jumpAnimation = gsap.to(position, {
-        y: animation.scrollTrigger.end + 2, duration: 2.6, ease: 'power2.inOut',
+        y: animation.scrollTrigger.end + 2, duration: 1.4, ease: 'power2.inOut',
         onUpdate: () => window.scrollTo({ top: position.y, behavior: 'instant' }),
         onComplete: () => {
           jumpAnimation = null
@@ -251,22 +246,30 @@ export function initOceanDescent(section) {
       animation.kill()
       section.classList.remove('is-descent-ready', 'is-descending', 'is-submerged')
       section.style.removeProperty('--sail-runway')
+      delete section.dataset.workChapterProgress
+      section.dispatchEvent(new CustomEvent('work-chapter-change', { detail: { progress: 0 } }))
       delete section.dataset.descentProgress
+      section.style.removeProperty('--work-depth')
+      section.dispatchEvent(new CustomEvent('work-depth-change', { detail: { progress: 0 } }))
       article.inert = false
       opening.inert = false
       article.classList.remove('is-readable')
       article.style.removeProperty('--seabed-reveal')
       article.style.removeProperty('--project-depth')
-      ;[scene, ceiling, shade, opening, nightScene, chapter, environment, surface, typeWindow, label, explore, ...text].forEach(element => element.removeAttribute('style'))
+      ;[scene, ceiling, shade, opening, entryScene, environment, surface, typeWindow, label, explore, ...text].forEach(element => element.removeAttribute('style'))
       ceilingImage?.style.removeProperty('object-position')
       section.dispatchEvent(new Event('depth-statechange'))
     }
   })
 
   explore.addEventListener('click', event => {
-    if (!jumpToProject || event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return
+    if (event.button !== 0 || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return
     event.preventDefault()
-    jumpToProject()
+    if (jumpToProject) jumpToProject()
+    else {
+      article.scrollIntoView({ block: 'start', inline: 'start', behavior: 'instant' })
+      article.focus({ preventScroll: true })
+    }
   }, { signal })
   return () => {
     destroyed = true

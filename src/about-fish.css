@@ -6,6 +6,14 @@
   pointer-events: none;
   user-select: none;
 }
+.about-fish-bridge {
+  position: fixed;
+  z-index: 6;
+  inset: 0;
+  overflow: clip;
+  pointer-events: none;
+  user-select: none;
+}
 .about-fish-canvas { position: absolute; inset: 0; display: block; width: 100%; height: 100%; pointer-events: none; }
 .has-fish-canvas .about-fish img { visibility: hidden; }
 .about-fish {

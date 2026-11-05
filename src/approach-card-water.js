@@ -1,4 +1,4 @@
-// Broad swashes enter around the floating objects and return to their origin.
+// Broad swashes enter diagonally and return to their origin.
 // The water and its foam stay together; neither crosses the whole screen.
 const clamp = (value, min = 0, max = 1) => Math.max(min, Math.min(max, value))
 const smooth = value => {
@@ -67,7 +67,8 @@ export function initApproachCardWater(section) {
   const { signal } = controller
   const motion = window.matchMedia('(prefers-reduced-motion: reduce)')
   const canvas = canvasLayer('design-process__surface-flow', '1')
-  canvas.dataset.waterFlow = 'horizontal'
+  canvas.dataset.waterFlow = 'diagonal'
+  canvas.dataset.waveAngle = '30'
   const context = canvas.getContext('2d')
   const water = document.createElement('canvas')
   const waterContext = water.getContext('2d')
@@ -272,10 +273,34 @@ export function initApproachCardWater(section) {
     edge.addColorStop(1, 'transparent')
     surfContext.fillStyle = edge
     surfContext.fillRect(0, 0, surf.width, surf.height)
+  }
 
+  function drawWaterEdges(tide) {
+    if (!surf || tide.envelope < .001) return
+    const mobile = width <= 899
+    const objectWidth = mobile ? Math.min(width * (width <= 520 ? .62 : .46), height * .44)
+      : Math.min(width * .27, 450, height * .52)
+    const resting = width <= 360 ? .40 : width <= 520 ? .37 : mobile ? .30 : -.01
+    const leftCenter = objectWidth / 2 - width * resting
+    const surfHeight = Math.min(height * .94, objectWidth * 4 / 3 + (mobile ? 120 : 220))
+    const surfWidth = surfHeight * surf.width / surf.height
+    const reach = tide.advance * (mobile ? 36 : 68)
+    // Give the right-hand crest more space beside the reading area.
+    const rightOffset = Math.min(width * .045, surfWidth * .18)
+    // Keep the original painting and dimensions intact while aligning the
+    // two diagonal inlets; their advance follows the same rotation.
+    for (const [side, center] of [{ x: leftCenter, y: height * .53 },
+      { x: width - leftCenter + rightOffset, y: height * .47 }].entries()) {
+      waterContext.setTransform(ratio, 0, 0, ratio, 0, 0)
+      waterContext.translate(center.x, center.y)
+      waterContext.rotate((side ? 1 : -1) * 30 * Math.PI / 180)
+      if (side) waterContext.scale(-1, -1)
+      waterContext.drawImage(surf, -surfWidth * .63 + reach, -surfHeight / 2, surfWidth, surfHeight)
+    }
   }
 
   function drawSurfaces(tide) {
+    if (!surfaces.length) drawWaterEdges(tide)
     surfaces.forEach(surface => {
       ensurePose(surface)
       if (!isActive(surface)) return
@@ -464,7 +489,7 @@ export function initApproachCardWater(section) {
   let activeChapter = section.querySelector('[data-approach-scene].is-active')
   const activeScene = new MutationObserver(() => {
     const next = section.querySelector('[data-approach-scene].is-active')
-    if (next !== activeChapter && visible && !motion.matches && !document.hidden) {
+    if (surfaces.length && next !== activeChapter && visible && !motion.matches && !document.hidden) {
       // A fresh inlet leads a new chapter, with no jump in the object's pose.
       wave = null
       beginWave(performance.now(), .90)
@@ -493,6 +518,7 @@ export function initApproachCardWater(section) {
     resize.disconnect()
     activeScene.disconnect()
     stop()
+    surf = null
     canvas.remove()
     surfaces.forEach(surface => {
       surface.art.style.removeProperty('--approach-drift-x')

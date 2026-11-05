@@ -6,7 +6,7 @@ const smooth = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
 
 // The nose follows the reversible card progress. Its earlier route headings
 // travel down the spine, while a visibility-aware clock only adds fin strokes.
-export function initAboutFish(section) {
+export function initAboutFish(section, portfolio) {
   const stage = section.querySelector('.capability-cards__stage')
   const layer = section.querySelector('.about-fish-layer')
   const nodes = [...section.querySelectorAll('[data-about-fish]')]
@@ -34,6 +34,34 @@ export function initAboutFish(section) {
   let activity = 0
   let stroke = 0
   const controller = new AbortController()
+  const originalParent = layer.parentNode
+  const originalNext = layer.nextSibling
+  let bridge = null
+  let leaving = 0
+  portfolio?.addEventListener('portfolio:reveal', event => {
+    leaving = clamp(event.detail.fishExit ?? 0)
+    render()
+  }, { signal: controller.signal })
+
+  function restoreLayer() {
+    if (!bridge) return
+    originalParent.insertBefore(layer, originalNext?.parentNode === originalParent ? originalNext : null)
+    bridge.remove()
+    bridge = null
+  }
+
+  function syncAttachment() {
+    if (!portfolio?.classList.contains('is-unfolding') || progress < .999 || leaving >= 1) {
+      restoreLayer()
+      return
+    }
+    if (bridge) return
+    bridge = document.createElement('div')
+    bridge.className = 'about-fish-bridge is-fish-swimming'
+    bridge.setAttribute('aria-hidden', 'true')
+    document.body.append(bridge)
+    bridge.append(layer)
+  }
 
   function place(item, pose) {
     item.x(pose.x)
@@ -95,12 +123,12 @@ export function initAboutFish(section) {
     return routePoint(item, start + (lower + mix) * step).angle
   }
 
-  function progressPose(item, opacity) {
+  function progressPose(item, opacity, routeProgress = progress) {
     const right = item.index === 1
     const head = right ? .85 : .865
     const tail = right ? .117 : .087
-    const point = routePoint(item, progress)
-    const headArc = arcAtProgress(item, progress)
+    const point = routePoint(item, routeProgress)
+    const headArc = arcAtProgress(item, routeProgress)
     const spineLength = (head - tail) * item.height
     const mirror = right ? -1 : 1
     const bends = new Float32Array(17)
@@ -125,9 +153,30 @@ export function initAboutFish(section) {
     }
   }
 
+  function leaveFrame(item, pose) {
+    if (!leaving) return pose
+    const head = item.index ? .85 : .865
+    const headOffset = (head - .5) * item.height
+    const originalAngle = pose.angle * Math.PI / 180
+    const noseX = pose.x - Math.sin(originalAngle) * headOffset
+    const noseY = pose.y + Math.cos(originalAngle) * headOffset
+    const angle = pose.angle + ((item.index ? -45 : 45) - pose.angle) * smooth(leaving / .3)
+    const radians = angle * Math.PI / 180
+    const clearance = Math.hypot(item.width, item.height) + Math.max(320, width * .2)
+    const destination = item.index ? width + clearance : -clearance
+    const dx = (destination - noseX) * smooth(leaving)
+    return {
+      ...pose,
+      x: noseX + dx + Math.sin(radians) * headOffset,
+      y: noseY + Math.abs(dx) * .2 - Math.cos(radians) * headOffset,
+      angle,
+    }
+  }
+
   function paint() {
     const current = poses.map((pose, index) => {
-      const next = { ...pose, stroke: stroke + (index ? 2.2 : .35), waveStrength: .18 + activity * .24 }
+      const animated = { ...pose, stroke: stroke + (index ? 2.2 : .35), waveStrength: .18 + activity * .24 }
+      const next = portfolio?.classList.contains('is-unfolding') ? leaveFrame(fish[index], animated) : animated
       place(fish[index], next)
       return next
     })
@@ -149,7 +198,9 @@ export function initAboutFish(section) {
     frame = requestAnimationFrame(tick)
   }
   function syncVisibility() {
-    const running = inView && !document.hidden && poses.some(pose => pose.opacity > .002)
+    const crossing = bridge && leaving < 1
+    const running = (inView || crossing) && !document.hidden && poses.some(pose => pose.opacity > .002)
+    if (running) boot()
     swimmer?.setVisible(running)
     if (running && !frame) { lastTime = 0; motionProgress = progress; frame = requestAnimationFrame(tick) }
     if (!running) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; motionProgress = progress; activity = 0 }
@@ -181,8 +232,19 @@ export function initAboutFish(section) {
 
   function render(value = progress) {
     progress = clamp(value)
-    const visibility = smooth((progress - .002) / .035) * (1 - smooth((progress - .94) / .06))
-    poses = width && height ? fish.map(item => progressPose(item, visibility * (item.index ? .95 : .89))) : []
+    const connected = portfolio?.classList.contains('is-unfolding')
+    syncAttachment()
+    const remaining = connected ? 1 : 1 - smooth((progress - .94) / .06)
+    const visibility = smooth((progress - .002) / .035) * remaining
+    poses = width && height ? fish.map(item => {
+      // Slow only the pose sampling before the handoff. The original route,
+      // spine history, fin clock and shader retain their deployed calculations.
+      const settle = item.index ? .18 : .54
+      const sample = connected && progress > settle
+        ? settle + .06 * Math.tanh((progress - settle) / .06)
+        : progress
+      return progressPose(item, visibility * (item.index ? .95 : .89), sample)
+    }) : []
     // The same directional motion drives the intact image fallback and GPU
     // renderer. Losing WebGL cannot freeze or teleport either fish.
     paint()
@@ -211,6 +273,7 @@ export function initAboutFish(section) {
       controller.abort()
       observer.disconnect()
       swimmer?.destroy()
+      restoreLayer()
       section.classList.remove('is-fish-swimming')
       gsap.set(nodes, { clearProps: 'transform,opacity' })
     },

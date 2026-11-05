@@ -1,0 +1,115 @@
+/* Original project screens rest in open water. The reading column and
+   travel clock retain their existing geometry. */
+#diptyque-details.has-simple-team-exhibition .project-exhibition {
+  --simple-seat-bottom: 17%;
+  --simple-side-seat: 12%;
+  container-type: inline-size;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition__prop {
+  display: none;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition [hidden] { display: none !important; }
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition :is(.project-overview__object, .project-overview__laptop, .project-overview__sheet) {
+  top: auto;
+  bottom: var(--simple-seat-bottom);
+  animation: none;
+  transform: none;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition :is(.project-overview__browser, .project-overview__monitor, .project-overview__photograph, .project-overview__sheet, .project-case__display) {
+  padding: 4px;
+  border: 1px solid #7f9db575;
+  border-radius: 6px;
+  background: #0b1d34;
+  box-shadow: 0 8px 16px #010b2238;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__screen,
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__sheet img { border-radius: 2px; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__browser-bar { height: 8px; margin-bottom: 4px; opacity: .7; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__browser-bar p { font-size: 5px; line-height: 8px; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__browser-bar > span { width: 2px; height: 2px; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__tablet { padding: 4px; border-radius: 10px; border-color: #7f9db575; background: #0b1d34; box-shadow: 0 7px 14px #010b2238; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__tablet .project-overview__screen { border-radius: 6px; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__phone { padding: 3px; border-radius: 12px; border-color: #7f9db575; background: #0b1d34; box-shadow: 0 7px 14px #010b2238; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__phone .project-overview__screen { border-radius: 8px; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-overview__phone::before { top: 3px; height: 4px; background: #0b1d34; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-case__laptop { padding-bottom: 0; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-case__base { display: none; }
+#diptyque-details.has-simple-team-exhibition .project-exhibition .project-exhibition__exhibit::after { height: 7px; bottom: -3px; opacity: .6; filter: blur(4px); }
+
+/* Cover: a leading desktop with one restrained mobile counterpart. */
+#diptyque-details.has-simple-team-exhibition #team-projects .project-exhibition-cover__computer {
+  left: 17%;
+  width: 65%;
+  bottom: var(--simple-seat-bottom);
+}
+#diptyque-details.has-simple-team-exhibition #team-projects .project-exhibition-cover__phone {
+  left: 77%;
+  width: 11%;
+  bottom: 14%;
+}
+#diptyque-details.has-simple-team-exhibition #team-projects .project-overview__monitor { padding: 5px; border-radius: 7px; }
+
+/* A maximum of two viewports keeps the project itself in the foreground. */
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='2'] .project-overview__laptop { left: 32%; width: 64%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='2'] .project-overview__sheet--ritual { left: 4%; width: 28%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='3'] .project-overview__object--primary { left: 31%; width: 66%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='3'] .project-overview__object--secondary { left: 4%; width: 27%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='4'] .project-overview__object--primary { left: 10%; width: 80%; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='5'] .project-overview__object--primary { left: 64%; width: 28%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='5'] .project-overview__object--secondary { left: 5%; width: 69%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='6'] .project-overview__object--primary { left: 6%; width: 76%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='6'] .project-overview__object--secondary { left: 77%; width: 20%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='7'] .project-overview__object--primary { left: 32%; width: 64%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='7'] .project-overview__object--secondary { left: 4%; width: 27%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='7'] .project-overview__object--tertiary { left: 11%; width: 15%; bottom: var(--simple-side-seat); z-index: 4; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='8'] .project-overview__object--primary { left: 5%; width: 65%; z-index: 3; }
+#diptyque-details.has-simple-team-exhibition [data-exhibition-index='8'] .project-overview__object--secondary { left: 61%; width: 35%; bottom: var(--simple-side-seat); z-index: 4; }
+
+#diptyque-details.has-simple-team-exhibition .project-exhibition__choices {
+  position: absolute;
+  z-index: 7;
+  left: 50%;
+  bottom: -8px;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+#diptyque-details.has-simple-team-exhibition .project-exhibition__choices button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 6px 0;
+  border: 0;
+  background: transparent;
+  color: #89a7c2;
+  font: 400 11px/1.5 'Intro Pretendard', var(--font-family-body, sans-serif);
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: transparent;
+  text-underline-offset: 7px;
+}
+#diptyque-details.has-simple-team-exhibition .project-exhibition__choices button[aria-pressed='true'] {
+  color: #d6e5ef;
+  text-decoration-color: #8faec566;
+}
+#diptyque-details.has-simple-team-exhibition .project-exhibition__choices button:focus-visible { outline: 1px solid #a6c3e5; outline-offset: 3px; }
+
+@media (max-width: 899px) {
+  #diptyque-details.has-simple-team-exhibition .project-overview__scene.project-exhibition > .project-overview__depth { transform: translate3d(0, 24px, 0); }
+  #diptyque-details.has-simple-team-exhibition .project-exhibition :is(.project-overview__browser, .project-overview__monitor, .project-overview__photograph, .project-overview__sheet, .project-case__display) { padding: 3px; border-radius: 5px; }
+  #diptyque-details.has-simple-team-exhibition .project-exhibition__choices { top: -6px; bottom: auto; gap: 20px; }
+  #diptyque-details.has-simple-team-exhibition .project-exhibition__choices button { font-size: 11px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #diptyque-details.has-simple-team-exhibition .project-exhibition__exhibit { opacity: 1; translate: none; }
+}

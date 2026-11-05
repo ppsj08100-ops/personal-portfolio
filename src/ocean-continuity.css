@@ -1,0 +1,126 @@
+/* One dark body of water; cobalt belongs to the light inside each painting. */
+:root {
+  --ocean-edge-fade: linear-gradient(180deg, transparent, #000 25% 72%, transparent);
+}
+.ocean-continuity__water {
+  position: absolute;
+  z-index: var(--ocean-water-level, 0);
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  -webkit-mask-image: var(--ocean-edge-fade);
+  mask-image: var(--ocean-edge-fade);
+}
+.ocean-continuity__water::before,
+.ocean-continuity__water::after { content: ''; position: absolute; inset: 0; pointer-events: none; }
+.ocean-continuity__water::before {
+  opacity: var(--ocean-light-strength, .65);
+  background:
+    radial-gradient(ellipse 86% 76% at var(--ocean-light-x, 24%) var(--ocean-light-y, 40%), #16458466, transparent 78%),
+    radial-gradient(ellipse 70% 65% at 78% 67%, #02256b2b, transparent 80%);
+}
+.ocean-continuity__water::after {
+  background: var(--ocean-water-texture) right center / 360% 100% no-repeat;
+  mix-blend-mode: screen;
+  opacity: .12;
+}
+#capabilities,
+#design-code .ocean-type__opening,
+#personal-projects-intro,
+#personal-projects-intro > .work-chapter__stage,
+#short-form-intro,
+#personal-brand-gallery > .project-details__stage,
+#short-form-contents > .project-details__stage,
+#tools-skills,
+#tools-skills [data-skills-stage],
+#about,
+#about [data-about-stage] { background: var(--work-ocean-deep, #020b1d); }
+
+#personal-projects-intro > .work-chapter__stage::before,
+#short-form-intro::before,
+.is-descent-ready [data-work-chapter='team']::before { background: none; }
+
+/* The mask touches only scenery. Real lettering, documents, films and controls
+   remain outside it, including when a gallery is pinned or internally scrolled. */
+#personal-brand-gallery .brand-gallery__room,
+#short-form-contents .short-form__room {
+  -webkit-mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade));
+  mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade));
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+}
+#personal-brand-gallery .brand-gallery__room::after,
+#short-form-contents .short-form__room::after {
+  background: linear-gradient(90deg, #020b1d38, transparent 35% 60%, #020b1d40),
+    linear-gradient(180deg, #020b1d1f, transparent 30% 67%, #020b1d40);
+}
+#personal-brand-gallery > .project-details__stage::after { background: none; }
+#personal-brand-gallery .brand-archive::before {
+  /* Give the reading column open water; the cabin stays in the exhibit area. */
+  background: linear-gradient(90deg, #020b1dfc 0%, #020b1df5 29%, #020b1dcc 40%, #020b1d40 56%, transparent 74%);
+}
+#short-form-contents > .project-details__stage::before {
+  background: radial-gradient(ellipse 72% 70% at 24% 35%, #184c981a, transparent 80%);
+}
+#short-form-contents .short-form__navigation::before {
+  background: linear-gradient(180deg, transparent, #020b1d99 45%, #020b1de6);
+}
+#short-form-contents[data-projector-playing='true'] > .project-details__stage > .ocean-continuity__water { opacity: .38; }
+#short-form-contents > .project-details__stage > .ocean-continuity__water { transition: opacity .85s ease; }
+
+/* Keep the original arrival mask while thinning the painting's exit strokes. */
+#diptyque-process.has-process-exhibition.is-project-paged > .project-details__stage::before {
+  -webkit-mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade)), linear-gradient(180deg, transparent 0 3%, #000 28%);
+  mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade)), linear-gradient(180deg, transparent 0 3%, #000 28%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+#diptyque-process.has-process-exhibition:not(.is-project-paged) .process-exhibition-page::before {
+  -webkit-mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade));
+  mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade));
+  -webkit-mask-size: 100% 100%;
+  mask-size: 100% 100%;
+}
+#diptyque-process.has-process-exhibition:not(.is-project-paged) #diptyque-planning::before {
+  -webkit-mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade)), linear-gradient(180deg, transparent, #000 24%);
+  mask-image: var(--ocean-ink-mask, var(--ocean-edge-fade)), linear-gradient(180deg, transparent, #000 24%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+#diptyque-process.has-process-exhibition.is-project-paged > .project-details__stage::after,
+#diptyque-process.has-process-exhibition:not(.is-project-paged) .process-exhibition-page::after {
+  background: radial-gradient(ellipse 90% 78% at 24% 35%, #184c9829, transparent 80%),
+    linear-gradient(90deg, transparent 32%, #020b1d33 72%, #020b1d1a);
+  -webkit-mask-image: var(--ocean-edge-fade);
+  mask-image: var(--ocean-edge-fade);
+}
+
+#design-code .tidal-title__sea,
+#tools-skills .tools-skills__sea,
+#about .tidal-title__sea {
+  -webkit-mask-image: var(--ocean-edge-fade);
+  mask-image: var(--ocean-edge-fade);
+}
+#design-code .tidal-title__sea::after,
+#tools-skills .tools-skills__sea::after,
+#about .tidal-title__sea::after {
+  background: linear-gradient(180deg, #020b1d26, transparent 26% 72%, var(--work-ocean-deep, #020b1d));
+}
+#tools-skills .skill-reef__art {
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5% 95%, transparent), linear-gradient(180deg, #000 62%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent, #000 5% 95%, transparent), linear-gradient(180deg, #000 62%, transparent 100%);
+  -webkit-mask-composite: source-in;
+  mask-composite: intersect;
+}
+
+@media (max-width: 900px) {
+  #personal-brand-gallery .brand-archive::before { background: linear-gradient(180deg, #020b1deb 0%, #020b1dc7 38%, #020b1de8 64%, #020b1df5 100%); }
+  #personal-brand-gallery .brand-gallery__navigation::before { background: linear-gradient(transparent, #020b1ded 42%, var(--work-ocean-deep, #020b1d)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  #short-form-contents > .project-details__stage > .ocean-continuity__water { transition: none; }
+}

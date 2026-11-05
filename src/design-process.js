@@ -1,11 +1,19 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { CustomEase } from 'gsap/CustomEase'
-import { initApproachCardWater } from './approach-card-water.js'
 
-gsap.registerPlugin(ScrollTrigger, CustomEase)
-const ease = CustomEase.create('approach-pinned', '.6,0,.2,1')
+gsap.registerPlugin(ScrollTrigger)
 const clamp = value => Math.max(0, Math.min(1, value))
+const smooth = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
+const orbitAt = value => smooth((value - .22) / .22) + smooth((value - .55) / .22)
+function progressAtOrbit(orbit) {
+  let low = 0, high = 1
+  for (let i = 0; i < 20; i++) {
+    const middle = (low + high) / 2
+    if (orbitAt(middle) < orbit) low = middle
+    else high = middle
+  }
+  return (low + high) / 2
+}
 
 export function initDesignProcess(section) {
   if (!section) return () => {}
@@ -13,13 +21,14 @@ export function initDesignProcess(section) {
   const stage = section.querySelector('[data-approach-stage]')
   const scenes = [...section.querySelectorAll('[data-approach-scene]')]
   if (!journey || !stage || scenes.length !== 3) return () => {}
-  const objects = scenes.map(scene => [...scene.querySelectorAll('[data-approach-object]')])
   const centers = scenes.map(scene => scene.querySelector('.design-process__center'))
+  const visuals = scenes.map(scene => scene.querySelector('[data-approach-visual]'))
+  const helm = section.querySelector('[data-approach-helm]')
   const lines = scenes.map(scene => [...scene.querySelectorAll('[data-approach-reveal]')])
   const actions = scenes.map(scene => scene.querySelector('[data-approach-action]'))
   const buttons = [...section.querySelectorAll('[data-approach-step]')]
   const counter = section.querySelector('[data-approach-counter]')
-  const elements = [section, ...scenes, ...centers, ...objects.flat(), ...lines.flat(), ...actions]
+  const elements = [section, ...scenes, ...centers, ...visuals.filter(Boolean), ...lines.flat(), ...actions]
   const originals = new Map(elements.map(element => [element, {
     style: element.getAttribute('style'),
     active: element.classList.contains('is-active'),
@@ -32,7 +41,14 @@ export function initDesignProcess(section) {
   const controller = new AbortController()
   const { signal } = controller
   const media = gsap.matchMedia()
-  const destroyCardWater = initApproachCardWater(section)
+  const hadInViewClass = document.body.classList.contains('has-approach-gallery-in-view')
+  let inViewport = false
+  const inView = new IntersectionObserver(entries => {
+    inViewport = entries.some(entry => entry.isIntersecting)
+    document.body.classList.toggle('has-approach-gallery-in-view', inViewport)
+    updateAtmosphere()
+  })
+  inView.observe(stage)
   let destroyed = false
   let pinned = false
   let active = -1
@@ -41,18 +57,19 @@ export function initDesignProcess(section) {
   let refreshFrame = 0
   let hashFrame = 0
   let pendingFocus = -1
+  let drag = null
+  let wheelDrag = null
+  const state = { progress: 0 }
+
+  function updateAtmosphere() {
+    if (destroyed) return
+    section.style.setProperty('--approach-bubble-play', inViewport && pinned && !document.hidden ? 'running' : 'paused')
+  }
+  document.addEventListener('visibilitychange', updateAtmosphere, { signal })
 
   function restore(element, attribute, value) {
     if (value === null) element.removeAttribute(attribute)
     else element.setAttribute(attribute, value)
-  }
-
-  function pose(side, hidden = false, index = 0) {
-    const width = window.innerWidth
-    const mobile = width <= 899
-    const resting = width <= 360 ? .40 : width <= 520 ? .37 : mobile ? .30 : -.01
-    const angle = mobile ? 10 : [[13, 11], [20, 14], [9, 17]][index][side]
-    return { x: width * (hidden ? mobile ? 1.05 : .5 : resting) * (side ? 1 : -1), y: 0, yPercent: -50, rotation: (side ? 1 : -1) * (hidden ? 22 : angle) }
   }
 
   function updateSelection(index) {
@@ -75,62 +92,55 @@ export function initDesignProcess(section) {
     })
   }
 
-  function settle(index) {
-    scenes.forEach((scene, position) => gsap.set(scene, { autoAlpha: position === index ? 1 : 0 }))
-    centers.forEach((center, position) => gsap.set(center, { opacity: position === index ? 1 : 0 }))
-    objects[index].forEach((object, side) => gsap.set(object, pose(side, false, index)))
-    gsap.set(lines[index], { yPercent: 0 })
-    gsap.set(actions[index], { yPercent: 0, opacity: 1 })
-  }
-
-  function show(index, { immediate = false, entrance = false } = {}) {
-    if (destroyed || !pinned || (index === active && !immediate && !entrance)) return
-    const previous = active
-    const focusedInOld = previous >= 0 && previous !== index && scenes[previous].contains(document.activeElement)
-    const moveFocus = pendingFocus === index || (focusedInOld && pendingFocus < 0)
-    transition?.kill()
-    // Move focus before hiding the old state; shared navigation never unmounts.
-    scenes[index].inert = false
-    scenes[index].removeAttribute('aria-hidden')
-    gsap.set(scenes[index], { autoAlpha: 1 })
-    if (moveFocus) {
-      scenes[index].querySelector('h3')?.focus({ preventScroll: true })
-      pendingFocus = -1
-    }
-    updateSelection(index)
-    if (immediate || (previous >= 0 && Math.abs(index - previous) > 1)) { settle(index); return }
-    scenes.forEach((scene, position) => {
-      if (position !== index && position !== previous) gsap.set(scene, { autoAlpha: 0 })
-    })
-    // Only one text group may paint, including when a scroll interrupts a
-    // partially entered chapter. Keep opacity separate from focus visibility.
-    centers.forEach((center, position) => {
-      if (position !== previous || position === index) gsap.set(center, { opacity: 0 })
-    })
-    objects[index].forEach((object, side) => gsap.set(object, pose(side, true, index)))
-    gsap.set(lines[index], { yPercent: 100 })
-    gsap.set(actions[index], { yPercent: 110, opacity: 0 })
-    transition = gsap.timeline({ onComplete: () => {
-      if (!destroyed && active === index) settle(index)
-    } })
-    if (previous >= 0 && previous !== index) {
-      transition.set(centers[previous], { opacity: 0 }, .5)
-        .set(scenes[previous], { autoAlpha: 0 }, .65)
-        .to(lines[previous], { yPercent: 100, duration: .5, ease }, 0)
-        .to(actions[previous], { yPercent: 110, opacity: 0, duration: .4, ease }, 0)
-      objects[previous].forEach((object, side) => transition.to(object, { ...pose(side, true, previous), duration: .65, ease }, 0))
-    }
-    const changing = previous >= 0 && previous !== index
-    const textDelay = changing ? .56 : 0
-    transition.set(centers[index], { opacity: 1 }, textDelay)
-      .to(lines[index], { yPercent: 0, duration: 1.1, ease, stagger: .07 }, textDelay)
-      .to(actions[index], { yPercent: 0, opacity: 1, duration: .9, ease }, textDelay + .15)
-    objects[index].forEach((object, side) => transition.to(object, { ...pose(side, false, index), duration: 1.1, ease }, changing ? .28 : 0))
-  }
-
-  function render(progress, immediate = false, entrance = false) {
+  function render(progress) {
+    if (destroyed || !pinned) return
     const value = clamp(progress)
-    show(Math.min(2, Math.floor(value * 3)), { immediate, entrance })
+    const orbit = orbitAt(value)
+    section.style.setProperty('--approach-wheel-turn', `${(orbit * 120).toFixed(4)}deg`)
+    const index = Math.round(orbit)
+    if (index !== active) {
+      const focusedInOld = active >= 0 && scenes[active].contains(document.activeElement)
+      const moveFocus = pendingFocus === index || (focusedInOld && pendingFocus < 0)
+      // Transfer focus before making the departing chapter inert.
+      scenes[index].style.visibility = 'visible'
+      scenes[index].inert = false
+      scenes[index].removeAttribute('aria-hidden')
+      if (moveFocus) {
+        scenes[index].querySelector('h3')?.focus({ preventScroll: true })
+        pendingFocus = -1
+      }
+      updateSelection(index)
+    }
+    scenes.forEach((scene, position) => {
+      const distance = position - orbit
+      const opacity = 1 - smooth(Math.abs(distance) * 2)
+      const shift = Math.sign(distance) * (1 - opacity) * 18
+      const artOpacity = distance < 0 ? 1 - smooth(-distance / .6)
+        : distance <= 1 ? 1 - smooth(distance) * .86 : .14 * (1 - smooth((distance - 1) / .18))
+      scene.style.opacity = '1'
+      scene.style.visibility = position === index || opacity > .0001 || artOpacity > .0001 ? 'visible' : 'hidden'
+      scene.style.pointerEvents = position === index && opacity > .8 ? 'auto' : 'none'
+      centers[position].style.opacity = opacity.toFixed(5)
+      if (visuals[position]) {
+        const visual = visuals[position]
+        visual.style.setProperty('--approach-art-x', `${(distance * 68).toFixed(4)}%`)
+        const turn = distance < 0 ? -smooth(-distance / .4) * 45 : clamp(distance) * 30
+        visual.style.setProperty('--approach-art-turn', `${turn.toFixed(4)}deg`)
+        visual.style.setProperty('--approach-art-scale', (1 - clamp(Math.abs(distance)) * .16).toFixed(5))
+        visual.style.setProperty('--approach-art-opacity', clamp(artOpacity).toFixed(5))
+      }
+      for (const line of [...lines[position], actions[position]]) {
+        line.style.transform = `translate3d(0, ${shift.toFixed(3)}px, 0)`
+      }
+    })
+  }
+
+  function syncProgress(progress) {
+    const value = clamp(progress)
+    trigger?.getTween()?.pause()
+    transition?.progress(value, true)
+    state.progress = value
+    render(value)
   }
 
   function navigate(index, { focus = false, hash = false, behavior = 'smooth' } = {}) {
@@ -152,7 +162,7 @@ export function initDesignProcess(section) {
     window.scrollTo({ top: target, behavior })
     if (behavior === 'instant') {
       ScrollTrigger.update()
-      render((index + .5) / 3, true)
+      syncProgress((index + .5) / 3)
     }
   }
 
@@ -178,12 +188,14 @@ export function initDesignProcess(section) {
       ScrollTrigger.refresh()
       if (preserved !== null && trigger) {
         window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * preserved, behavior: 'instant' })
-        render(preserved, true)
+        syncProgress(preserved)
       }
     })
   }
 
   function stopPinned() {
+    if (wheelDrag && helm?.hasPointerCapture(wheelDrag.id)) helm.releasePointerCapture(wheelDrag.id)
+    wheelDrag = null
     trigger?.kill()
     trigger = undefined
     transition?.kill()
@@ -191,6 +203,7 @@ export function initDesignProcess(section) {
     pinned = false
     section.classList.remove('is-pinned')
     originals.forEach((original, element) => restore(element, 'style', original.style))
+    updateAtmosphere()
     updateSelection(Math.max(0, active))
   }
 
@@ -198,21 +211,25 @@ export function initDesignProcess(section) {
     pinned = true
     active = -1
     section.classList.add('is-pinned')
-    gsap.set(scenes, { autoAlpha: 0 })
+    updateAtmosphere()
+    state.progress = 0
+    transition = gsap.to(state, {
+      progress: 1, duration: 1, ease: 'none', paused: true,
+      onUpdate: () => render(state.progress),
+    })
     trigger = ScrollTrigger.create({
       id: 'design-process-pinned',
       trigger: journey,
+      animation: transition,
+      scrub: .28,
       start: 'top top',
       end: 'bottom bottom',
       invalidateOnRefresh: true,
-      onUpdate: self => render(self.progress),
-      onRefresh: self => render(self.progress, true),
-      onEnter: self => render(self.progress, false, true),
-      onEnterBack: self => render(self.progress, false, true),
-      onLeave: self => render(self.progress, true),
-      onLeaveBack: self => render(self.progress, true),
+      onRefresh: self => syncProgress(self.progress),
+      onLeave: self => syncProgress(self.progress),
+      onLeaveBack: self => syncProgress(self.progress),
     })
-    render(trigger.progress, true)
+    syncProgress(trigger.progress)
     return stopPinned
   }
 
@@ -239,6 +256,69 @@ export function initDesignProcess(section) {
   window.addEventListener('hashchange', revealHash, { signal })
   window.addEventListener('popstate', revealHash, { signal })
   window.addEventListener('resize', queueRefresh, { signal, passive: true })
+  // Horizontal swipes advance the collection; vertical touch scrolling remains
+  // native and continues to scrub the same three-chapter timeline.
+  stage.addEventListener('pointerdown', event => {
+    if (!pinned || event.button !== 0 || event.target.closest('a, button')
+      || !event.target.closest('[data-approach-visual]')) return
+    drag = { id: event.pointerId, x: event.clientX, y: event.clientY, index: active }
+  }, { signal })
+  stage.addEventListener('pointerup', event => {
+    const start = drag
+    drag = null
+    if (!start || start.id !== event.pointerId) return
+    const dx = event.clientX - start.x, dy = event.clientY - start.y
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy) * 1.2) return
+    navigate(Math.max(0, Math.min(2, start.index + (dx < 0 ? 1 : -1))), { hash: true })
+  }, { signal })
+  stage.addEventListener('pointercancel', () => { drag = null }, { signal })
+  function wheelAngle(event) {
+    const box = helm.getBoundingClientRect()
+    return Math.atan2(event.clientY - box.top - box.height / 2, event.clientX - box.left - box.width / 2) * 180 / Math.PI
+  }
+  helm?.addEventListener('pointerdown', event => {
+    if (!pinned || event.button !== 0) return
+    event.preventDefault()
+    wheelDrag = { id: event.pointerId, angle: wheelAngle(event), total: 0, orbit: orbitAt(state.progress) }
+    helm.setPointerCapture(event.pointerId)
+  }, { signal })
+  helm?.addEventListener('pointermove', event => {
+    if (!wheelDrag || wheelDrag.id !== event.pointerId || !trigger) return
+    const angle = wheelAngle(event)
+    let delta = angle - wheelDrag.angle
+    if (delta > 180) delta -= 360
+    if (delta < -180) delta += 360
+    wheelDrag.angle = angle
+    wheelDrag.total += delta
+    const orbit = clamp((wheelDrag.orbit + wheelDrag.total / 120) / 2) * 2
+    const progress = progressAtOrbit(orbit)
+    window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * progress, behavior: 'instant' })
+    ScrollTrigger.update()
+    syncProgress(progress)
+  }, { signal })
+  const finishWheel = event => {
+    const gesture = wheelDrag
+    if (!gesture || gesture.id !== event.pointerId) return
+    wheelDrag = null
+    if (helm.hasPointerCapture(event.pointerId)) helm.releasePointerCapture(event.pointerId)
+    const index = Math.abs(gesture.total) < 8 ? (active + 1) % 3 : Math.round(orbitAt(state.progress))
+    navigate(index, { hash: true })
+  }
+  helm?.addEventListener('pointerup', finishWheel, { signal })
+  helm?.addEventListener('pointercancel', event => {
+    if (wheelDrag?.id !== event.pointerId) return
+    wheelDrag = null
+    navigate(Math.round(orbitAt(state.progress)))
+  }, { signal })
+  helm?.addEventListener('click', event => {
+    if (event.detail === 0) navigate((active + 1) % 3, { hash: true })
+  }, { signal })
+  helm?.addEventListener('keydown', event => {
+    const direction = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0
+    if (!direction) return
+    event.preventDefault()
+    navigate(Math.max(0, Math.min(2, active + direction)), { hash: true })
+  }, { signal })
   const cancelPendingFocus = () => { pendingFocus = -1 }
   window.addEventListener('wheel', cancelPendingFocus, { signal, passive: true })
   window.addEventListener('touchstart', cancelPendingFocus, { signal, passive: true })
@@ -249,13 +329,7 @@ export function initDesignProcess(section) {
   section.querySelectorAll('img').forEach(image => {
     if (!image.complete) image.addEventListener('load', queueRefresh, { signal, once: true })
   })
-  const preload = new IntersectionObserver(entries => {
-    if (!entries.some(entry => entry.isIntersecting) || destroyed) return
-    section.querySelectorAll('.design-process__scene img').forEach(image => { image.loading = 'eager' })
-    preload.disconnect()
-  }, { rootMargin: '100% 0px' })
-  preload.observe(journey)
-  media.add('(prefers-reduced-motion: no-preference) and (min-height: 600px)', startPinned)
+  media.add('(prefers-reduced-motion: no-preference) and (min-width: 900px) and (min-height: 600px), (prefers-reduced-motion: no-preference) and (min-width: 360px) and (min-height: 820px)', startPinned)
   if (!pinned) updateSelection(0)
   revealHash()
   document.fonts?.ready.then(() => { if (!destroyed) queueRefresh() })
@@ -264,10 +338,10 @@ export function initDesignProcess(section) {
   return () => {
     destroyed = true
     controller.abort()
-    destroyCardWater()
+    inView.disconnect()
+    document.body.classList.toggle('has-approach-gallery-in-view', hadInViewClass)
     cancelAnimationFrame(refreshFrame)
     cancelAnimationFrame(hashFrame)
-    preload.disconnect()
     media.revert()
     stopPinned()
     originals.forEach((original, element) => {

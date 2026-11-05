@@ -1,0 +1,139 @@
+/* A water-worn letter shares the seabed's etched blue shading. The outer
+   button, anchors and floating-dialog geometry keep their existing lift. */
+.site-footer__nametag,
+.footer-contact__plate {
+  --footer-paper-top: 14%;
+  --footer-paper-right: 6%;
+  --footer-paper-bottom: 10.7%;
+  --footer-paper-left: 17%;
+  --footer-paper-image: url('/images/footer-submerged-paper-v2.png');
+  --footer-paper-mask-size: 77% 75.3%;
+  --footer-paper-mask-position: 73.913% 56.68%;
+}
+
+.site-footer__nametag-art,
+.footer-contact__art {
+  z-index: 0;
+  background: none;
+  filter: drop-shadow(0 2px 1px #01081780);
+}
+
+.site-footer__nametag-art > img,
+.footer-contact__art > img,
+.site-footer__nametag > .site-footer__marine-growth,
+.footer-contact__plate > .site-footer__marine-growth {
+  display: none;
+}
+
+.site-footer__nametag-art::before,
+.footer-contact__art::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: var(--footer-paper-top) var(--footer-paper-right) var(--footer-paper-bottom) var(--footer-paper-left);
+  background: var(--footer-paper-image) center / 100% 100% no-repeat;
+  filter: brightness(.8) saturate(.65) contrast(.95);
+  pointer-events: none;
+}
+
+/* The original dune-contact shade follows the letter's actual alpha. */
+.site-footer__nametag-art::after {
+  z-index: 1;
+  inset: 0;
+  background: var(--footer-contact-shade) center / 100% 100% no-repeat;
+  -webkit-mask-image: var(--footer-paper-image);
+  mask-image: var(--footer-paper-image);
+  -webkit-mask-size: var(--footer-paper-mask-size);
+  mask-size: var(--footer-paper-mask-size);
+  -webkit-mask-position: var(--footer-paper-mask-position);
+  mask-position: var(--footer-paper-mask-position);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
+  opacity: .6;
+}
+
+.site-footer__nametag .site-footer__contacts,
+.footer-contact .site-footer__contacts {
+  z-index: 2;
+  top: 29%;
+  left: 22%;
+  width: 67%;
+  height: 44%;
+  gap: 4px;
+  color: #172f48;
+  text-shadow: none;
+  transform: none;
+}
+
+.site-footer__nametag .site-footer__contact-name,
+.footer-contact .site-footer__contact-name {
+  color: #172f48;
+  font-weight: 500;
+  letter-spacing: .16em;
+  text-indent: .16em;
+  line-height: 1.2;
+}
+
+.site-footer__nametag .site-footer__contact-name::after,
+.footer-contact .site-footer__contact-name::after {
+  width: 28px;
+  min-width: 28px;
+  max-width: 28px;
+  background: #314f6b55;
+  box-shadow: none;
+}
+
+.site-footer__nametag .site-footer__contact-item,
+.footer-contact .site-footer__contact-item {
+  color: #233f59;
+  text-shadow: none;
+  letter-spacing: .025em;
+  text-indent: .025em;
+}
+
+.site-footer__nametag .site-footer__contact-name { padding-bottom: 7px; }
+.site-footer__nametag .site-footer__email { font-size: clamp(12px, .903vw, 13px); }
+.site-footer__nametag .site-footer__tag-hint { left: 55.5%; top: -2%; }
+.footer-contact .footer-contact__art { filter: drop-shadow(0 8px 12px #01081766); }
+.footer-contact__art::before { filter: brightness(.91) saturate(.65) contrast(.95); }
+.footer-contact .site-footer__contacts { gap: 8px; }
+.footer-contact .site-footer__contact-name { font-size: clamp(24px, 4cqi, 34px); padding-bottom: 11px; }
+.footer-contact .site-footer__contact-item { min-height: 44px; font-size: clamp(20px, 3.2cqi, 28px); }
+.footer-contact .site-footer__email { font-size: clamp(16px, 2.4cqi, 22px); }
+.footer-contact .site-footer__contact-item:is(:hover, :focus-visible) { color: #184c98; }
+.footer-contact .site-footer__contact-item:focus-visible { outline-color: #345b7c; outline-offset: 3px; }
+
+@media (max-width: 991px) {
+  .site-footer__nametag,
+  .footer-contact__plate {
+    --footer-paper-top: 18%;
+    --footer-paper-bottom: 8.955%;
+    --footer-paper-left: 16%;
+    --footer-paper-mask-size: 78% 73.045%;
+    --footer-paper-mask-position: 72.727% 66.778%;
+  }
+  .site-footer__nametag .site-footer__contacts,
+  .footer-contact .site-footer__contacts {
+    top: 33%;
+    left: 20.5%;
+    width: 69%;
+    height: 42%;
+    gap: 4px;
+    transform: none;
+  }
+  .site-footer__nametag .site-footer__contact-name { font-size: 18px; }
+  .site-footer__nametag .site-footer__contact-item { font-size: 16px; }
+  .site-footer__nametag .site-footer__email { font-size: 12.5px; }
+  .site-footer__nametag .site-footer__tag-hint { left: 55%; top: 10%; }
+  .footer-contact .site-footer__contacts { top: 31%; height: 46%; gap: 6px; }
+  .footer-contact .site-footer__contact-name { font-size: clamp(23px, 6.8cqi, 30px); padding-bottom: 9px; }
+  .footer-contact .site-footer__contact-item { font-size: clamp(18px, 5.8cqi, 24px); }
+  .footer-contact .site-footer__email { font-size: clamp(14px, 4.6cqi, 19px); }
+}
+
+@media (max-height: 440px) and (min-width: 992px) {
+  .footer-contact .site-footer__contacts { gap: 4px; transform: none; }
+  .footer-contact .site-footer__contact-name { font-size: 23px; padding-bottom: 7px; }
+  .footer-contact .site-footer__contact-item { font-size: 21px; }
+  .footer-contact .site-footer__email { font-size: 17px; }
+}

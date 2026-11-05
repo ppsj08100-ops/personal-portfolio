@@ -1,0 +1,328 @@
+/* Four quiet navigation controls stay together above the same ocean. */
+.site-navigation.hero__header {
+  position: absolute;
+  z-index: var(--z-header);
+  isolation: isolate;
+  top: max(var(--space-4), calc(5.6svh - var(--tap-target-min) / 2), env(safe-area-inset-top));
+  inset-inline: var(--container-gutter, 48px);
+  padding: 0;
+  color: #d6e5ef;
+}
+
+.site-navigation .hero__navigation {
+  position: relative;
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.site-navigation .hero__nav-group,
+.site-navigation .hero__nav-group--right {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: clamp(20px, 3vw, 48px);
+}
+
+.site-navigation .hero__control {
+  flex: 0 0 auto;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  gap: 7px;
+  color: #d6e5ef;
+  font: 400 clamp(10px, .8vw, 12px)/1.2 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .14em;
+  border-radius: 2px;
+  box-shadow: none;
+  transition: color 180ms ease;
+}
+
+.site-navigation .hero__control::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  bottom: 7px;
+  left: 0;
+  height: 1px;
+  background: #a6c3e570;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 220ms ease;
+}
+
+.site-navigation [data-nav-link]::before {
+  content: '';
+  position: absolute;
+  top: calc(50% - 1.5px);
+  left: -9px;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #a6c3e5;
+  opacity: 0;
+  transition: opacity 180ms ease;
+}
+
+.site-navigation [data-nav-link][aria-current]:not([aria-current='false'])::before { opacity: .8; }
+.site-navigation .hero__sound-wave { width: 20px; height: 10px; }
+.site-navigation .hero__menu-icon { width: 10px; height: 10px; }
+.site-navigation .hero__sound-dot { left: 9px; bottom: 7px; background: #a6c3e5; }
+
+.site-navigation .hero__control:focus-visible,
+.portfolio-menu--ocean :is(.portfolio-menu__link, .portfolio-menu__home, .portfolio-menu__close, .portfolio-menu__bottom a):focus-visible {
+  outline: 1px solid #a6c3e5;
+  outline-offset: 4px;
+}
+
+/* The menu is a quiet pocket of blue water, with fine contours at the edge. */
+.portfolio-menu.portfolio-menu--ocean {
+  isolation: isolate;
+  color: #d6e5ef;
+  background:
+    radial-gradient(ellipse 80% 68% at 95% 35%, #184c9838, transparent 75%),
+    radial-gradient(ellipse 70% 62% at 8% 100%, #02256b45, transparent 78%),
+    linear-gradient(170deg, #020b1d, #04142c 64%, #020b1d);
+}
+
+.portfolio-menu--ocean::backdrop {
+  background: #020b1de0;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+}
+
+.portfolio-menu--ocean::before {
+  content: '';
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  opacity: .08;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 1000' fill='none'%3E%3Cg stroke='%238eabc7' stroke-width='.8'%3E%3Cpath d='M680-70C1190 110 790 330 1320 550S1160 890 1510 1060'/%3E%3Cpath d='M730-90C1230 100 835 330 1360 540S1205 895 1550 1070'/%3E%3Cpath d='M795-100C1280 95 885 325 1410 530S1260 900 1610 1080'/%3E%3Cpath d='M875-110C1340 95 950 325 1475 525S1330 910 1680 1090'/%3E%3C/g%3E%3C/svg%3E") center / cover no-repeat;
+  -webkit-mask-image: linear-gradient(90deg, transparent 25%, #000 85%);
+  mask-image: linear-gradient(90deg, transparent 25%, #000 85%);
+}
+
+.portfolio-menu--ocean .portfolio-menu__panel {
+  position: relative;
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  justify-content: normal;
+  gap: clamp(20px, 4svh, 40px);
+  width: calc(100% - var(--container-gutter, 48px) * 2);
+  max-width: 1380px;
+  min-height: 100%;
+  padding-block: clamp(22px, 4svh, 44px);
+}
+
+.portfolio-menu--ocean .portfolio-menu__top {
+  align-items: flex-start;
+  min-height: 44px;
+  gap: 20px;
+}
+
+.portfolio-menu--ocean .portfolio-menu__identity {
+  margin: 0;
+  color: #d6e5ef;
+  font: 400 11px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .16em;
+}
+
+.portfolio-menu--ocean .portfolio-menu__identity span {
+  margin-top: 7px;
+  color: #8eabc7;
+  font-size: 9px;
+  font-weight: 400;
+  letter-spacing: .12em;
+}
+
+.portfolio-menu--ocean .portfolio-menu__home {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 44px;
+  color: #a6c3d8;
+  font: 400 10px/1.4 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .14em;
+  text-decoration: none;
+  text-underline-offset: 6px;
+}
+
+.portfolio-menu--ocean .portfolio-menu__close {
+  flex: 0 0 auto;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 10px;
+  color: #d6e5ef;
+  border: 1px solid #8eabc73b;
+  border-radius: 50%;
+  background: transparent;
+}
+
+.portfolio-menu--ocean .portfolio-menu__navigation {
+  align-self: center;
+  width: 100%;
+  margin: 0;
+}
+
+.portfolio-menu--ocean .portfolio-menu__link {
+  position: relative;
+  display: grid;
+  grid-template-columns: 24px minmax(0, 1fr) 30px;
+  align-items: center;
+  gap: clamp(20px, 3vw, 44px);
+  min-height: 44px;
+  padding-block: clamp(16px, 2.4svh, 26px);
+  color: #d6e5ef;
+  border-bottom: 1px solid #8eabc72d;
+  font: 400 clamp(44px, 5vw, 78px)/1.12 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .015em;
+  text-decoration: none;
+  transition: color 180ms ease, border-color 180ms ease;
+}
+
+.portfolio-menu--ocean .portfolio-menu__link > span:nth-child(2) {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+.portfolio-menu--ocean .portfolio-menu__number {
+  position: relative;
+  color: #8eabc7;
+  font: 400 10px/1.4 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .1em;
+}
+
+.portfolio-menu--ocean .portfolio-menu__arrow {
+  color: #a6c3d8;
+  font-size: .34em;
+  font-weight: 400;
+  opacity: .65;
+  transition: transform 220ms ease, opacity 180ms ease;
+}
+
+.portfolio-menu--ocean .portfolio-menu__link[aria-current]:not([aria-current='false']) {
+  color: #edf3f7;
+  border-color: #8eabc766;
+}
+
+.portfolio-menu--ocean .portfolio-menu__link[aria-current]:not([aria-current='false']) .portfolio-menu__number::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: calc(50% - 1.5px);
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: #a6c3e5;
+}
+
+.portfolio-menu--ocean .portfolio-menu__bottom {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px 28px;
+  color: #8eabc7;
+  font: 400 10px/1.6 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .1em;
+}
+
+.portfolio-menu--ocean .portfolio-menu__contact {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 28px;
+}
+
+.portfolio-menu--ocean .portfolio-menu__bottom a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  color: #b2c9db;
+  text-decoration-color: #8eabc757;
+  text-underline-offset: 6px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .site-navigation .hero__control:hover { color: #f0f5f8; box-shadow: none; }
+  .site-navigation .hero__control:hover::after { transform: scaleX(1); }
+  .portfolio-menu--ocean .portfolio-menu__link:hover { color: #f0f5f8; border-color: #8eabc766; }
+  .portfolio-menu--ocean .portfolio-menu__link:hover .portfolio-menu__arrow { opacity: 1; transform: translate(2px, -2px); }
+  .portfolio-menu--ocean .portfolio-menu__close:hover { background: #184c9829; }
+  .portfolio-menu--ocean .portfolio-menu__home:hover { color: #edf3f7; text-decoration: underline; }
+}
+
+@media (max-width: 767px) {
+  .site-navigation.hero__header {
+    left: max(16px, env(safe-area-inset-left));
+    right: max(16px, env(safe-area-inset-right));
+  }
+  .site-navigation .hero__navigation { gap: 12px; }
+  .site-navigation .hero__nav-group,
+  .site-navigation .hero__nav-group--right { gap: clamp(10px, 3.3vw, 20px); }
+  .site-navigation .hero__control { gap: 5px; font-size: 10px; letter-spacing: .1em; }
+  .site-navigation .hero__sound-wave { width: 16px; height: 9px; }
+  .site-navigation .hero__menu-icon { width: 9px; height: 9px; }
+  .site-navigation [data-nav-link]::before { left: -6px; width: 2px; height: 2px; top: calc(50% - 1px); }
+
+  .portfolio-menu--ocean .portfolio-menu__panel {
+    width: calc(100% - 40px);
+    padding-block: max(20px, env(safe-area-inset-top));
+    gap: 24px;
+  }
+  .portfolio-menu--ocean .portfolio-menu__identity { font-size: 10px; }
+  .portfolio-menu--ocean .portfolio-menu__identity span { font-size: 8px; letter-spacing: .1em; }
+  .portfolio-menu--ocean .portfolio-menu__home { font-size: 9px; }
+  .portfolio-menu--ocean .portfolio-menu__link {
+    grid-template-columns: 14px minmax(0, 1fr) 14px;
+    gap: 12px;
+    padding-block: 22px;
+    font-size: clamp(26px, 8.2vw, 32px);
+    letter-spacing: 0;
+  }
+  .portfolio-menu--ocean .portfolio-menu__number { font-size: 8px; }
+  .portfolio-menu--ocean .portfolio-menu__arrow { font-size: 15px; }
+  .portfolio-menu--ocean .portfolio-menu__bottom,
+  .portfolio-menu--ocean .portfolio-menu__contact {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0;
+    font-size: 9px;
+  }
+}
+
+@media (max-height: 699px) {
+  .portfolio-menu--ocean .portfolio-menu__panel { padding-block: 20px; gap: 18px; }
+  .portfolio-menu--ocean .portfolio-menu__link {
+    padding-block: 12px;
+    font-size: clamp(26px, min(8.2vw, 5.2svh), 44px);
+  }
+}
+
+@media (max-width: 360px) {
+  .portfolio-menu--ocean .portfolio-menu__link { font-size: clamp(23px, 7.7vw, 28px); }
+}
+
+@media (max-height: 500px) {
+  .site-navigation.hero__header { top: max(6px, env(safe-area-inset-top)); }
+  .portfolio-menu--ocean .portfolio-menu__panel { padding-block: 12px; gap: 12px; }
+  .portfolio-menu--ocean .portfolio-menu__link { padding-block: 8px; font-size: clamp(20px, 4.5svh, 28px); }
+  .portfolio-menu--ocean .portfolio-menu__identity span { margin-top: 2px; }
+  .portfolio-menu--ocean .portfolio-menu__bottom,
+  .portfolio-menu--ocean .portfolio-menu__contact { flex-direction: row; align-items: center; gap: 6px 20px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-navigation .hero__control,
+  .site-navigation .hero__control::after,
+  .site-navigation [data-nav-link]::before,
+  .portfolio-menu--ocean .portfolio-menu__link,
+  .portfolio-menu--ocean .portfolio-menu__arrow { transition: none; }
+}

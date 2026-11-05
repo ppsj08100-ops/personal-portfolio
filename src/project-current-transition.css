@@ -1,0 +1,35 @@
+/* One opaque page reveals over the held INTRO with a straight vertical edge. */
+#diptyque-details > .is-project-current-active > .project-pages > :nth-child(-n + 2) {
+  translate: var(--current-page-x, 0px) 0;
+  opacity: 1;
+  pointer-events: none;
+}
+#diptyque-details > .is-project-current-active > .project-pages > :first-child { z-index: 1; }
+#diptyque-details > .is-project-current-active > .project-pages > .project-overview:nth-child(2) {
+  z-index: 2;
+  background: #020d20;
+}
+#diptyque-details > .is-project-current-active > .project-pages > .project-overview:nth-child(2) > .project-overview__water { display: block; }
+#diptyque-details.is-project-paged > .is-project-current-active > .project-pages > .project-overview:nth-child(2) > .project-overview__water { inset: -2%; }
+#diptyque-details > .is-project-current-active::after { opacity: 0; }
+/* The curtain reveals a complete exhibit, including its already seated screens. */
+#diptyque-details .project-pages > #diptyque-overview .project-exhibition__exhibit,
+#diptyque-details > .is-project-current-active > .project-pages > :first-child :is(.project-exhibition__exhibit, .project-exhibition__scenery, .project-exhibition__shell-lip) {
+  opacity: 1;
+  translate: 0 0;
+  transition: none;
+}
+#diptyque-details > .is-project-current-active > .project-pages > :nth-child(-n + 2) :is(.sail-project--seabed, .project-overview) {
+  --chapter-visibility: 1 !important;
+  --chapter-copy-visibility: 1 !important;
+  --chapter-travel-x: 0px !important;
+  --chapter-settle-y: 0px !important;
+  --chapter-scale: 1 !important;
+}
+#diptyque-details > .is-project-current-active > .project-pages > .project-overview:nth-child(2) {
+  --chapter-visibility: 1 !important;
+  --chapter-copy-visibility: 1 !important;
+  --chapter-travel-x: 0px !important;
+  --chapter-settle-y: 0px !important;
+  --chapter-scale: 1 !important;
+}

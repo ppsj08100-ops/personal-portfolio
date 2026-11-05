@@ -44,6 +44,12 @@ export function initPortfolioChat() {
   const reducedMotion = matchMedia('(prefers-reduced-motion: reduce)')
   let history = [], lastTopic = null, request = null
   let generation = 0, busy = false, open = false, destroyed = false
+  let navigationFocusFrame = 0
+
+  function cancelNavigationFocus() {
+    cancelAnimationFrame(navigationFocusFrame)
+    navigationFocusFrame = 0
+  }
 
   function scrollToLatest() { log.scrollTop = log.scrollHeight }
   function nearBottom() { return log.scrollHeight - log.clientHeight - log.scrollTop < 70 }
@@ -73,6 +79,7 @@ export function initPortfolioChat() {
     } else if (restoreFocus) launcher.focus({ preventScroll: true })
   }
   function navigate(action) {
+    cancelNavigationFocus()
     const target = document.querySelector(action.href)
     if (!target) return
     setOpen(false, false)
@@ -80,7 +87,8 @@ export function initPortfolioChat() {
     const button = project?.querySelector(`[data-project-page="${action.page ?? 0}"]`)
     const triggerIds = { '#diptyque-details': 'diptyque-project-pages', '#diesel-project': 'diesel-project-pages',
       '#repetto-project': 'repetto-project-pages', '#diptyque-process': 'diptyque-process-pages',
-      '#design-process': 'design-process-pinned' }
+      '#design-process': 'design-process-pinned', '#personal-brand-gallery': 'personal-brand-pages',
+      '#short-form-contents': 'short-form-pages' }
     const triggerId = triggerIds[action.project || action.href]
     const trigger = triggerId ? ScrollTrigger.getById(triggerId) : null
     if (button) {
@@ -95,8 +103,24 @@ export function initPortfolioChat() {
     else target.scrollIntoView({ block: 'start', behavior: reducedMotion.matches ? 'instant' : 'smooth' })
     ScrollTrigger.update()
     const focus = target.querySelector('h2, h3') || target
-    if (!focus.hasAttribute('tabindex')) focus.setAttribute('tabindex', '-1')
-    focus.focus({ preventScroll: true })
+    const applyFocus = () => {
+      if (!focus.hasAttribute('tabindex')) focus.setAttribute('tabindex', '-1')
+      focus.focus({ preventScroll: true })
+    }
+    if (action.project === '#personal-brand-gallery' || action.project === '#short-form-contents') {
+      const started = performance.now()
+      const finish = () => {
+        navigationFocusFrame = 0
+        if (destroyed || !focus.isConnected) return
+        const page = focus.closest('.brand-archive, [data-short-film]')
+        const box = page?.getBoundingClientRect()
+        const style = getComputedStyle(focus)
+        if (!page?.inert && box && Math.abs(box.left) < 3 && box.bottom > 0 && box.top < innerHeight
+          && style.visibility !== 'hidden' && Number(style.opacity) > .95) applyFocus()
+        else if (performance.now() - started < 2000) navigationFocusFrame = requestAnimationFrame(finish)
+      }
+      navigationFocusFrame = requestAnimationFrame(finish)
+    } else applyFocus()
   }
   function addMessage(role, text, actions = []) {
     const message = document.createElement('div')
@@ -273,12 +297,15 @@ export function initPortfolioChat() {
   window.visualViewport?.addEventListener('resize', viewportChanged, { signal })
   window.visualViewport?.addEventListener('scroll', viewportChanged, { signal })
   window.addEventListener('resize', viewportChanged, { signal })
+  window.addEventListener('wheel', cancelNavigationFocus, { passive: true, signal })
+  window.addEventListener('touchstart', cancelNavigationFocus, { passive: true, signal })
   clearConversation()
   viewportChanged()
   return () => {
     destroyed = true
     generation++
     request?.abort()
+    cancelNavigationFocus()
     controller.abort()
     menuObserver.disconnect()
     widget.remove()

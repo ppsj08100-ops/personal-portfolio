@@ -205,10 +205,17 @@ export function initInsightOceanZoom(section) {
         run.textContent = text.textContent
         letters.append(run)
         if (!focused && text.textContent.trim() === 'INSIGHT') {
+          // Enter the middle I's solid ink rather than the leftmost I or the
+          // G's hollow center. The existing pan settles it at viewport center.
+          const centerIndex = text.textContent.indexOf('INSIGHT') + 3
+          const centerRange = document.createRange()
+          centerRange.setStart(text, centerIndex)
+          centerRange.setEnd(text, centerIndex + 1)
+          const centerBounds = centerRange.getBoundingClientRect()
           const stem = measureContext.measureText('I')
           const stemWidth = Math.max(1, stem.actualBoundingBoxLeft + stem.actualBoundingBoxRight)
           focus = {
-            x: x + (stem.actualBoundingBoxRight - stem.actualBoundingBoxLeft) / 2,
+            x: centerBounds.left - stageBox.left + (stem.actualBoundingBoxRight - stem.actualBoundingBoxLeft) / 2,
             y: baseline - stem.actualBoundingBoxAscent / 2,
           }
           finalScale = Math.max(width / (stemWidth * .72), height / Math.max(1, stem.actualBoundingBoxAscent * .75)) * 1.15

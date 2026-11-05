@@ -1,0 +1,60 @@
+/* Transparent air pockets cradle the work; the water remains visible. */
+.team-air-supported { isolation: isolate; overflow: visible; }
+.team-air__field {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  user-select: none;
+}
+.team-air__pocket {
+  position: absolute;
+  left: 16%;
+  top: calc(100% - var(--team-air-size, 36px) * .22);
+  width: var(--team-air-size, 36px);
+  aspect-ratio: 1;
+  border: .7px solid #a6c3e54d;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 32% 25%, #cfe8ff15, transparent 56%),
+    linear-gradient(145deg, #7eabd80a, #10325b05 55%, #0a204e12);
+  box-shadow: inset 1px 1px 3px #c7e1f10d, inset -1px -2px 4px #010c282e;
+  transform: translateX(-50%);
+}
+.team-air__pocket::before {
+  content: '';
+  position: absolute;
+  left: 17%;
+  top: 13%;
+  width: 27%;
+  height: 16%;
+  border-top: 1px solid #d8e9fa66;
+  border-radius: 50%;
+  transform: rotate(-34deg);
+}
+.team-air__pocket--two {
+  left: auto;
+  right: 14%;
+  top: calc(100% - var(--team-air-size, 36px) * .16);
+  width: calc(var(--team-air-size, 36px) * .76);
+  transform: translateX(50%);
+}
+.team-air__field--secondary .team-air__pocket {
+  left: 50%;
+  top: calc(100% - var(--team-air-size, 18px) * .2);
+  opacity: .8;
+}
+.team-air__mote {
+  position: absolute;
+  left: -2%;
+  top: 100%;
+  width: 3px;
+  aspect-ratio: 1;
+  border: .6px solid #bbd6ef70;
+  border-radius: 50%;
+  background: radial-gradient(circle at 28% 24%, #d5eafb1f, transparent 60%);
+  opacity: 0;
+}
+.team-air__mote--two { left: auto; right: -2%; width: 2px; }
+@media (prefers-reduced-motion: reduce) {
+  .team-air__mote { display: none; }
+}

@@ -1,0 +1,36 @@
+.work-team-school {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.work-team-school__fish {
+  position: absolute;
+  display: block;
+  max-width: none;
+  overflow: hidden;
+  object-fit: contain;
+  opacity: var(--team-fish-opacity, .8);
+  transform-origin: center;
+}
+
+.work-team-school__canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+}
+
+.work-team-school.has-team-fish-canvas .work-team-school__canvas { opacity: 1; }
+.work-team-school.has-team-fish-canvas .work-team-school__fish.has-team-fish-texture { opacity: 0; }
+.work-team-school__fish[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .work-team-school.has-team-fish-canvas .work-team-school__canvas { opacity: 0; }
+  .work-team-school.has-team-fish-canvas .work-team-school__fish.has-team-fish-texture { opacity: var(--team-fish-opacity, .8); }
+}

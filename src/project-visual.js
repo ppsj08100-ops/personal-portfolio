@@ -1,6 +1,5 @@
 import { initProjectResearch } from './project-research.js'
-
-const fileUrl = 'https://www.figma.com/design/srssqZHNPbxBDzXAwby1u6/1%EC%A1%B0--DIPTYQUE-renewal-project--Copy-'
+import { DIPTYQUE_PROPOSAL_URL } from './project-links.js'
 const documents = {
   moodboard: {
     title: '딥디크 디자인 무드보드', caption: '무드보드 · 향과 장면, 이야기를 하나의 무드로',
@@ -40,7 +39,7 @@ export function initProjectVisual(section) {
         return item
       }))
       sourceCaption.textContent = doc.source
-      sourceLink.href = `${fileUrl}?node-id=${doc.node}`
+      sourceLink.href = DIPTYQUE_PROPOSAL_URL
       sourceLink.setAttribute('aria-label', `${doc.title} Figma 장표 열기 (새 탭)`)
       section.querySelector('[data-visual-document-number]').textContent = doc.label.slice(0, 2)
     },

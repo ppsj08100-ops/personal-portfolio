@@ -1,3 +1,5 @@
+import './project-research-threec.css'
+
 const researchDocuments = {
   brand: {
     title: '딥디크 자사 분석', caption: '자사 분석',
@@ -14,6 +16,12 @@ const researchDocuments = {
     label: 'STEEP → EXPERIENCE DIRECTION',
     insight: '자기표현과 브랜드 가치, 디지털 탐색을 연결해\n감각적이면서 신뢰할 수 있는 향 경험으로.',
   },
+  threec: {
+    title: '딥디크 3C 분석', caption: '3C 분석',
+    label: 'CUSTOMER · COMPETITOR · COMPANY → INSIGHT',
+    insight: '고객의 빠르고 명확한 탐색과 딥디크의 감성·세계관을 연결해\n빠르게 찾고, 깊게 경험하고, 자연스럽게 구매하는 온라인 경험으로.',
+    image: '/images/research/diptyque-threec-original-v1.webp',
+  },
 }
 
 export function initProjectResearch(section, { documents = researchDocuments, initial = 'brand', onSelect } = {}) {
@@ -25,8 +33,22 @@ export function initProjectResearch(section, { documents = researchDocuments, in
   const dialog = section.querySelector('dialog')
   const full = section.querySelector('[data-research-full]')
   const opener = section.querySelector('[data-research-open]')
+  const imageTools = dialog.querySelector('[data-research-image-tools]')
+  const imageZoomButtons = [...dialog.querySelectorAll('[data-research-image-zoom]')]
+  const originalImageLink = dialog.querySelector('[data-research-image-original]')
   const templates = Object.fromEntries(Object.keys(documents).map(key => [key, section.querySelector(`[data-research-document="${key}"]`)]))
   let active = initial
+  function imageZoom(mode) {
+    if (!imageTools || !documents[active].image) return
+    dialog.dataset.threecZoom = mode
+    imageZoomButtons.forEach(button => button.setAttribute('aria-pressed', String(button.dataset.researchImageZoom === mode)))
+    const view = full.querySelector('.research-threec')
+    if (!view) return
+    view.tabIndex = mode === 'original' ? 0 : -1
+    view.setAttribute('aria-label', `${documents[active].title} — 방향키 또는 스크롤로 이동`)
+    view.scrollTo({ left: 0, top: 0, behavior: 'instant' })
+    if (mode === 'original') view.focus({ preventScroll: true })
+  }
   const fit = () => previews.forEach(preview => {
     if (preview.clientWidth) preview.style.setProperty('--research-document-scale', preview.clientWidth / preview.firstElementChild.offsetWidth)
   })
@@ -47,8 +69,10 @@ export function initProjectResearch(section, { documents = researchDocuments, in
       if (selected && focus) tab.focus()
     })
     section.querySelector('[data-research-caption]').textContent = documents[key].caption
-    section.querySelector('[data-research-insight-label]').textContent = documents[key].label
-    section.querySelector('[data-research-insight]').textContent = documents[key].insight
+    const insightLabel = section.querySelector('[data-research-insight-label]')
+    const insight = section.querySelector('[data-research-insight]')
+    if (insightLabel) insightLabel.textContent = documents[key].label
+    if (insight) insight.textContent = documents[key].insight
     opener.setAttribute('aria-label', `${documents[key].title} 크게 보기`)
     section.dataset.researchActive = key
     fit()
@@ -67,9 +91,16 @@ export function initProjectResearch(section, { documents = researchDocuments, in
   opener.addEventListener('click', () => {
     dialog.querySelector('h2').textContent = documents[active].title
     full.replaceChildren(templates[active].content.cloneNode(true))
+    if (imageTools) {
+      imageTools.hidden = !documents[active].image
+      if (documents[active].image) originalImageLink.href = documents[active].image
+      else delete dialog.dataset.threecZoom
+    }
     dialog.showModal()
     dialog.scrollTop = 0
+    imageZoom('fit')
   }, { signal })
+  imageZoomButtons.forEach(button => button.addEventListener('click', () => imageZoom(button.dataset.researchImageZoom), { signal }))
   section.querySelector('[data-research-close]').addEventListener('click', () => dialog.close(), { signal })
   dialog.addEventListener('click', event => {
     if (event.target !== dialog) return
@@ -85,5 +116,7 @@ export function initProjectResearch(section, { documents = researchDocuments, in
     full.replaceChildren()
     opener.hidden = true
     delete section.dataset.researchActive
+    delete dialog.dataset.threecZoom
+    if (imageTools) imageTools.hidden = true
   }
 }

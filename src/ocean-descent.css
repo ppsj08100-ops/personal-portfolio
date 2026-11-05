@@ -1,4 +1,4 @@
-/* Surface light recedes overhead while the first work emerges on the seabed. */
+/* The first work emerges from the same deep water as its single introduction. */
 .ocean-descent { display: none; }
 .is-descent-ready .ocean-descent {
   display: block;
@@ -21,8 +21,8 @@
 }
 .ocean-descent__water {
   background:
-    radial-gradient(ellipse at 52% -32%, #284e675c 0%, #11344b26 42%, transparent 70%),
-    linear-gradient(180deg, #061d36 0%, #04162c 35%, #020e23 72%, #020b1d 100%);
+    radial-gradient(ellipse at 45% 5%, #184c9866 0%, transparent 65%),
+    linear-gradient(180deg, #02256b 0%, #001b52 35%, #001342 72%, var(--work-ocean-deep, #000b2f) 100%);
 }
 .ocean-descent__ceiling {
   position: absolute;
@@ -46,55 +46,19 @@
 }
 .ocean-descent__shade {
   background:
-    linear-gradient(180deg, #04132600 0%, #020b1d17 38%, #020b1d8c 82%, #020b1dd9 100%),
-    linear-gradient(90deg, #010a1c66 0%, #020e2112 32% 67%, #010a1c70 100%);
+    linear-gradient(180deg, #000b2f00 0%, #000b2f12 38%, #000b2f66 82%, #000b2fb3 100%),
+    linear-gradient(90deg, #000b2f52 0%, #0013420d 32% 67%, #000b2f59 100%);
 }
 .ocean-descent__particles { display: block; }
-.ocean-descent__chapter {
-  position: absolute;
-  inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: clamp(20px, 3svh, 32px);
-  padding: 8svh var(--container-gutter);
-  color: #e3edf4;
-  font-family: 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
-  text-align: center;
-  opacity: 0;
-}
-.ocean-descent__chapter::before {
-  content: '';
-  position: absolute;
-  z-index: -1;
-  inset: 12% 8%;
-  background: radial-gradient(ellipse, #020c1f66, transparent 65%);
-}
-.ocean-descent__chapter-label {
-  margin: 0;
-  color: #a7c3d8;
-  font-size: clamp(9px, .75vw, 12px);
-  line-height: 1.6;
-  letter-spacing: .25em;
-}
-.ocean-descent__chapter-title {
-  margin: 0;
-  font-size: clamp(56px, 7.4vw, 116px);
-  line-height: 1.12;
-  letter-spacing: .035em;
-}
-.ocean-descent__chapter-title span { display: block; }
-.ocean-descent__chapter-caption {
-  margin: 0;
-  max-width: 32rem;
-  color: #9ebbd0;
-  font-size: clamp(8px, .65vw, 10px);
-  line-height: 1.8;
-  letter-spacing: .16em;
+
+/* Discovery uses the original shell and original screens before paging is
+   ready. The surface owns their reveal; cover text waits for its later beat. */
+#design-code.is-descent-ready #team-projects .project-exhibition__exhibit,
+#design-code.is-descent-ready #team-projects :is(.project-exhibition__scenery, .project-exhibition__shell-lip) {
+  opacity: 1;
+  translate: none;
+  transition: none;
 }
 @media (max-width: 767px) {
   .ocean-descent__ceiling img { object-position: 25% 0; }
-  .ocean-descent__chapter-title { font-size: clamp(42px, 12vw, 72px); }
-  .ocean-descent__chapter-caption { max-width: 17rem; }
 }

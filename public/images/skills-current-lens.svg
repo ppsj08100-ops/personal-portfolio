@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="400" height="600" viewBox="0 0 400 600" fill="none">
+  <title>Subtle underwater refraction fold</title>
+  <desc>Open, asymmetrical silver-blue current contours surrounding a barely perceptible wash of light.</desc>
+  <defs>
+    <linearGradient id="fold-edge" x1="200" y1="28" x2="200" y2="574" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#91AFD4" stop-opacity="0"/>
+      <stop offset=".2" stop-color="#B9CDE7" stop-opacity=".62"/>
+      <stop offset=".49" stop-color="#AAC3E3"/>
+      <stop offset=".77" stop-color="#829EC5" stop-opacity=".65"/>
+      <stop offset="1" stop-color="#91AFD4" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="fold-wash" cx="0" cy="0" r="1" gradientTransform="translate(204 295) rotate(82) scale(230 126)" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#C3D6EC" stop-opacity=".015"/>
+      <stop offset=".52" stop-color="#9FBCE0" stop-opacity=".008"/>
+      <stop offset="1" stop-color="#7F9DC6" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <path d="M16 14H384V586H16Z" fill="url(#fold-wash)"/>
+
+  <g stroke="url(#fold-edge)" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M225 28C157 66 103 118 83 194C67 255 79 299 91 331M113 396C135 455 178 514 239 570" stroke-width=".8" opacity=".3"/>
+    <path d="M234 40C167 83 118 137 99 208C85 260 88 295 99 324M119 388C141 450 185 508 246 560" stroke-width=".55" opacity=".16"/>
+    <path d="M215 77C160 116 125 165 114 224C105 269 111 304 121 331M139 391C161 444 189 484 226 516" stroke-width=".45" opacity=".08"/>
+    <path d="M257 58C290 101 320 156 327 208C331 238 328 260 323 279M303 369C284 438 245 501 202 552" stroke-width=".65" opacity=".23"/>
+    <path d="M273 89C301 131 322 178 330 223M317 341C302 401 273 455 234 501" stroke-width=".45" opacity=".12"/>
+    <path d="M278 155C297 196 303 232 300 269C298 291 290 316 280 338M258 387C245 413 228 440 208 461" stroke-width=".5" opacity=".1"/>
+    <path d="M157 175C132 230 133 277 151 318C163 346 180 365 193 388M210 426C222 452 222 474 212 500" stroke-width=".55" opacity=".14"/>
+  </g>
+</svg>

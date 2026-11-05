@@ -1,4 +1,5 @@
 import { initMirrorCurrentTransition } from './mirror-current-transition.js'
+import { initCapabilitiesBubbles } from './capabilities-bubbles.js'
 
 export function initCapabilities(section) {
   if (!section) return () => {}
@@ -39,8 +40,10 @@ export function initCapabilities(section) {
   reducedMotion.addEventListener('change', configure, { signal })
   configure()
   const destroyCurrent = initMirrorCurrentTransition(section)
+  const destroyBubbles = initCapabilitiesBubbles(section)
 
   return () => {
+    destroyBubbles()
     destroyCurrent()
     controller.abort()
     revealObserver?.disconnect()

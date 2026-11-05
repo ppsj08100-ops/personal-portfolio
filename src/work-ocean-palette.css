@@ -1,0 +1,14 @@
+/* Navy is the shared water. Cobalt is light within it, rather than a new
+   rectangular background at every chapter. Original media keeps its ink. */
+:root {
+  --work-ocean-deep: #020b1d;
+  --work-ocean-water: #001342;
+  --work-ocean-mid: #02256b;
+  --work-ocean-light: #184c98;
+  --work-ocean-silver: #a6c3e5;
+  --work-ocean-text: #e4edf4;
+  --work-ocean-field:
+    radial-gradient(ellipse 88% 78% at 24% 42%, #1645844d, transparent 78%),
+    radial-gradient(ellipse 70% 65% at 78% 67%, #02256b26, transparent 80%),
+    linear-gradient(#020b1d, #020b1d);
+}

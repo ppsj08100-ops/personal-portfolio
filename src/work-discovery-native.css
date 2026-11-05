@@ -1,0 +1,95 @@
+/* Only the fallback composition uses this still preview. The held scene reveals
+   the original cover, keeping its existing device link and final composition. */
+.work-discovery-preview { display: none; }
+#design-code:not(.is-descent-ready) #team-projects-intro .work-discovery-preview {
+  position: absolute;
+  z-index: 1;
+  top: 47%;
+  right: var(--container-gutter, 48px);
+  display: block;
+  width: min(60vw, 69svh, 740px);
+  aspect-ratio: 3 / 2;
+  margin: 0;
+  transform: translateY(-50%);
+  pointer-events: none;
+  user-select: none;
+}
+.work-discovery-preview::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  bottom: 1%;
+  left: 13%;
+  width: 76%;
+  height: 7%;
+  border-radius: 50%;
+  background: #00081766;
+  filter: blur(12px);
+}
+.work-discovery-preview__shell {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.work-discovery-preview__device {
+  position: absolute;
+  bottom: 26%;
+  overflow: hidden;
+  border: 1px solid #a8c5da9c;
+  background: #11263b;
+  box-shadow: inset 0 0 0 1px #bed5e32b, 0 9px 16px #00102533;
+  pointer-events: none;
+}
+.work-discovery-preview__device img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  object-position: top center;
+  pointer-events: none;
+}
+.work-discovery-preview__device--computer {
+  z-index: 2;
+  left: 25%;
+  width: 59%;
+  padding: 5px 5px 14px;
+  border-radius: 9px;
+}
+.work-discovery-preview__device--computer img { aspect-ratio: 1.6; border-radius: 3px; }
+.work-discovery-preview__device--tablet {
+  z-index: 3;
+  left: 9%;
+  width: 20%;
+  padding: 4px;
+  border-radius: 10px;
+}
+.work-discovery-preview__device--tablet img { aspect-ratio: .75; border-radius: 6px; }
+.work-discovery-preview__device--phone {
+  z-index: 4;
+  left: 73%;
+  bottom: 25%;
+  width: 9.5%;
+  padding: 3px;
+  border-radius: 9px;
+}
+.work-discovery-preview__device--phone img { aspect-ratio: .4620853081; border-radius: 6px; }
+.work-discovery-preview__lip { z-index: 6; clip-path: inset(80% 0 0); }
+@media (max-width: 767px) {
+  #design-code:not(.is-descent-ready) #team-projects-intro .work-discovery-preview {
+    top: 35%;
+    right: auto;
+    left: 50%;
+    width: min(100%, 460px);
+    transform: translateX(-50%);
+  }
+  .work-discovery-preview__device--computer { padding: 3px 3px 10px; border-radius: 6px; }
+  .work-discovery-preview__device--tablet { padding: 3px; border-radius: 7px; }
+  .work-discovery-preview__device--phone { padding: 2px; border-radius: 6px; }
+  .work-discovery-preview__device--tablet img { border-radius: 4px; }
+  .work-discovery-preview__device--phone img { border-radius: 4px; }
+}

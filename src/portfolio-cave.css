@@ -1,0 +1,73 @@
+.portfolio.has-cave {
+  --cave-gutter: clamp(40px, 10vw, 180px);
+  --cave-ceiling: clamp(76px, 15svh, 180px);
+  --cave-bottom-space: clamp(48px, 10svh, 100px);
+}
+
+.has-cave .portfolio__heading {
+  margin-inline: var(--container-gutter);
+  font-family: 'Capabilities Helvetica', 'Helvetica Neue', Arial, sans-serif;
+  font-size: clamp(48px, 7.3vw, 144px);
+  font-weight: 100;
+  letter-spacing: -.035em;
+  text-transform: uppercase;
+}
+.has-cave .portfolio__title-line { display: block; gap: normal; flex-direction: row; }
+.has-cave .portfolio__context {
+  display: none;
+}
+.has-cave .portfolio__gallery {
+  width: 100%;
+  margin-inline: auto;
+}
+.has-cave .portfolio__gallery.is-webgl {
+  --cave-canvas-height: 60vw;
+  width: 100%;
+  height: 70vw;
+  margin-top: 2.375vw;
+  aspect-ratio: auto;
+}
+.has-cave .is-webgl .portfolio__canvas {
+  height: var(--cave-canvas-height);
+  aspect-ratio: auto;
+}
+.has-cave .portfolio__gallery-controls {
+  gap: 12px;
+  margin-top: 20px;
+}
+.has-cave .portfolio__gallery-controls button {
+  width: 44px;
+  height: 44px;
+  margin: 0;
+  font-size: 14px;
+  background: #0614279c;
+}
+.has-cave .is-webgl .portfolio__gallery-controls {
+  z-index: 2;
+  top: var(--cave-controls-y, 78%);
+  bottom: auto;
+  margin: 0;
+  clip-path: none;
+}
+
+/* Static reading retains the gallery spacing without a viewport pin or reveal. */
+.has-cave:not(.is-unfolding) .portfolio__work {
+  padding-top: calc(var(--cave-ceiling) + 32px);
+  padding-bottom: calc(var(--cave-bottom-space) + 32px);
+}
+@media (max-width: 991px) {
+  .portfolio.has-cave {
+    --cave-gutter: clamp(30px, 8vw, 78px);
+    --cave-ceiling: clamp(88px, 13svh, 156px);
+    --cave-bottom-space: clamp(44px, 7svh, 84px);
+  }
+  .has-cave .portfolio__heading { font-size: clamp(30px, 8.4vw, 84px); }
+  .has-cave .portfolio__project { flex-basis: 79.2vw; }
+  .has-cave .portfolio__projects { padding-inline: 4.8vw; scroll-padding-inline: 4.8vw; }
+  .has-cave .portfolio__gallery { margin-top: clamp(40px, 8vw, 80px); }
+  .has-cave .portfolio__project figcaption { margin-top: 16px; font-size: 12px; }
+  .has-cave .portfolio__context { margin-inline: calc(var(--cave-gutter) + 8px); }
+}
+@media (max-width: 599px) {
+  .has-cave .portfolio__collection { gap: 16px; font-size: 8px; }
+}

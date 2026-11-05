@@ -3,7 +3,7 @@
 .insight-section {
   --insight-font-family: 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
   --insight-font-weight: 400;
-  --insight-font-size: clamp(2.5rem, 13vw, 16rem);
+  --insight-font-size: clamp(2.125rem, 11.05vw, 13.6rem);
   --insight-line-height: .94;
   --insight-letter-spacing: -.01em;
   --insight-top-inset: var(--ocean-message-inset);
@@ -63,7 +63,7 @@
 }
 .insight-section__ocean-ink { filter: brightness(1.65); }
 .insight-section.is-immersive {
-  --insight-font-size: min(clamp(2.5rem, 13vw, 16rem), 24.6svh);
+  --insight-font-size: min(clamp(2.125rem, 11.05vw, 13.6rem), 20.91svh);
   grid-template-columns: minmax(0, 1fr);
 }
 .insight-section__ocean-world {

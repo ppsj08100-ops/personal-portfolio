@@ -25,6 +25,8 @@ function roundedMask() {
   const canvas = document.createElement('canvas')
   canvas.width = canvas.height = 512
   const context = canvas.getContext('2d')
+  context.fillStyle = '#000'
+  context.fillRect(0, 0, 512, 512)
   context.fillStyle = '#fff'
   context.beginPath()
   context.roundRect(0, 0, 512, 512, 20)
@@ -94,6 +96,38 @@ export function initPortfolioGallery(section) {
   let step = fallbackStep
   let togglePause = () => {}
   let disposed = false
+  const clamp = value => Math.min(1, Math.max(0, value))
+  const easeOpen = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
+  const revealListeners = new Set()
+  const readReveal = () => section.classList.contains('is-unfolding')
+    ? clamp(Number.parseFloat(getComputedStyle(section).getPropertyValue('--portfolio-open')) || 0)
+    : 1
+  let revealProgress = readReveal()
+  function syncReveal(event) {
+    const previous = revealProgress
+    revealProgress = section.classList.contains('is-unfolding')
+      ? clamp(Number.isFinite(event?.detail?.progress) ? event.detail.progress : readReveal())
+      : 1
+    revealListeners.forEach(listener => listener(revealProgress, previous))
+  }
+  section.addEventListener('portfolio:reveal', syncReveal, { signal })
+  const canExplore = () => !section.classList.contains('is-unfolding') || revealProgress >= .985
+  function emitPhotoEdges(points) {
+    section.dispatchEvent(new CustomEvent('portfolio:photo-edges', { bubbles: true, detail: { points } }))
+  }
+  function emitPhotoFrame(rect, radius = 0, restRect = rect, anchorRect = rect) {
+    section.dispatchEvent(new CustomEvent('portfolio:photo-frame', {
+      bubbles: true,
+      detail: { rect, restRect, anchorRect, radius, image: projects[0].image, focusX: projects[0].focusX, focusY: projects[0].focusY },
+    }))
+  }
+  const visibleEdgePoint = point => Number.isFinite(point.x) && Number.isFinite(point.y)
+    && point.x >= 0 && point.x <= innerWidth && point.y >= 0 && point.y <= innerHeight
+  function requestExplore() {
+    if (canExplore()) return true
+    section.dispatchEvent(new CustomEvent('portfolio:open-request', { bubbles: true }))
+    return false
+  }
   const playback = new WeakMap()
   function playVideo(video, playing) {
     if (playback.get(video) === playing && (playing || video.paused)) return
@@ -122,6 +156,7 @@ export function initPortfolioGallery(section) {
   })
 
   media.add('(prefers-reduced-motion: no-preference)', () => {
+    if (section.classList.contains('is-unfolding')) return
     gsap.fromTo(heading.querySelectorAll('.portfolio__word'), {
       opacity: 0, filter: 'blur(.8vw)', scale: .95,
     }, {
@@ -152,8 +187,9 @@ export function initPortfolioGallery(section) {
     const group = new THREE.Group()
     scene.add(group)
     const radius = panelWidth * projects.length / (Math.PI * 2)
-    // Keep the visible back of the ring at the approved distance as photos grow.
+    // Keep the original large photographs at a constant distance throughout entry.
     group.position.z = radius - referenceRadius - 3
+    const restingDepth = group.position.z
     const mask = roundedMask()
     const textures = [mask]
     const color = getComputedStyle(section).color
@@ -163,12 +199,15 @@ export function initPortfolioGallery(section) {
     const videoEvents = new AbortController()
     let alive = true
     projects.forEach((project, index) => {
-      const material = new THREE.MeshBasicMaterial({ color: '#888888', alphaMap: mask, transparent: true, side: THREE.DoubleSide })
+      const material = new THREE.MeshBasicMaterial({ color: '#888888', alphaMap: mask, alphaTest: .01, transparent: true, side: THREE.DoubleSide })
       const mesh = new THREE.Mesh(curvedPlane(panelWidth, panelHeight, .2), material)
       mesh.name = project.name
       const angle = index * angleStep
       mesh.position.set(radius * Math.sin(angle), 0, radius * Math.cos(angle))
       mesh.lookAt(0, 0, 0)
+      mesh.userData.ringPosition = mesh.position.clone()
+      mesh.userData.ringQuaternion = mesh.quaternion.clone()
+      mesh.userData.index = index
       group.add(mesh)
       let showingVideo = false
       if (project.video) {
@@ -192,6 +231,7 @@ export function initPortfolioGallery(section) {
         const texture = captionTexture(text, align, color)
         textures.push(texture)
         const caption = new THREE.Mesh(curvedPlane(panelWidth, labelHeight, panelWidth * .066, 8, 3), new THREE.MeshBasicMaterial({ map: texture, transparent: true }))
+        caption.userData.isCaption = true
         caption.position.set(x, -panelHeight / 2 - labelHeight / 4, -.05)
         mesh.add(caption)
       }
@@ -233,29 +273,176 @@ export function initPortfolioGallery(section) {
     let dragging = false, previousX = 0, dragVelocity = 0
     let targetRotation = Math.PI, speed = .001, wave = 0, waveTime = 0
     group.rotation.y = targetRotation
-    let paused = false, videoPaused = false, visible = false, frame, lastTime = 0
+    let paused = section.classList.contains('is-unfolding') && section.classList.contains('is-darkroom')
+    let videoPaused = false, visible = false, frame, lastTime = 0
+    pauseButton.setAttribute('aria-pressed', String(paused))
+    pauseButton.setAttribute('aria-label', paused ? '사진 자동 넘김 재생' : '사진 자동 넘김 일시정지')
+    let entryRotation = Math.PI, alignedRotation = Math.PI, activePointer
     let pointerX = 0, pointerY = 0, cursorX = 0, cursorY = 0
+    const edgeVector = new THREE.Vector3()
+    const centerVector = new THREE.Vector3()
+    const anchorRotation = new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), Math.PI)
+    const anchorScale = new THREE.Vector3(1, 1, 1)
+    const anchorGroupMatrix = new THREE.Matrix4()
+    const anchorMeshMatrix = new THREE.Matrix4()
+    const anchorWorldMatrix = new THREE.Matrix4()
+    function publishPhotoFrame() {
+      if (disposed) { emitPhotoFrame(null); return }
+      const rect = renderer.domElement.getBoundingClientRect()
+      if (!rect.width || !rect.height) { emitPhotoFrame(null); return }
+      group.updateMatrixWorld(true)
+      camera.updateMatrixWorld()
+      const mesh = group.children[0]
+      const position = mesh.geometry.attributes.position
+      const rest = mesh.geometry.userData.rest
+      const bounds = (matrix, unwarped = false) => {
+        let left = Infinity, top = Infinity, right = -Infinity, bottom = -Infinity
+        for (let index = 0; index < position.count; index++) {
+          if (unwarped) edgeVector.fromArray(rest, index * 3)
+          else edgeVector.fromBufferAttribute(position, index)
+          edgeVector.applyMatrix4(matrix).project(camera)
+          const x = rect.left + (edgeVector.x * .5 + .5) * rect.width
+          const y = rect.top + (.5 - edgeVector.y * .5) * rect.height
+          left = Math.min(left, x); right = Math.max(right, x)
+          top = Math.min(top, y); bottom = Math.max(bottom, y)
+        }
+        return { x: left, y: top, width: right - left, height: bottom - top }
+      }
+      // Layout follows a centered, still photograph. Carousel navigation and
+      // drag waves must never move the entire gallery's vertical anchor.
+      anchorGroupMatrix.compose(group.position, anchorRotation, group.scale)
+      if (group.parent) anchorGroupMatrix.premultiply(group.parent.matrixWorld)
+      anchorMeshMatrix.compose(mesh.userData.ringPosition, mesh.userData.ringQuaternion, anchorScale)
+      anchorWorldMatrix.multiplyMatrices(anchorGroupMatrix, anchorMeshMatrix)
+      const anchorRect = bounds(anchorWorldMatrix, true)
+      centerVector.setFromMatrixPosition(mesh.matrixWorld).project(camera)
+      if (centerVector.z < -1 || centerVector.z > 1) {
+        emitPhotoFrame(null, 0, null, anchorRect)
+        return
+      }
+      const frame = bounds(mesh.matrixWorld)
+      const resting = mesh.matrixWorld.clone()
+      resting.elements[14] += restingDepth - group.position.z
+      emitPhotoFrame(frame, Math.min(frame.width, frame.height) * 20 / 512, bounds(resting), anchorRect)
+    }
+    function publishPhotoEdges() {
+      if (disposed || canExplore()) { emitPhotoEdges([]); return }
+      const rect = renderer.domElement.getBoundingClientRect()
+      if (!rect.width || !rect.height) { emitPhotoEdges([]); return }
+      group.updateMatrixWorld(true)
+      camera.updateMatrixWorld()
+      const project = (mesh, index) => {
+        edgeVector.fromBufferAttribute(mesh.geometry.attributes.position, index).applyMatrix4(mesh.matrixWorld).project(camera)
+        return { x: rect.left + (edgeVector.x * .5 + .5) * rect.width, y: rect.top + (.5 - edgeVector.y * .5) * rect.height, z: edgeVector.z }
+      }
+      const photos = group.children.filter(mesh => mesh.visible && mesh.material.opacity > .01 && mesh.scale.x > .4).map(mesh => {
+        const columns = mesh.geometry.parameters.widthSegments + 1
+        const rows = mesh.geometry.parameters.heightSegments + 1
+        const corners = [0, columns - 1, (rows - 1) * columns, rows * columns - 1].map(index => project(mesh, index))
+        const bounds = {
+          left: Math.min(...corners.map(p => p.x)), right: Math.max(...corners.map(p => p.x)),
+          top: Math.min(...corners.map(p => p.y)), bottom: Math.max(...corners.map(p => p.y)),
+        }
+        centerVector.setFromMatrixPosition(mesh.matrixWorld)
+        const depth = centerVector.z
+        centerVector.project(camera)
+        return { mesh, columns, depth, bounds, z: centerVector.z }
+      }).filter(({ bounds: b, z }) => z >= -1 && z <= 1
+        && Math.min(b.right, innerWidth) - Math.max(b.left, 0) > 80
+        && Math.min(b.bottom, innerHeight) - Math.max(b.top, 0) > 60)
+        .sort((a, b) => b.depth - a.depth).slice(0, revealProgress > .55 ? 3 : 1)
+      const edges = photos.map(({ mesh, columns }) => {
+        const last = columns - 1
+        const samples = [[.16, 0], [.36, 0], [.64, 0], [.84, 0], [0, .2], [1, .2]]
+        return samples.map(([u, v]) => {
+          const point = project(mesh, Math.round(v * last) * columns + Math.round(u * last))
+          const center = mesh.getWorldPosition(centerVector).project(camera)
+          const cx = rect.left + (center.x * .5 + .5) * rect.width
+          const cy = rect.top + (.5 - center.y * .5) * rect.height
+          const distance = Math.hypot(cx - point.x, cy - point.y) || 1
+          return { x: point.x + (cx - point.x) / distance * 1.5, y: point.y + (cy - point.y) / distance * 1.5 }
+        })
+      })
+      emitPhotoEdges(Array.from({ length: 6 }, (_, index) => edges.map(points => points[index])).flat().filter(visibleEdgePoint))
+    }
+    function holdEntryRotation() {
+      if (!canExplore()) {
+        group.rotation.y = THREE.MathUtils.lerp(entryRotation, alignedRotation, easeOpen((1 - revealProgress) / .3))
+        targetRotation = group.rotation.y
+      }
+    }
+    function revealPhotos() {
+      holdEntryRotation()
+      // Photos enter at their original full size; scroll never dollies the ring
+      // or shifts flanking photographs toward the camera.
+      group.position.z = restingDepth
+      for (const mesh of group.children) {
+        const index = mesh.userData.index
+        const near = index === 0 || index === 1 || index === projects.length - 1
+        mesh.position.copy(mesh.userData.ringPosition)
+        mesh.quaternion.copy(mesh.userData.ringQuaternion)
+        mesh.scale.setScalar(1)
+        // Keep a nearby center and two flanking prints. The other photographs
+        // join only when the original carousel is ready to be explored.
+        mesh.material.opacity = 1
+        mesh.visible = canExplore() || near
+        mesh.children.forEach(child => {
+          if (child.userData.isCaption) child.material.opacity = easeOpen((revealProgress - .92) / .08)
+        })
+      }
+    }
     function syncVideos() {
       videoPanels.forEach(({ video, index }) => {
         const angle = index * angleStep + group.rotation.y
-        playVideo(video, visible && !document.hidden && !videoPaused && Math.cos(angle) < -.65)
+        playVideo(video, canExplore() && visible && !document.hidden && !videoPaused && Math.cos(angle) < -.65)
       })
     }
-    document.addEventListener('visibilitychange', syncVideos, { signal: events.signal })
+    const revealChanged = (open, previous) => {
+      if (open < .985 && previous >= .985) {
+        entryRotation = group.rotation.y
+        alignedRotation = entryRotation + Math.atan2(Math.sin(Math.PI - entryRotation), Math.cos(Math.PI - entryRotation))
+        targetRotation = entryRotation
+        dragging = false
+        dragVelocity = 0
+        if (activePointer != null && gallery.hasPointerCapture(activePointer)) gallery.releasePointerCapture(activePointer)
+        cursor.classList.remove('is-visible')
+      }
+      revealPhotos()
+      publishPhotoFrame()
+      publishPhotoEdges()
+      syncVideos()
+      if (visible) renderer.render(scene, camera)
+    }
+    revealListeners.add(revealChanged)
+    revealPhotos()
+    section.addEventListener('portfolio:photo-frame-request', publishPhotoFrame, { signal: events.signal })
+    document.addEventListener('visibilitychange', syncVisibility, { signal: events.signal })
+    window.addEventListener('scroll', syncVisibility, { passive: true, signal: events.signal })
     const finePointer = matchMedia('(hover: hover) and (pointer: fine)')
     function size() {
-      renderer.setSize(gallery.clientWidth, gallery.clientWidth * .6)
-      camera.aspect = 1000 / 600
+      const width = gallery.clientWidth
+      const height = surface.clientHeight || width * .6
+      renderer.setSize(width, height)
+      camera.aspect = width / height
       camera.updateProjectionMatrix()
+      revealPhotos()
+      publishPhotoFrame()
+      publishPhotoEdges()
+      syncVisibility()
     }
     const dimensions = new ResizeObserver(size)
     dimensions.observe(gallery)
     size()
-    const visibility = new IntersectionObserver(entries => {
-      visible = entries[0].isIntersecting
+    function syncVisibility() {
+      const rect = renderer.domElement.getBoundingClientRect()
+      const wasVisible = visible
+      // Pinning can move the canvas independently of the gallery's bounds.
+      visible = rect.width > 0 && rect.height > 0 && rect.top < innerHeight + 100 && rect.bottom > -100
       if (!visible) cursor.classList.remove('is-visible')
       syncVideos()
-    }, { rootMargin: '100px' })
+      if (visible && !wasVisible && !document.hidden) renderer.render(scene, camera)
+    }
+    const visibility = new IntersectionObserver(syncVisibility, { rootMargin: '100px' })
     visibility.observe(gallery)
     function waveGeometry(delta) {
       wave += (Math.abs(dragVelocity) * .1 - wave) * (1 - Math.pow(.8, delta))
@@ -281,7 +468,9 @@ export function initPortfolioGallery(section) {
       const delta = lastTime ? Math.min((time - lastTime) / (1000 / 60), 3) : 1
       lastTime = time
       if (!visible || document.hidden) return
-      if (!dragging) {
+      if (!canExplore()) {
+        holdEntryRotation()
+      } else if (!dragging) {
         if (!paused) targetRotation -= speed * delta
         dragVelocity *= Math.pow(.95, delta)
       }
@@ -297,12 +486,12 @@ export function initPortfolioGallery(section) {
     function enter(event) {
       pointerX = cursorX = event.clientX
       pointerY = cursorY = event.clientY
-      if (finePointer.matches) cursor.classList.add('is-visible')
+      if (canExplore() && finePointer.matches) cursor.classList.add('is-visible')
     }
     function move(event) {
       pointerX = event.clientX
       pointerY = event.clientY
-      if (!dragging) return
+      if (!dragging || !canExplore()) return
       const distance = event.clientX - previousX
       previousX = event.clientX
       dragVelocity = distance * .01
@@ -311,13 +500,16 @@ export function initPortfolioGallery(section) {
     function release(event) {
       if (dragging && event?.pointerId != null && gallery.hasPointerCapture(event.pointerId)) gallery.releasePointerCapture(event.pointerId)
       dragging = false
+      activePointer = undefined
       speed = .002
     }
     gallery.addEventListener('pointerenter', enter, { signal: events.signal })
     gallery.addEventListener('pointermove', move, { signal: events.signal })
     gallery.addEventListener('pointerdown', event => {
       if (event.button !== 0 || event.target.closest('button')) return
+      if (!requestExplore()) return
       dragging = true
+      activePointer = event.pointerId
       previousX = event.clientX
       speed = 0
       gallery.setPointerCapture(event.pointerId)
@@ -348,6 +540,9 @@ export function initPortfolioGallery(section) {
     }
     return () => {
       alive = false
+      emitPhotoFrame(null)
+      emitPhotoEdges([])
+      revealListeners.delete(revealChanged)
       videoEvents.abort()
       videoPanels.forEach(({ video }) => playVideo(video, false))
       events.abort()
@@ -383,11 +578,74 @@ export function initPortfolioGallery(section) {
       else list.append(fragment)
     }
     const compactEvents = new AbortController()
+    const nativeCards = [...list.children]
+    const originalCardStyles = new Map(nativeCards.map(card => [card, Object.fromEntries(
+      ['transform', 'opacity', 'willChange'].map(property => [property, card.style[property]]),
+    )]))
+    const nativeCaptions = [...list.querySelectorAll('figcaption')]
+    const originalCaptionStyles = new Map(nativeCaptions.map(caption => [caption, {
+      opacity: caption.style.opacity, visibility: caption.style.visibility,
+    }]))
+    const originalAnchor = list.style.overflowAnchor
+    list.style.overflowAnchor = 'none'
+    let entryScroll = null
+    function restoreEntry() {
+      nativeCards.forEach(card => Object.assign(card.style, originalCardStyles.get(card)))
+    }
+    function revealNative(open = revealProgress) {
+      const complete = open >= .999 || !section.classList.contains('is-unfolding')
+      nativeCaptions.forEach(caption => {
+        if (complete) Object.assign(caption.style, originalCaptionStyles.get(caption))
+        else {
+          caption.style.visibility = open < .94 ? 'hidden' : 'visible'
+          caption.style.opacity = String(easeOpen((open - .94) / .06))
+        }
+      })
+      if (complete) { restoreEntry(); list.style.scrollSnapType = ''; return }
+      list.style.scrollSnapType = 'none'
+      const resting = period()
+      if (entryScroll === null) entryScroll = resting
+      list.scrollLeft = resting + (entryScroll - resting) * easeOpen((open - .7) / .3)
+      // Keep the native photos full size too; only the section's opacity and
+      // vertical handoff animate, with no compact stack or scale interpolation.
+      restoreEntry()
+    }
+    function publishPhotoFrame() {
+      if (disposed || !section.classList.contains('is-unfolding')) { emitPhotoFrame(null); return }
+      const photo = items[0].querySelector('.portfolio__placeholder')
+      const rect = photo.getBoundingClientRect()
+      const cardRect = items[0].getBoundingClientRect()
+      const style = getComputedStyle(items[0])
+      const matrix = new DOMMatrix(style.transform)
+      const scale = matrix.a || 1
+      const origin = style.transformOrigin.split(' ').map(Number.parseFloat)
+      const restRect = {
+        x: cardRect.left - matrix.e - origin[0] * (1 - scale) + (rect.left - cardRect.left) / scale,
+        y: cardRect.top - matrix.f - origin[1] * (1 - scale) + (rect.top - cardRect.top) / scale,
+        width: rect.width / scale, height: rect.height / scale,
+      }
+      const radius = (Number.parseFloat(getComputedStyle(photo).borderTopLeftRadius) || 0) * rect.width / photo.offsetWidth
+      emitPhotoFrame({ x: rect.left, y: rect.top, width: rect.width, height: rect.height }, radius, restRect)
+    }
+    function publishPhotoEdges() {
+      if (disposed || canExplore()) { emitPhotoEdges([]); return }
+      const photos = [...list.querySelectorAll('.portfolio__placeholder')].map(photo => photo.getBoundingClientRect())
+        .filter(rect => Math.min(rect.right, innerWidth) - Math.max(rect.left, 0) > 80
+          && Math.min(rect.bottom, innerHeight) - Math.max(rect.top, 0) > 60)
+        .sort((a, b) => Math.abs((a.left + a.right) / 2 - innerWidth / 2) - Math.abs((b.left + b.right) / 2 - innerWidth / 2))
+        .slice(0, revealProgress > .55 ? 3 : 1)
+      const edges = photos.map(rect => [
+        ...[.16, .36, .64, .84].map(u => ({ x: rect.left + rect.width * u, y: rect.top + 1.5 })),
+        { x: rect.left + 1.5, y: rect.top + rect.height * .2 },
+        { x: rect.right - 1.5, y: rect.top + rect.height * .2 },
+      ])
+      emitPhotoEdges(Array.from({ length: 6 }, (_, index) => edges.map(points => points[index])).flat().filter(visibleEdgePoint))
+    }
     const videos = [...list.querySelectorAll('video')]
     const visibleVideos = new Set()
     let galleryVisible = false
     const syncVideos = () => videos.forEach(video => {
-      const visible = galleryVisible && visibleVideos.has(video) && !document.hidden
+      const visible = canExplore() && galleryVisible && visibleVideos.has(video) && !document.hidden
       if (!visible || !context.conditions.reduce) playVideo(video, visible)
     })
     videos.forEach(video => {
@@ -409,15 +667,37 @@ export function initPortfolioGallery(section) {
     galleryVisibility.observe(gallery)
     document.addEventListener('visibilitychange', syncVideos, { signal: compactEvents.signal })
     let gesture, scrollTween
-    const stride = () => items[0].getBoundingClientRect().width + 20
+    // Intrinsic card widths keep the looping row independent of entry motion.
+    const stride = () => (Number.parseFloat(getComputedStyle(items[0]).width) || items[0].offsetWidth) + 20
     const period = () => stride() * items.length
-    const reset = () => { scrollTween?.kill(); list.style.scrollSnapType = ''; list.scrollLeft = period() }
+    const reset = () => {
+      scrollTween?.kill()
+      list.style.scrollSnapType = canExplore() ? '' : 'none'
+      list.scrollLeft = period()
+      entryScroll = list.scrollLeft
+      if (!canExplore()) revealNative()
+      publishPhotoFrame()
+      publishPhotoEdges()
+    }
     const resetFrame = requestAnimationFrame(reset)
+    const revealChanged = (open, previous) => {
+      if (open < .985 && previous >= .985) {
+        entryScroll = list.scrollLeft
+        scrollTween?.kill()
+        gesture = undefined
+      }
+      revealNative(open)
+      publishPhotoFrame()
+      publishPhotoEdges()
+      syncVideos()
+    }
+    revealListeners.add(revealChanged)
+    section.addEventListener('portfolio:photo-frame-request', publishPhotoFrame, { signal: compactEvents.signal })
     let timer
     const wrap = () => {
       clearTimeout(timer)
       timer = setTimeout(() => {
-        if (gesture?.horizontal || scrollTween?.isActive()) return
+        if (!canExplore() || gesture?.horizontal || scrollTween?.isActive()) return
         const width = period()
         if (list.scrollLeft < width * .5) list.scrollLeft += width
         else if (list.scrollLeft > width * 1.5) list.scrollLeft -= width
@@ -438,6 +718,7 @@ export function initPortfolioGallery(section) {
     step = direction => settle(Math.round(list.scrollLeft / stride()) + direction)
     list.addEventListener('pointerdown', event => {
       if (event.button !== 0) return
+      if (!requestExplore()) return
       scrollTween?.kill()
       gesture = { x: event.clientX, y: event.clientY, left: list.scrollLeft, horizontal: false }
     }, { signal: compactEvents.signal })
@@ -467,6 +748,12 @@ export function initPortfolioGallery(section) {
     list.addEventListener('pointerup', endGesture, { signal: compactEvents.signal })
     list.addEventListener('pointercancel', endGesture, { signal: compactEvents.signal })
     return () => {
+      revealListeners.delete(revealChanged)
+      emitPhotoFrame(null)
+      emitPhotoEdges([])
+      restoreEntry()
+      nativeCaptions.forEach(caption => Object.assign(caption.style, originalCaptionStyles.get(caption)))
+      list.style.overflowAnchor = originalAnchor
       clearTimeout(timer)
       cancelAnimationFrame(resetFrame)
       compactEvents.abort()
@@ -482,21 +769,27 @@ export function initPortfolioGallery(section) {
     }
   })
 
-  previous.addEventListener('click', () => step(-1), { signal })
-  next.addEventListener('click', () => step(1), { signal })
-  pauseButton.addEventListener('click', () => togglePause(), { signal })
+  previous.addEventListener('click', () => { if (requestExplore()) step(-1) }, { signal })
+  next.addEventListener('click', () => { if (requestExplore()) step(1) }, { signal })
+  pauseButton.addEventListener('click', () => { if (requestExplore()) togglePause() }, { signal })
   gallery.addEventListener('keydown', event => {
     if (event.target.closest('button')) return
     if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
       event.preventDefault()
+      if (!requestExplore()) return
       step(event.key === 'ArrowRight' ? 1 : -1)
     } else if (event.key === ' ' && gallery.classList.contains('is-webgl')) {
       event.preventDefault()
+      if (!requestExplore()) return
       togglePause()
     }
   }, { signal })
+  // The renderer loads after the reveal's pin has measured the HTML fallback.
+  // Re-measure its final height so the pin cannot leave an empty page below it.
+  const layoutRefresh = requestAnimationFrame(() => { if (!disposed) ScrollTrigger.refresh() })
   return () => {
     disposed = true
+    cancelAnimationFrame(layoutRefresh)
     controller.abort()
     resize.disconnect()
     media.revert()

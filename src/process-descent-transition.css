@@ -1,0 +1,46 @@
+.process-descent-transition {
+  position: fixed;
+  z-index: 6;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.process-descent-transition[hidden] { display: none; }
+.process-descent-transition canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+/* A common water colour dissolves the seam as the silt landing passes it. */
+#diptyque-together,
+#diptyque-process { --process-boundary-water: var(--work-ocean-deep, #000b2f); }
+#diptyque-together::after {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  inset: auto 0 0;
+  height: min(32svh, 300px);
+  background: linear-gradient(180deg, transparent, var(--process-boundary-water) 96%);
+  pointer-events: none;
+}
+#diptyque-process.project-process.has-process-exhibition,
+#diptyque-process.project-process.has-process-exhibition > .project-details__stage {
+  background-color: var(--process-boundary-water);
+}
+#diptyque-process.has-process-exhibition.is-project-paged > .project-details__stage::before {
+  -webkit-mask-image: linear-gradient(180deg, transparent 0 3%, #000 28%);
+  mask-image: linear-gradient(180deg, transparent 0 3%, #000 28%);
+}
+#diptyque-process.has-process-exhibition #diptyque-planning::before {
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 24%);
+  mask-image: linear-gradient(180deg, transparent, #000 24%);
+}
+#diptyque-process.has-process-exhibition:not(.is-project-paged) #diptyque-planning {
+  background-color: var(--process-boundary-water);
+}
+@media (prefers-reduced-motion: reduce) {
+  .process-descent-transition { display: none; }
+}

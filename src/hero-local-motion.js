@@ -35,15 +35,18 @@ float contactRipple(vec2 p, float phase) {
   return line * life * broken;
 }
 
-float armContactRipple(vec2 p, float phase) {
-  float age = fract(elapsed * 0.19 + phase);
-  vec2 radii = vec2(135.0 + age * 125.0, 3.0 + age * 18.0);
-  vec2 q = (p - vec2(1003.0, 687.0)) / radii;
+float armContactRipple(vec2 p, vec2 center, vec2 reach, float phase, float rate) {
+  float age = fract(elapsed * rate + phase);
+  vec2 radii = reach + vec2(reach.x * 0.9, 15.0) * age;
+  vec2 local = p - center;
+  local.y += sin(local.x * 0.043 - elapsed * 0.7 + phase * 5.0) * 0.45;
+  vec2 q = local / radii;
   float edge = abs(length(q) - 1.0) * radii.y;
-  float line = 1.0 - smoothstep(0.25, 1.1, edge);
-  float life = smoothstep(0.0, 0.2, age) * (1.0 - smoothstep(0.6, 1.0, age));
-  float broken = smoothstep(-0.2, 0.7,
-    sin(p.x * 0.054 + phase * 8.0) + sin(p.x * 0.127 - age * 1.6) * 0.4);
+  float line = 1.0 - smoothstep(0.3, 1.35, edge);
+  float life = smoothstep(0.0, 0.17, age) * (1.0 - smoothstep(0.55, 1.0, age));
+  float broken = 0.3 + 0.7 * smoothstep(-0.3, 0.7,
+    sin(p.x * 0.054 + phase * 8.0 - elapsed * 0.18)
+      + sin(p.x * 0.127 - age * 1.6) * 0.4);
   return line * life * broken;
 }
 
@@ -56,9 +59,10 @@ void main() {
 
   // The water matte includes a still margin around every painted object.
   // Source samples stay inside clear water even at the widest wave phase.
-  vec2 waterRegions = texture2D(oceanMask, uv).rg;
-  float waterMask = waterRegions.r;
-  float armWater = waterRegions.g;
+  vec3 waterRegions = texture2D(oceanMask, uv).rgb;
+  float hairMask = waterRegions.b;
+  float waterMask = waterRegions.r * (1.0 - hairMask);
+  float armWater = waterRegions.g * (1.0 - hairMask);
   float depth = clamp((p.y - 454.0) / 487.0, 0.0, 1.0);
   float swell = sin(p.y * 0.043 + p.x * 0.007 - elapsed * 0.72);
   float ripple = sin(p.x * 0.028 + p.y * 0.065 - elapsed * 1.05);
@@ -70,10 +74,16 @@ void main() {
   // blends into the wider sea swell without moving the hand or its outline.
   float armPhase = elapsed * 0.95 - (p.x - 940.0) * 0.028;
   vec2 armShift = vec2(
-    sin(armPhase - 0.6) * 0.8,
-    sin(armPhase) * 1.2 + sin(p.x * 0.051 - elapsed * 1.3) * 0.25
+    sin(armPhase - 0.6) * 1.2,
+    sin(armPhase) * 2.0 + sin(p.x * 0.051 - elapsed * 1.3) * 0.4
   );
   waterShift += armShift * armWater * (1.0 - waterMask);
+  float hairPhase = elapsed * 0.72 - (p.y - 430.0) * 0.016;
+  vec2 hairShift = vec2(
+    sin(hairPhase) * 3.6 + sin(elapsed * 0.43 + p.y * 0.022) * 0.75,
+    sin(elapsed * 0.64 - p.y * 0.013) * 1.25
+  );
+  waterShift += hairShift * hairMask;
   float waterLine = 669.8 + sin((p.x - 250.0) * 0.012) * 1.3 + sin(elapsed * 0.96) * 0.55;
   vec2 waterUV = clamp(uv - waterShift / vec2(1672.0, 941.0), 0.0, 1.0);
   vec3 original = texture2D(painting, waterUV).rgb;
@@ -97,13 +107,18 @@ void main() {
   }
 
   if (armWater > 0.001) {
-    float wake = armContactRipple(p, 0.0) + armContactRipple(p, 0.34) * 0.85
-      + armContactRipple(p, 0.67) * 0.65;
+    // Separate shallow wakes keep the elbow, forearm and fingertips in contact
+    // with the sea. Staggered phases let each arc fade before it starts again.
+    float wake = armContactRipple(p, vec2(864.0, 683.0), vec2(35.0, 2.4), 0.0, 0.22)
+      + armContactRipple(p, vec2(957.0, 687.0), vec2(78.0, 3.0), 0.31, 0.19) * 0.8
+      + armContactRipple(p, vec2(1082.0, 696.5), vec2(39.0, 2.5), 0.63, 0.24)
+      + armContactRipple(p, vec2(1134.0, 690.0), vec2(27.0, 2.3), 0.17, 0.21) * 0.75;
+    wake += armContactRipple(p, vec2(973.0, 689.0), vec2(112.0, 4.0), 0.81, 0.19) * 0.5;
     float glints = pow(0.5 + sin(p.y * 0.68 - elapsed * 1.15
       + sin(p.x * 0.024) * 0.6) * 0.5, 18.0)
       * smoothstep(0.3, 0.85, sin(p.x * 0.089 + elapsed * 0.23) * 0.5 + 0.5);
-    float reflected = (wake * 0.27 + glints * 0.075) * armWater;
-    color = mix(color, vec3(0.64, 0.8, 0.96), clamp(reflected, 0.0, 0.34));
+    float reflected = (wake * 0.4 + glints * 0.1) * armWater;
+    color = mix(color, vec3(0.64, 0.8, 0.96), clamp(reflected, 0.0, 0.48));
   }
 
   float tailLength = clamp((580.0 - p.x) / 390.0, 0.0, 1.0);

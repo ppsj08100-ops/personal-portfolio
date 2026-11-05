@@ -1,11 +1,13 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { initProjectPreview } from './project-preview.js'
+import { initProjectCurrentTransition } from './project-current-transition.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const defaultTiming = { entry: .18, slide: 1, between: .3, exit: .22 }
 const voyageTiming = { entry: .3, slide: 1, between: .65, exit: .45 }
+const processTiming = { entry: .62, slide: 1, between: .36, exit: .3 }
 const transitionProperties = ['--chapter-visibility', '--chapter-copy-visibility', '--chapter-travel-x', '--chapter-settle-y', '--chapter-scale']
 
 function smoothRange(start, end, value) {
@@ -19,17 +21,18 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
   const track = stage?.querySelector('.project-pages')
   if (!track) return () => {}
   const isVoyage = chapter.classList.contains('project-details--voyage')
-  const timing = isVoyage ? voyageTiming : defaultTiming
+  const timing = isVoyage ? voyageTiming : chapter.id === 'diptyque-process' ? processTiming : defaultTiming
   const voyage = chapter.closest('.ocean-type.has-sail')
   const runwayHost = voyage || chapter
   const destroyPreviews = [...chapter.querySelectorAll('[data-project-preview]')].map(initProjectPreview)
 
   const pages = [...track.children]
+  const currentTransition = isVoyage ? initProjectCurrentTransition(stage, pages) : null
   const sceneRoots = isVoyage ? pages.map(page => page.matches('.project-overview, .sail-project--seabed')
     ? page : page.querySelector('.sail-project--seabed')) : []
   const duration = timing.entry + (pages.length - 1) * timing.slide
     + Math.max(0, pages.length - 2) * timing.between + timing.exit
-  const pageProgress = pages.map((_, index) => index === 0 ? 0
+  const pageProgress = pages.map((_, index) => index === 0 ? chapter.id === 'diptyque-process' ? timing.entry / 2 / duration : 0
     : (timing.entry + index * timing.slide + (index - 1) * timing.between
       + (index === pages.length - 1 ? timing.exit : timing.between) / 2) / duration)
   const navigation = stage.querySelector('.project-pages__navigation')
@@ -59,6 +62,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
   stageObserver.observe(stage)
 
   function clearSceneTransition() {
+    currentTransition?.reset()
     sceneRoots.forEach(scene => transitionProperties.forEach(property => scene?.style.removeProperty(property)))
     chapter.style.removeProperty('--chapter-shift')
     chapter.style.removeProperty('--chapter-flow')
@@ -99,6 +103,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
   function nativePage() {
     if (activeTrigger || destroyed) return
     lastPage = track.scrollLeft / Math.max(1, track.clientWidth)
+    currentTransition?.render(lastPage, track.clientWidth)
     select(Math.max(0, Math.min(pages.length - 1, Math.round(lastPage))))
   }
 
@@ -180,6 +185,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
       track.style.transform = `translate3d(${(-position.page * stage.clientWidth).toFixed(3)}px,0,0)`
       chapter.dataset.projectPage = position.page.toFixed(4)
       renderSceneTransition(position.page)
+      currentTransition?.render(position.page, stage.clientWidth)
       select(Math.max(0, Math.min(pages.length - 1, Math.round(position.page))))
       syncReadiness()
     }
@@ -242,6 +248,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
     gsap.removeEventListener('matchMedia', restore)
     media.revert()
     clearSceneTransition()
+    currentTransition?.destroy()
     pages.forEach(page => { page.inert = false })
     delete chapter.dataset.projectPageIndex
   }
