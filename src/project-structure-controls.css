@@ -1,0 +1,10 @@
+.project-structure__meetings { display: flex; flex-wrap: wrap; gap: 8px 20px; margin: 0 0 8px; }
+.project-structure__meetings[hidden] { display: none; }
+.project-structure__meetings button { min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px solid transparent; background: transparent; color: #97afbf; font: 300 12px/1.5 'Intro Pretendard', var(--font-family-body); cursor: pointer; }
+.project-structure__meetings button[aria-pressed='true'] { border-bottom-color: #c9dee7; color: #e0e9e9; }
+.project-structure__meetings button:focus-visible { outline: 1px solid #c4dce9; outline-offset: 4px; }
+.project-structure__dialog :is(.project-structure__meetings, .project-structure__flows) { gap: 8px 20px; margin: 0 0 16px; }
+.project-structure__dialog :is(.project-structure__meetings, .project-structure__flows) button { min-height: 44px; padding: 8px 0; border: 0; border-bottom: 1px solid transparent; border-radius: 0; background: transparent; color: #64746a; font: 400 12px/1.5 'Intro Pretendard', var(--font-family-body); }
+.project-structure__dialog :is(.project-structure__meetings, .project-structure__flows) button[aria-pressed='true'] { color: #273d33; border-bottom-color: #5f7469; }
+.project-structure__dialog .project-structure__flows button > span { color: #788276; }
+.project-structure__dialog :is(.project-structure__meetings, .project-structure__flows) button:focus-visible { outline: 2px solid #536e83; outline-offset: 3px; }

@@ -6,7 +6,7 @@ const clamp = value => Math.max(0, Math.min(1, Number(value) || 0))
 export function initPersonalBrandSurface() {
   const records = [...document.querySelectorAll('.brand-archive')].map((section, index) => {
     const stage = section.querySelector('.brand-archive__water-stage')
-    if (!stage || !stage.querySelector('button.brand-archive__preview')) return null
+    if (!stage || !stage.querySelector('.brand-archive__preview')) return null
     return {
       section, stage, index,
       content: ['header', 'body', 'footer']

@@ -1,14 +1,15 @@
 import './process-exhibition.css'
 import './process-exhibition-simple.css'
+import './process-copy.css'
 
 const scenes = [
   { id: 'diptyque-planning', motif: 'plinth', variant: 'ruined-plinth', title: '01 / LEAN CANVAS' },
-  { id: 'diptyque-research', motif: 'city', variant: 'lost-city-facade', complements: ['competition', 'threec', 'brand', 'steep'], title: '02 / BRAND RESEARCH' },
+  { id: 'diptyque-research', motif: 'city', variant: 'lost-city-facade', complements: ['competition', 'threec', 'brand', 'steep'], companionCount: 0, title: '02 / BRAND RESEARCH' },
   { id: 'diptyque-interviews', motif: 'head', variant: 'reclining-head', sourceGallery: true, companionCount: 2, title: '03 / USER RESEARCH' },
-  { id: 'diptyque-definition', motif: 'backhand', variant: 'resting-backhand', complements: ['journey', 'persona', 'canvas'], title: '04 / UX STRATEGY' },
-  { id: 'diptyque-structure', motif: 'city', variant: 'broken-city-colonnade', complements: ['flow', 'menu', 'requirements', 'meeting'], title: '05 / INFORMATION ARCHITECTURE' },
-  { id: 'diptyque-visual', motif: 'city', variant: 'city-medallion', complements: ['mindmap', 'moodboard'], title: '06 / VISUAL DIRECTION' },
-  { id: 'diptyque-screens', motif: 'fountain', variant: 'buried-fountain', complements: ['system', 'components', 'wireframe'], companionCount: 2, title: '07 / SCREEN DESIGN' },
+  { id: 'diptyque-definition', motif: 'backhand', variant: 'resting-backhand', userGallery: true, companionCount: 2, title: '04 / UX STRATEGY' },
+  { id: 'diptyque-structure', motif: 'city', variant: 'broken-city-colonnade', structureGallery: true, companionCount: 2, title: '05 / INFORMATION ARCHITECTURE' },
+  { id: 'diptyque-visual', motif: 'city', variant: 'city-medallion', companionCount: 0, title: '06 / VISUAL DIRECTION' },
+  { id: 'diptyque-screens', motif: 'fountain', variant: 'buried-fountain', companionCount: 0, title: '07 / SCREEN DESIGN' },
 ]
 
 function make(tag, className) {
@@ -51,8 +52,8 @@ function complementaryDocument(source) {
   return clone
 }
 
-// Keep the original interactive documents. Side displays provide different
-// source material, while the two unique canvas notes remain real text nodes.
+// Keep the original interactive documents. Side displays show complementary
+// source material, including the two other original lean canvases.
 export function initProcessExhibition(chapter) {
   const track = chapter?.querySelector(':scope > .project-details__stage > .project-pages')
   if (!track) return () => {}
@@ -80,14 +81,7 @@ export function initProcessExhibition(chapter) {
     for (const record of records) {
       const readoutHeight = record.readout.offsetHeight
       if (readoutHeight) record.visual.style.setProperty('--process-readout-height', `${Math.ceil(readoutHeight) + 12}px`)
-      if (record.planning) {
-        const preview = record.visual.querySelector('[data-lean-preview]')
-        if (preview) fitDocument(preview, '--process-document-scale')
-        record.visual.querySelectorAll('.process-device__note-fit').forEach(note => {
-          const viewport = note.parentElement
-          if (note.offsetHeight && viewport.clientHeight) viewport.style.setProperty('--process-note-scale', Math.min(1, (viewport.clientHeight - 12) / note.offsetHeight))
-        })
-      } else {
+      if (!record.planning) {
         record.visual.querySelectorAll('.project-research__paper').forEach(preview => fitDocument(preview, '--process-document-scale'))
         record.companions.forEach(side => fitDocument(side.viewport, '--process-mini-scale'))
       }
@@ -118,6 +112,7 @@ export function initProcessExhibition(chapter) {
       count: visual.getAttribute('data-process-frame-count'),
       readoutHeight: visual.style.getPropertyValue('--process-readout-height'),
       readoutHeightPriority: visual.style.getPropertyPriority('--process-readout-height'),
+      structureRatios: ['--structure-main-ratio', '--structure-side-ratio-1', '--structure-side-ratio-2'].map(name => [name, visual.style.getPropertyValue(name), visual.style.getPropertyPriority(name)]),
       eyebrow: eyebrow?.textContent,
     }
     page.classList.add('process-exhibition-page')
@@ -141,8 +136,6 @@ export function initProcessExhibition(chapter) {
     const readout = make('div', 'process-exhibit__readout')
     if (planning) {
       const document = visual.querySelector('.project-planning__document')
-      const user = visual.querySelector('.project-planning__note--user')
-      const solution = visual.querySelector('.project-planning__note--solution')
       opener = document?.querySelector('[data-lean-open]')
       if (opener) {
         openerPlaceholder = window.document.createComment('original canvas zoom action')
@@ -152,23 +145,22 @@ export function initProcessExhibition(chapter) {
       const caption = make('div', 'process-exhibit__caption')
       const label = make('span', '')
       label.textContent = 'LEAN PRODUCT CANVAS / v3'
-      label.lang = 'en'
+      label.dataset.leanCaption = ''
       caption.append(label)
       if (opener) caption.append(opener)
       readout.append(caption)
-      for (const [note, kind] of [[user, 'phone'], [solution, 'tablet']]) {
-        if (!note) continue
+      for (const [i, kind] of ['tablet', 'phone'].entries()) {
         const side = device(kind)
-        side.shell.classList.add('process-exhibit__note-card')
-        const fit = make('div', 'process-device__note-fit')
-        fit.append(note)
-        side.viewport.append(fit)
+        side.shell.classList.add('process-exhibit__companion', 'process-exhibit__canvas-companion')
+        if (i) side.shell.classList.add('process-exhibit__canvas-companion--two')
+        side.shell.inert = true
+        side.shell.setAttribute('aria-hidden', 'true')
         companions.push(side)
       }
     } else {
       visual.querySelectorAll(':scope > .project-research__panel').forEach(panel => monitor.viewport.append(panel))
-      visual.querySelectorAll(':scope > .project-research__caption, :scope > .project-definition__users').forEach(element => readout.append(element))
-      for (let i = 0; i < (scene.companionCount || 1); i++) {
+      visual.querySelectorAll(':scope > .project-research__caption, :scope > .project-definition__users, :scope > [data-structure-flows], :scope > [data-structure-meetings]').forEach(element => readout.append(element))
+      for (let i = 0; i < (scene.companionCount ?? 1); i++) {
         const side = device(i ? 'phone' : 'tablet')
         side.shell.classList.add('process-exhibit__companion')
         side.shell.inert = true
@@ -181,8 +173,78 @@ export function initProcessExhibition(chapter) {
     visual.append(monitor.shell, ...companions.map(side => side.shell), readout)
     const record = { page, layout, visual, previous, planning, originalChildren, opener, openerPlaceholder, eyebrow, readout, companions }
     records.push(record)
-    if (!planning) {
+    if (planning) {
+      const sources = [...page.querySelector('#diptyque-canvas-document').content.querySelectorAll('[data-lean-document]')]
+      const syncCanvases = () => {
+        const active = page.dataset.leanActive || '1'
+        const selected = sources.find(image => image.dataset.leanDocument === active)
+        const label = readout.querySelector('[data-lean-caption]')
+        label.textContent = `${selected.dataset.leanLabel} · Lean Canvas v3`
+        sources.filter(image => image.dataset.leanDocument !== active).forEach((image, i) => {
+          companions[i].shell.dataset.leanDocument = image.dataset.leanDocument
+          companions[i].viewport.replaceChildren(image.cloneNode(true))
+        })
+        queueFit()
+      }
+      const state = new MutationObserver(syncCanvases)
+      state.observe(page, { attributes: true, attributeFilter: ['data-lean-active'] })
+      record.state = state
+      syncCanvases()
+    } else {
       const syncComplements = () => {
+        if (scene.structureGallery) {
+          const key = page.dataset.researchActive
+          const source = monitor.viewport.querySelector(`[data-research-preview='${key}'] > .structure-document`)
+          if (!source) return
+          const mainImage = [...source.querySelectorAll('img')].find(image => !image.hidden)
+          const setRatio = (frame, width, height, variable) => {
+            const ratio = String(width / height)
+            frame.shell.style.setProperty('--structure-source-ratio', ratio)
+            frame.viewport.style.setProperty('--structure-source-ratio', ratio)
+            visual.style.setProperty(variable, ratio)
+          }
+          setRatio(monitor, mainImage ? Number(mainImage.getAttribute('width')) : 960, mainImage ? Number(mainImage.getAttribute('height')) : 600, '--structure-main-ratio')
+          let images = []
+          if (key === 'meeting') images = [...source.querySelectorAll('[data-structure-meeting-source]')].filter(image => image.hidden)
+          if (key === 'flow') images = [...source.querySelectorAll('[data-structure-flow-image]')].filter(image => image.hidden)
+          visual.dataset.processFrameCount = String(1 + images.length)
+          companions.forEach((side, i) => {
+            const image = images[i]
+            side.shell.hidden = !image
+            if (!image) return
+            const document = make('article', 'research-document')
+            const preview = image.cloneNode(true)
+            preview.hidden = false
+            document.append(preview)
+            side.shell.dataset.processPreviewKey = key
+            if (key === 'flow') side.shell.dataset.structureFlow = image.dataset.structureFlowImage
+            else delete side.shell.dataset.structureFlow
+            side.viewport.replaceChildren(complementaryDocument(document))
+            setRatio(side, Number(image.getAttribute('width')), Number(image.getAttribute('height')), `--structure-side-ratio-${i + 1}`)
+          })
+          queueFit()
+          return
+        }
+        if (scene.userGallery) {
+          const key = page.dataset.researchActive
+          const source = monitor.viewport.querySelector(`[data-research-preview='${key}'] > .definition-document`)
+          if (!source) return
+          const images = [...source.querySelectorAll('[data-definition-image]')]
+          const otherUsers = images.filter(image => image.hidden)
+          companions.forEach((side, i) => {
+            const image = otherUsers[i]
+            if (!image) return
+            const document = make('article', 'research-document')
+            const preview = image.cloneNode(true)
+            preview.hidden = false
+            document.append(preview)
+            side.shell.dataset.processPreviewKey = key
+            side.shell.dataset.definitionUser = image.dataset.definitionImage
+            side.viewport.replaceChildren(complementaryDocument(document))
+          })
+          queueFit()
+          return
+        }
         if (scene.sourceGallery) {
           const survey = page.dataset.researchActive === 'survey'
           visual.dataset.processFrameCount = survey ? '3' : '1'
@@ -201,7 +263,7 @@ export function initProcessExhibition(chapter) {
           queueFit()
           return
         }
-        const keys = scene.complements.filter(key => key !== page.dataset.researchActive)
+        const keys = (scene.complements ?? []).filter(key => key !== page.dataset.researchActive)
         companions.forEach((side, i) => {
           const key = keys[i]
           const source = monitor.viewport.querySelector(`[data-research-preview='${key}'] > .research-document`)
@@ -215,6 +277,11 @@ export function initProcessExhibition(chapter) {
       const state = new MutationObserver(syncComplements)
       state.observe(monitor.viewport, { attributes: true, subtree: true, attributeFilter: ['hidden'] })
       record.state = state
+      if (scene.structureGallery) {
+        const galleryState = new MutationObserver(syncComplements)
+        galleryState.observe(page, { attributes: true, attributeFilter: ['data-structure-meeting'] })
+        record.galleryState = galleryState
+      }
       syncComplements()
     }
   }
@@ -244,6 +311,7 @@ export function initProcessExhibition(chapter) {
     document.body.classList.toggle('has-process-exhibition-in-view', hadInViewClass)
     for (const record of records) {
       record.state?.disconnect()
+      record.galleryState?.disconnect()
       if (record.openerPlaceholder?.isConnected && record.opener) record.openerPlaceholder.replaceWith(record.opener)
       record.visual.replaceChildren(...record.originalChildren)
       record.visual.className = record.previous.visualClass
@@ -266,6 +334,10 @@ export function initProcessExhibition(chapter) {
       else record.visual.setAttribute('data-process-frame-count', record.previous.count)
       if (record.previous.readoutHeight) record.visual.style.setProperty('--process-readout-height', record.previous.readoutHeight, record.previous.readoutHeightPriority)
       else record.visual.style.removeProperty('--process-readout-height')
+      for (const [name, value, priority] of record.previous.structureRatios) {
+        if (value) record.visual.style.setProperty(name, value, priority)
+        else record.visual.style.removeProperty(name)
+      }
       record.visual.querySelectorAll('[data-lean-preview], .project-research__paper').forEach(preview => preview.style.removeProperty('--process-document-scale'))
     }
   }

@@ -1,25 +1,22 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createTidalSpatialField } from './tidal-spatial-field.js'
-import { initWorkWaterAtmosphere } from './work-water-atmosphere.js'
+import './selected-title-type.css'
 
 gsap.registerPlugin(ScrollTrigger)
-
 const clamp = gsap.utils.clamp(0, 1)
-const smooth = value => value * value * (3 - 2 * value)
+const smooth = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
 
-// Keep the introduction's existing clock: the first project's descent chains
-// from work-tidal-type.end. Only the title/water field owns the glyph motion.
+// Preserve the first project's clock while the complete title travels left.
 export function initOceanType(section) {
   const opening = section?.querySelector('.ocean-type__opening')
   const stage = section?.querySelector('.ocean-type__title-stage')
-  const canvas = stage?.querySelector('[data-work-title-wave]')
   const runs = [...section?.querySelectorAll('[data-work-title-run]') || []]
+  const title = stage?.querySelector('.ocean-type__text')
   const caption = stage?.querySelector('.ocean-entry__caption')
-  if (!opening || !stage || !canvas || !runs.length) return () => {}
+  if (!opening || !stage || !title || !runs.length) return () => {}
 
-  const destroyAtmosphere = initWorkWaterAtmosphere(section, { opening: stage, variant: 'selected' })
-
+  const hadEditorial = section.classList.contains('is-editorial-type')
+  section.classList.add('is-editorial-type')
   const media = gsap.matchMedia()
   let destroyed = false
   let refreshFrame = 0
@@ -32,7 +29,7 @@ export function initOceanType(section) {
   }
 
   media.add({ motion: '(prefers-reduced-motion: no-preference)', tall: '(min-height: 700px)' }, context => {
-    if (!context.conditions.motion) return
+    if (!context.conditions.motion) { stage.dataset.typeMotion = 'static'; return }
     const controller = new AbortController()
     const { signal } = controller
     const tall = context.conditions.tall
@@ -41,25 +38,31 @@ export function initOceanType(section) {
     const originalRunway = section.style.getPropertyValue('--ocean-type-runway')
     const originalPriority = section.style.getPropertyPriority('--ocean-type-runway')
     const originalProgress = section.dataset.entryProgress
-    const captionStyle = caption?.getAttribute('style')
+    const styles = [title, caption, ...runs].filter(Boolean).map(element => [element, element.getAttribute('style')])
     const state = { progress: 0 }
-    let active = true
-    let observedSize = ''
+    let active = true, observedSize = '', travelDistance = 0
     section.classList.add(mode)
-    const field = createTidalSpatialField({ stage, canvas, runs })
 
     function render() {
       if (!active) return
-      const progress = clamp(state.progress)
-      section.dataset.entryProgress = progress.toFixed(4)
-      field.render(progress)
-      if (caption) caption.style.opacity = (1 - smooth(clamp((progress - .25) / .2))).toFixed(4)
+      const p = clamp(state.progress)
+      const travel = smooth((p - .15) / .85)
+      section.dataset.entryProgress = p.toFixed(4)
+      stage.dataset.typeProgress = p.toFixed(4)
+      stage.dataset.typeMotion = 'scroll'
+      title.style.translate = `${-travelDistance * travel}px 0px`
+      title.style.opacity = String(1 - smooth((p - .94) / .06))
+      if (caption) caption.style.opacity = String(1 - smooth((p - .5) / .35))
     }
     function measure() {
       if (!active) return
       if (tall) section.style.setProperty('--ocean-type-runway', `${Math.round(stage.clientHeight * 1.2)}px`)
+      // Refresh against the centered title, never its current travelling box.
+      title.style.translate = '0px 0px'
+      const titleBox = title.getBoundingClientRect()
+      const stageBox = stage.getBoundingClientRect()
+      travelDistance = Math.max(0, titleBox.right - stageBox.left + stageBox.width * .09)
       observedSize = `${stage.clientWidth}:${stage.clientHeight}`
-      field.measure()
       render()
     }
     measure()
@@ -79,7 +82,6 @@ export function initOceanType(section) {
       if (`${stage.clientWidth}:${stage.clientHeight}` !== observedSize) requestRefresh()
     })
     dimensions.observe(stage)
-    field.ready.then(() => { if (active && !destroyed) measure() })
     document.fonts?.addEventListener('loadingdone', requestRefresh, { signal })
     document.fonts?.ready.then(() => { if (active && !destroyed) requestRefresh() })
     requestRefresh()
@@ -90,15 +92,14 @@ export function initOceanType(section) {
       dimensions.disconnect()
       animation.scrollTrigger?.kill()
       animation.kill()
-      field.destroy()
       if (!hadMode) section.classList.remove(mode)
       if (originalRunway) section.style.setProperty('--ocean-type-runway', originalRunway, originalPriority)
       else section.style.removeProperty('--ocean-type-runway')
       if (originalProgress === undefined) delete section.dataset.entryProgress
       else section.dataset.entryProgress = originalProgress
-      if (caption) {
-        if (captionStyle === null) caption.removeAttribute('style')
-        else caption.setAttribute('style', captionStyle)
+      for (const [element, style] of styles) {
+        if (style === null) element.removeAttribute('style')
+        else element.setAttribute('style', style)
       }
       if (!destroyed) requestRefresh()
     }
@@ -107,7 +108,9 @@ export function initOceanType(section) {
   return () => {
     destroyed = true
     media.revert()
-    destroyAtmosphere()
+    if (!hadEditorial) section.classList.remove('is-editorial-type')
+    delete stage.dataset.typeProgress
+    delete stage.dataset.typeMotion
     cancelAnimationFrame(refreshFrame)
   }
 }

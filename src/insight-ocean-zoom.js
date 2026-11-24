@@ -10,8 +10,8 @@ gsap.registerPlugin(ScrollTrigger)
 
 const SVG = 'http://www.w3.org/2000/svg'
 const SCENES = {
-  desktop: '/images/insight-shipwreck-treasure-subdued.png',
-  mobile: '/images/insight-shipwreck-treasure-subdued-mobile.png',
+  desktop: '/images/insight-shipwreck-treasure-hd-v2.png',
+  mobile: '/images/insight-shipwreck-treasure-hd-v2-mobile.png',
 }
 const clamp = value => Math.max(0, Math.min(1, value))
 const smooth = (start, end, value) => {
@@ -93,6 +93,9 @@ export function initInsightOceanZoom(section) {
     let sizeKey = ''
     const plane = section.closest('#app')?.querySelector('.ocean-transition')
     const originalPlaneOpacity = plane?.style.opacity ?? ''
+    const originalPlaneTranslate = plane?.style.translate ?? ''
+    const originalCenterInset = section.style.getPropertyValue('--insight-center-inset')
+    const centerInsetPriority = section.style.getPropertyPriority('--insight-center-inset')
     const state = { progress: 0 }
     const root = node('svg', {
       class: 'insight-section__portal', 'aria-hidden': 'true', focusable: 'false',
@@ -118,7 +121,7 @@ export function initInsightOceanZoom(section) {
     const bubbles = createInsightBubbles(mobileArtwork.matches, true)
     const sunrays = createInsightSunrays(mobileArtwork.matches, true)
     const motes = createInsightMotes(mobileArtwork.matches, true)
-    world.append(water, sunrays.element, motes.element, bubbles.element, light.element, life.element)
+    world.append(water, light.element, motes.element, bubbles.element, sunrays.element, life.element)
     const ink = node('image', {
       preserveAspectRatio: 'xMidYMid slice',
       mask: 'url(#insight-ocean-letter-mask)', class: 'insight-section__ocean-ink',
@@ -151,6 +154,16 @@ export function initInsightOceanZoom(section) {
       selectArtwork().catch(() => {})
     }
 
+    function holdConnectedCurrent() {
+      if (!plane || !active || disposed || state.progress >= .205) return
+      // During the centered reading hold the connected water stem follows D.
+      // Its original position is restored when this motion mode is disposed.
+      const held = Math.max(0, Math.min(voyage.offsetHeight - stage.clientHeight,
+        -voyage.getBoundingClientRect().top))
+      plane.style.translate = `0px ${held}px`
+    }
+    window.addEventListener('scroll', holdConnectedCurrent, { passive: true })
+
     function render() {
       const progress = state.progress
       const zoom = smooth(.2, .86, progress)
@@ -161,19 +174,26 @@ export function initInsightOceanZoom(section) {
       letters.setAttribute('transform', `translate(${x} ${y}) scale(${scale}) translate(${-focus.x} ${-focus.y})`)
       heading.style.opacity = `${1 - smooth(.14, .22, progress)}`
       ink.style.opacity = `${smooth(.02, .14, progress) * (1 - smooth(.86, .98, progress))}`
-      world.style.opacity = `${smooth(.78, .88, progress)}`
-      life.setActive(progress > .78)
-      bubbles.setActive(progress > .78)
-      sunrays.setActive(progress > .78)
-      motes.setActive(progress > .78)
+      const cameraOwnsWorld = world.parentElement?.classList.contains('approach-helm-zoom__camera')
+      world.style.opacity = cameraOwnsWorld ? '1' : `${smooth(.78, .88, progress)}`
+      const visible = cameraOwnsWorld || progress > .78
+      life.setActive(visible)
+      bubbles.setActive(visible)
+      sunrays.setActive(visible)
+      motes.setActive(visible)
       luster.style.opacity = `${.2 * smooth(.02, .14, progress) * (1 - smooth(.4, .7, progress))}`
       if (plane) plane.style.opacity = `${1 - smooth(.08, .2, progress)}`
+      holdConnectedCurrent()
     }
 
     function measure() {
       if (!active || !measureContext) return
       width = stage.clientWidth
       height = stage.clientHeight
+      const inset = `${Math.max(0, (height - heading.offsetHeight) / 2)}px`
+      if (section.style.getPropertyValue('--insight-center-inset') !== inset) {
+        section.style.setProperty('--insight-center-inset', inset)
+      }
       const stageBox = stage.getBoundingClientRect()
       root.setAttribute('viewBox', `0 0 ${width} ${height}`)
       for (const element of [mask, ink]) {
@@ -297,6 +317,7 @@ export function initInsightOceanZoom(section) {
       exitFade?.kill()
       artworkRequest++
       mobileArtwork.removeEventListener('change', queueArtwork)
+      window.removeEventListener('scroll', holdConnectedCurrent)
       root.remove()
       life.destroy()
       bubbles.destroy()
@@ -305,8 +326,13 @@ export function initInsightOceanZoom(section) {
       world.remove()
       section.classList.remove('is-immersive')
       section.style.removeProperty('--insight-zoom-runway')
+      if (originalCenterInset) section.style.setProperty('--insight-center-inset', originalCenterInset, centerInsetPriority)
+      else section.style.removeProperty('--insight-center-inset')
       heading.style.removeProperty('opacity')
-      if (plane) plane.style.opacity = originalPlaneOpacity
+      if (plane) {
+        plane.style.opacity = originalPlaneOpacity
+        plane.style.translate = originalPlaneTranslate
+      }
       refresh()
     }
     return cleanup

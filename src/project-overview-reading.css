@@ -11,7 +11,7 @@
   height: auto;
   min-height: 100svh;
 }
-#diptyque-details .project-overview[data-overview-reading]:is([data-exhibition-index='3'], [data-exhibition-index='5'], [data-exhibition-index='7']) {
+#diptyque-details .project-overview[data-overview-reading]:is([data-exhibition-index='3'], [data-exhibition-index='5'], [data-exhibition-index='7'], [data-reading-layout='copy-first']) {
   grid-template-columns: minmax(0, 1fr) minmax(0, 1.12fr);
   grid-template-areas: 'copy scene';
 }
@@ -170,7 +170,7 @@
 }
 @media (max-width: 899px) {
   #diptyque-details .project-overview[data-overview-reading],
-  #diptyque-details .project-overview[data-overview-reading]:is([data-exhibition-index='3'], [data-exhibition-index='5'], [data-exhibition-index='7']) {
+  #diptyque-details .project-overview[data-overview-reading]:is([data-exhibition-index='3'], [data-exhibition-index='5'], [data-exhibition-index='7'], [data-reading-layout='copy-first']) {
     grid-template-columns: minmax(0, 1fr);
     grid-template-areas: 'masthead' 'scene' 'copy';
     align-content: start;
@@ -184,7 +184,7 @@
     justify-content: space-between;
     gap: 15px;
     height: auto;
-    min-height: 44px;
+    min-height: 24px;
     margin-bottom: 12px;
   }
   #diptyque-details .project-overview[data-overview-reading] .project-overview__chapter {
@@ -196,19 +196,6 @@
     white-space: normal;
     transform: none;
   }
-  #diptyque-details .project-overview[data-overview-reading] .project-overview__actions {
-    position: static;
-    flex-direction: row;
-    flex-wrap: nowrap;
-    gap: 6px;
-  }
-  #diptyque-details .project-overview[data-overview-reading] .project-overview__actions a {
-    gap: 12px;
-    min-width: 0;
-    padding: 10px 12px;
-    font-size: 8px;
-  }
-  #diptyque-details .project-overview[data-overview-reading] .project-overview__actions svg { width: 12px; height: 12px; }
   #diptyque-details .project-overview[data-overview-reading] .project-exhibition {
     width: min(108%, 620px);
     height: clamp(210px, 29svh, 320px);

@@ -16,6 +16,18 @@
   visibility: hidden;
 }
 
+.skill-reef__art--continuous { display: none; }
+.skill-reef__art--continuous > img { left: 0; width: 100%; }
+
+@media (min-width: 1200px) {
+  .has-continuous-coral > .skill-reef__art--continuous {
+    display: block;
+    --reef-fade-start: 1.6666667%;
+    --reef-fade-end: 98.3333333%;
+  }
+  .has-continuous-coral > .skill-reef__rock > .skill-reef__art { visibility: hidden; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .skill-reef__coral-current {
     display: none;

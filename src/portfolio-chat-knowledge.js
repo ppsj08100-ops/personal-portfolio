@@ -6,9 +6,11 @@ export const SITE_KNOWLEDGE = `박서진(PARK SEOJIN)의 개인 포트폴리오 
 
 딥디크(DIPTYQUE): 2026년 9월 1일부터 9월 30일까지 진행한 4인 팀의 브랜드 웹 리뉴얼입니다. 제품을 찾는 경험을 넘어 향과 이야기를 경험하는 온라인 공간을 제안했습니다. 박서진은 향수 이야기 페이지의 디자인, 화면 구현, 인터랙션을 맡았습니다. 빈티지 콜라주, 종이 질감, 큰 세리프 제목과 비대칭 이미지·본문 배치를 사용했습니다. 세 향의 이야기를 챕터로 나누고 이야기 → 장면 카드 → 향 노트 순서로 구성했습니다. 스크롤에 맞춰 콜라주와 제목을 보여주고, 모바일 배치와 카드·향 노트 조작을 조정했습니다. 전체 팀 사이트를 혼자 제작했다는 내용은 없습니다. 웹사이트: https://mbc-teamproject-alpha.vercel.app/ . 본인 작업 페이지: https://mbc-teamproject-alpha.vercel.app/about/fragrances-story . 사이트 내 프로젝트: #diptyque-details, 기여 내용: #diptyque-contribution, 기획 과정: #diptyque-process.
 
-디젤(DIESEL): 개인 작업인 브랜드 웹사이트 메인 페이지 UI 디자인입니다. 흑백 이미지와 대형 타이포그래피로 자유롭고 대담한 브랜드 정체성을 표현했습니다. 브랜드 비주얼 콘셉트 정리, 메인 페이지 정보 구조, 이미지와 타이포그래피, 가방·컬렉션 콘텐츠 레이아웃을 Figma로 디자인했습니다. 제작 범위는 메인 페이지 UI 디자인이며, 실제 서비스 구현·배포를 했다고 명시되어 있지 않습니다. 사이트 내 작업: #diesel-project. Figma: https://www.figma.com/design/6GPeNKxLjIVbw8NeE8h3xO/?node-id=923-2692 .
+딥디크 팀 사이트의 다른 서브페이지도 별도 전시로 소개합니다. 04 GALERIE는 향의 풍경에서 관련 제품으로 이어지는 갤러리이며 https://mbc-teamproject-alpha.vercel.app/galerie 에 연결됩니다. 05 BRAND HISTORY는 패브릭·오브제·캔들·메종으로 이어지는 창작의 역사를 소개하며 https://mbc-teamproject-alpha.vercel.app/about/history 에 연결됩니다. 06 FOR THE PLANET은 자연·원료 조달·에코디자인·지역사회에 대한 브랜드의 약속을 담고 https://mbc-teamproject-alpha.vercel.app/about/for-the-planet 에 연결됩니다. 이 세 페이지를 박서진 개인 담당 작업으로 소개하지 않습니다. 직접 담당한 향수 이야기 페이지는 07 MY CONTRIBUTION에서 설명합니다.
 
-레페토(REPETTO): 개인 작업인 브랜드 웹사이트 메인 페이지 UI 디자인입니다. 발레에서 비롯된 우아한 움직임을 부드러운 핑크와 아이보리, 세리프 타이포그래피로 표현했습니다. 브랜드 소개와 슈즈·발레웨어 컬렉션을 이미지와 여백의 흐름으로 연결했습니다. 브랜드 비주얼 콘셉트, 정보 구조, 색과 타이포그래피, 콘텐츠 레이아웃을 Figma로 디자인했습니다. 제작 범위는 메인 페이지 UI 디자인입니다. 사이트 내 작업: #repetto-project. Figma: https://www.figma.com/design/Xp7ykV2Wn7lnueIo1fhhMl/?node-id=475-804 .
+디젤(DIESEL): 개인 작업인 브랜드 웹사이트 리디자인입니다. 흑백 이미지와 대형 타이포그래피로 자유롭고 대담한 브랜드 정체성을 표현했습니다. 브랜드 비주얼 콘셉트 정리, 메인 페이지 정보 구조, 이미지와 타이포그래피, 가방·컬렉션 콘텐츠 레이아웃을 Figma로 디자인하고 웹사이트를 구현·배포했습니다. 웹사이트: https://diesel-web-redesign.vercel.app/ . 사이트 내 작업: #diesel-project.
+
+레페토(REPETTO): 개인 작업인 브랜드 웹사이트 리디자인입니다. 발레에서 비롯된 우아한 움직임을 부드러운 핑크와 아이보리, 세리프 타이포그래피로 표현했습니다. 브랜드 소개와 슈즈·발레웨어 컬렉션을 이미지와 여백의 흐름으로 연결했습니다. 브랜드 비주얼 콘셉트, 정보 구조, 색과 타이포그래피, 콘텐츠 레이아웃을 Figma로 디자인하고 웹사이트를 구현·배포했습니다. 웹사이트: https://repetto-web-redesign.vercel.app/ . 사이트 내 작업: #repetto-project.
 
 영상 작업: 성경김 곱창김은 캐릭터와 제품의 매력을 담은 영상입니다. 시슬리 SOIR DE LUNE은 달빛과 꽃으로 향의 분위기를 표현한 영상입니다. DIESEL 웹사이트 히어로 영상도 소개합니다. 사이트 내 영상: #short-form-contents.
 
@@ -31,10 +33,12 @@ export const STARTER_QUESTIONS = [
 const actions = {
   works: { label: '작업 둘러보기', href: '#design-code' },
   diptyque: { label: '딥디크 보기', href: '#diptyque-details', project: '#diptyque-details', page: 0 },
-  contribution: { label: '내가 맡은 페이지 보기', href: '#diptyque-contribution', project: '#diptyque-details', page: 6 },
+  contribution: { label: '내가 맡은 페이지 보기', href: '#diptyque-contribution', project: '#diptyque-details', page: 7 },
   diptyqueWebsite: { label: '향수 이야기 사이트', href: 'https://mbc-teamproject-alpha.vercel.app/about/fragrances-story' },
   diesel: { label: '디젤 디자인 보기', href: '#diesel-overview', project: '#personal-brand-gallery', page: 0 },
   repetto: { label: '레페토 디자인 보기', href: '#repetto-overview', project: '#personal-brand-gallery', page: 1 },
+  dieselWebsite: { label: '디젤 웹사이트 보기', href: 'https://diesel-web-redesign.vercel.app/' },
+  repettoWebsite: { label: '레페토 웹사이트 보기', href: 'https://repetto-web-redesign.vercel.app/' },
   skills: { label: 'Skills & tools 보기', href: '#tools-skills' },
   video: { label: '영상 작업 보기', href: '#short-film-01', project: '#short-form-contents', page: 0 },
   about: { label: '소개 더 보기', href: '#capability-cards' },
@@ -46,7 +50,7 @@ const actions = {
 
 const answers = {
   works: {
-    text: '대표 작업은 딥디크 팀 웹 리뉴얼과 디젤·레페토의 개인 메인 페이지 디자인이에요. 딥디크에서는 향수 이야기 페이지의 디자인과 구현, 인터랙션을 맡았고, 디젤·레페토는 Figma로 만든 UI 디자인입니다. 숏폼 영상 작업도 함께 볼 수 있어요.',
+    text: '대표 작업은 딥디크 팀 웹 리뉴얼과 디젤·레페토의 개인 웹사이트 리디자인이에요. 딥디크에서는 향수 이야기 페이지의 디자인과 구현, 인터랙션을 맡았고, 디젤·레페토는 메인 페이지 UI 디자인부터 웹사이트 구현·배포까지 진행했습니다. 숏폼 영상 작업도 함께 볼 수 있어요.',
     actions: [actions.diptyque, actions.diesel, actions.repetto, actions.video],
   },
   'diptyque-role': {
@@ -58,12 +62,12 @@ const answers = {
     actions: [actions.diptyque, actions.contribution],
   },
   diesel: {
-    text: 'DIESEL은 흑백 이미지와 대형 타이포그래피로 브랜드의 자유롭고 대담한 분위기를 표현한 개인 작업이에요. 브랜드 철학에서 가방·컬렉션으로 이어지는 흐름을 Figma 메인 페이지 UI로 디자인했습니다.',
-    actions: [actions.diesel],
+    text: 'DIESEL은 흑백 이미지와 대형 타이포그래피로 브랜드의 자유롭고 대담한 분위기를 표현한 개인 웹사이트 리디자인이에요. 브랜드 철학에서 가방·컬렉션으로 이어지는 메인 페이지 UI를 Figma로 디자인하고 웹사이트로 구현·배포했습니다.',
+    actions: [actions.diesel, actions.dieselWebsite],
   },
   repetto: {
-    text: 'REPETTO는 발레의 우아한 움직임을 핑크·아이보리와 세리프 타이포그래피로 표현한 개인 작업이에요. 브랜드 이야기와 슈즈·발레웨어 컬렉션을 이미지와 여백으로 연결한 Figma 메인 페이지 UI 디자인입니다.',
-    actions: [actions.repetto],
+    text: 'REPETTO는 발레의 우아한 움직임을 핑크·아이보리와 세리프 타이포그래피로 표현한 개인 웹사이트 리디자인이에요. 브랜드 이야기와 슈즈·발레웨어 컬렉션을 연결한 메인 페이지 UI를 Figma로 디자인하고 웹사이트로 구현·배포했습니다.',
+    actions: [actions.repetto, actions.repettoWebsite],
   },
   skills: {
     text: '디자인·프런트엔드·협업·인터랙션·AI·영상의 6개 카테고리에 18개 도구를 소개하고 있어요. Figma와 Photoshop으로 화면을 설계하고, HTML·CSS·JavaScript·React로 구현합니다. GSAP·ScrollTrigger로 움직임을 다듬고 Premiere Pro·CapCut으로 영상도 편집해요.',

@@ -61,9 +61,10 @@
   overflow: hidden;
   pointer-events: none;
 }
-.insight-section__ocean-ink { filter: brightness(1.65); }
+.insight-section__ocean-ink { filter: none; }
 .insight-section.is-immersive {
   --insight-font-size: min(clamp(2.125rem, 11.05vw, 13.6rem), 20.91svh);
+  --insight-center-inset: max(0px, calc(50svh - var(--insight-font-size) * 1.88));
   grid-template-columns: minmax(0, 1fr);
 }
 .insight-section__ocean-world {
@@ -118,11 +119,7 @@
 }
 .insight-section__shipwreck-glow {
   opacity: .42;
-  animation: insight-shipwreck-light 8.8s cubic-bezier(.45, 0, .55, 1) infinite;
-}
-@keyframes insight-shipwreck-light {
-  0%, 100% { opacity: .42; }
-  50% { opacity: .86; }
+  animation: none;
 }
 .insight-section__marine-life,
 .insight-section__marine-life > svg,
@@ -164,13 +161,7 @@
   transform-origin: 0 0;
 }
 .insight-section__sunrays.is-animated .insight-sunray {
-  animation: insight-sunray-breathe var(--ray-duration) ease-in-out var(--ray-delay) infinite;
-  animation-play-state: paused;
-}
-.insight-section__sunrays.is-active .insight-sunray { animation-play-state: running; }
-@keyframes insight-sunray-breathe {
-  0%, 100% { opacity: .77; transform: skewX(calc(var(--ray-sway) * -.55)) scaleX(.985); }
-  50% { opacity: .95; transform: skewX(var(--ray-sway)) scaleX(1.015); }
+  animation: none;
 }
 .insight-section.is-immersive .insight-section__voyage {
   z-index: 1;
@@ -178,11 +169,14 @@
   grid-row: 1;
   align-self: start;
   width: calc(100% + var(--container-gutter) * 2);
-  height: calc(100svh + var(--insight-zoom-runway, 190svh));
+  height: calc(100svh + var(--insight-zoom-runway, 190svh) + var(--insight-center-inset));
+  margin-top: calc(-1 * var(--insight-center-inset));
   margin-inline: calc(-1 * var(--container-gutter));
 }
 .insight-section.is-immersive .insight-section__stage {
   position: sticky;
+  display: grid;
+  place-items: center;
   top: 0;
   height: 100svh;
   overflow: clip;

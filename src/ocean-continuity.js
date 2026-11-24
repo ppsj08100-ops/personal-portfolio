@@ -12,7 +12,6 @@ export function initOceanContinuity(root = document) {
   let active = true
   let frame = 0
   const hosts = [
-    ['#capabilities', -2, '24%', '72%', '.55'],
     ['.ocean-type__title-stage', 0, '24%', '35%', '.65'],
     ['[data-work-chapter="team"]', 0, '24%', '40%', '.6'],
     ['#diptyque-process > .project-details__stage', -1, '24%', '38%', '.6'],
@@ -20,8 +19,6 @@ export function initOceanContinuity(root = document) {
     ['#personal-brand-gallery > .project-details__stage', -3, '24%', '36%', '.6'],
     ['#short-form-intro', 0, '24%', '46%', '.75'],
     ['#short-form-contents > .project-details__stage', -3, '22%', '35%', '.6'],
-    ['[data-skills-stage]', -2, '24%', '35%', '.65'],
-    ['#tools-skills > .tools-skills__inner', -2, '24%', '38%', '.5'],
     ['[data-about-stage]', 0, '24%', '35%', '.65'],
   ]
   for (const [selector, level, x, y, strength] of hosts) {

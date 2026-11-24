@@ -1,11 +1,10 @@
 .project-structure__archive-label { display: flex; justify-content: space-between; gap: 16px; margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid #8aafc92b; color: #91adc1; font: 400 9px/1.5 var(--insight-font-family); letter-spacing: .12em; }
 .project-structure .project-research__panel { border-color: #aec9db48; border-radius: 3px; }
 .project-structure .project-research__paper { aspect-ratio: 8 / 5; }
-/* Each sheet is an untouched Figma export, fitted inside the preview mat. */
-.structure-document { display: grid; place-items: center; width: 1440px; height: 900px; padding: 0; background: #f7f6f3; }
-.structure-document > img { display: block; width: auto; height: auto; max-width: 1368px; max-height: 828px; object-fit: contain; }
+/* Fit the untouched source itself, without adding a landscape preview mat. */
+.structure-document { display: block; width: var(--structure-document-width, 1440px); height: var(--structure-document-height, 900px); padding: 0; background: #f7f6f3; }
+.structure-document > img { display: block; width: 100%; height: auto; max-width: none; max-height: none; object-fit: contain; }
 .structure-document > img[hidden] { display: none; }
-.structure-document--menu > img { max-width: 1440px; max-height: 900px; }
 .project-structure__flows { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 18px; }
 .project-structure__flows[hidden] { display: none; }
 .project-structure__flows > button { display: inline-flex; align-items: center; gap: 7px; min-height: 44px; padding: 6px 0; border: 0; border-bottom: 1px solid transparent; color: #86a2b7; background: transparent; font: 400 11px/1.5 var(--font-family-body); cursor: pointer; }
@@ -28,6 +27,96 @@
 .project-structure__image-tools > p { flex-basis: 100%; margin: 0; color: #788276; font-size: 11px; line-height: 1.7; }
 .project-process__navigation > button > b, .project-process__navigation > button > em { font: inherit; }
 .project-process .project-process__navigation > button { display: flex; justify-content: center; align-items: center; gap: 4px; }
+
+/* Each archive type has its own composition; every screen keeps the full source. */
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit {
+  --process-scene-height: clamp(440px, 76svh, 700px);
+  --structure-frame-inset: 10px;
+  --structure-gap: clamp(16px, 2cqw, 24px);
+  --structure-drop: max(0px, min(clamp(44px, 7svh, 76px), calc(18svh - var(--process-readout-height) + 8px)));
+  --structure-space: calc(var(--process-scene-height) - var(--process-air-lift) - 24px);
+  --structure-main-width: min(66cqw, calc((var(--structure-space) - var(--structure-frame-inset)) * (var(--structure-main-ratio, 16 / 9)) + var(--structure-frame-inset)));
+  --structure-side-width: 28cqw;
+  --structure-main-height: calc((var(--structure-main-width) - var(--structure-frame-inset)) / (var(--structure-main-ratio, 16 / 9)) + var(--structure-frame-inset));
+  --structure-side-height: calc((var(--structure-side-width) - var(--structure-frame-inset)) / (var(--structure-side-ratio-1, 16 / 9)) + var(--structure-frame-inset));
+  --structure-group-height: max(var(--structure-main-height), var(--structure-side-height));
+  --structure-group-width: calc(var(--structure-main-width) + var(--structure-gap) + var(--structure-side-width));
+  --structure-group-left: calc((100% - var(--structure-group-width)) / 2);
+  --structure-group-top: calc(var(--process-scene-height) - var(--process-air-lift) - var(--structure-group-height) + var(--structure-drop));
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-device--monitor {
+  left: var(--structure-group-left);
+  top: calc(var(--structure-group-top) + (var(--structure-group-height) - var(--structure-main-height)) / 2);
+  bottom: auto;
+  width: var(--structure-main-width);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__companion {
+  left: calc(var(--structure-group-left) + var(--structure-main-width) + var(--structure-gap));
+  top: calc(var(--structure-group-top) + (var(--structure-group-height) - var(--structure-side-height)) / 2);
+  bottom: auto;
+  width: var(--structure-side-width);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__companion[hidden] { display: none; }
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-device__screen { height: auto; aspect-ratio: var(--structure-source-ratio, 16 / 9); }
+#diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__readout { top: calc(100% - var(--process-air-lift) + var(--process-air-caption-clearance) + var(--structure-drop)); }
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='menu'] .process-exhibit {
+  --structure-main-width: min(94cqw, calc((var(--structure-space) - var(--structure-frame-inset)) * (var(--structure-main-ratio, 16 / 9)) + var(--structure-frame-inset)));
+  --structure-group-width: var(--structure-main-width);
+  --structure-group-height: var(--structure-main-height);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='flow'] .process-exhibit {
+  --structure-main-width: min(58cqw, calc((var(--structure-space) - var(--structure-frame-inset)) * (var(--structure-main-ratio, 2180 / 3426)) + var(--structure-frame-inset)));
+  --structure-side-width: calc((var(--structure-main-height) - var(--structure-gap) - 20px) / (1 / (var(--structure-side-ratio-1, 2554 / 3648)) + 1 / (var(--structure-side-ratio-2, 2200 / 3200))) + var(--structure-frame-inset));
+  --structure-group-height: var(--structure-main-height);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='flow'] .process-exhibit__companion { top: var(--structure-group-top); }
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='flow'] .process-exhibit__companion.process-device--phone { top: calc(var(--structure-group-top) + var(--structure-side-height) + var(--structure-gap)); }
+/* Matching frames keep the three records equal; originals fit without distortion. */
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='meeting'] .process-exhibit {
+  --structure-meeting-frame-ratio: .7;
+  --structure-main-width: min(calc((96cqw - var(--structure-gap) * 2) / 3), calc((var(--structure-space) - var(--structure-frame-inset)) * var(--structure-meeting-frame-ratio) + var(--structure-frame-inset)));
+  --structure-side-width: var(--structure-main-width);
+  --structure-side-two-width: var(--structure-main-width);
+  --structure-main-height: calc((var(--structure-main-width) - var(--structure-frame-inset)) / var(--structure-meeting-frame-ratio) + var(--structure-frame-inset));
+  --structure-side-height: var(--structure-main-height);
+  --structure-group-height: var(--structure-main-height);
+  --structure-group-width: calc(var(--structure-main-width) * 3 + var(--structure-gap) * 2);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='meeting'] .process-device__screen { aspect-ratio: var(--structure-meeting-frame-ratio); }
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='meeting'] .process-exhibit__companion.process-device--phone {
+  left: calc(var(--structure-group-left) + var(--structure-main-width) + var(--structure-side-width) + var(--structure-gap) * 2);
+  top: var(--structure-group-top);
+  width: var(--structure-side-two-width);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='requirements'] .process-exhibit {
+  --structure-main-width: min(94cqw, calc((var(--structure-space) - var(--structure-frame-inset)) * (var(--structure-main-ratio, 2420 / 3957)) + var(--structure-frame-inset)));
+  --structure-group-width: var(--structure-main-width);
+  --structure-group-height: var(--structure-main-height);
+}
+@media (max-width: 899px) {
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit {
+    --process-air-lift: 0px;
+    --structure-drop: 0px;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 16px;
+    height: auto;
+    padding: 16px 4% 0;
+    margin-bottom: calc(var(--process-readout-height) + 40px);
+  }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-device { position: relative; inset: auto; width: 100%; aspect-ratio: auto; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-device--monitor { grid-area: 1 / 1 / 2 / -1; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='flow'] .process-device--monitor { width: 86%; justify-self: center; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='meeting'] .process-device--monitor { width: calc((100% - 16px) / 2); justify-self: center; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure[data-research-active='requirements'] .process-device--monitor { width: 94%; justify-self: center; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__companion { grid-area: 2 / 1; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__companion.process-device--phone { grid-area: 2 / 2; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure:is([data-research-active='flow'], [data-research-active='meeting']) .process-exhibit__companion,
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure:is([data-research-active='flow'], [data-research-active='meeting']) .process-exhibit__companion.process-device--phone { inset: auto; width: 100%; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure :is([data-process-frame-count='1'], [data-process-frame-count='2']) .process-exhibit__companion { grid-column: 1 / -1; width: 80%; justify-self: center; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-structure .process-exhibit__readout { top: calc(100% + 20px); }
+}
 @media (max-width: 767px) {
   .project-structure__archive-label { margin-bottom: 12px; padding-bottom: 12px; font-size: 8px; }
   .project-structure__flows { gap: 4px 13px; margin-top: 12px; }

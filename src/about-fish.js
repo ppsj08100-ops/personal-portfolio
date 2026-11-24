@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { createFishSwimmer } from './about-fish-swim.js'
+import { createAboutFishBubbles } from './about-fish-bubbles.js'
 
 const clamp = gsap.utils.clamp(0, 1)
 const smooth = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
@@ -20,6 +21,7 @@ export function initAboutFish(section, portfolio) {
     angle: gsap.quickSetter(node, 'rotation', 'deg'),
     opacity: gsap.quickSetter(node, 'opacity'),
   }))
+  const bubbles = createAboutFishBubbles(layer)
   let width = 0
   let height = 0
   let progress = 0
@@ -173,7 +175,7 @@ export function initAboutFish(section, portfolio) {
     }
   }
 
-  function paint() {
+  function paint(deltaSeconds = 0) {
     const current = poses.map((pose, index) => {
       const animated = { ...pose, stroke: stroke + (index ? 2.2 : .35), waveStrength: .18 + activity * .24 }
       const next = portfolio?.classList.contains('is-unfolding') ? leaveFrame(fish[index], animated) : animated
@@ -181,6 +183,7 @@ export function initAboutFish(section, portfolio) {
       return next
     })
     swimmer?.update(current)
+    bubbles.update(current, deltaSeconds)
   }
   function tick(now) {
     frame = 0
@@ -194,7 +197,7 @@ export function initAboutFish(section, portfolio) {
     }
     motionProgress = progress
     lastTime = now
-    paint()
+    paint(dt)
     frame = requestAnimationFrame(tick)
   }
   function syncVisibility() {
@@ -202,6 +205,7 @@ export function initAboutFish(section, portfolio) {
     const running = (inView || crossing) && !document.hidden && poses.some(pose => pose.opacity > .002)
     if (running) boot()
     swimmer?.setVisible(running)
+    bubbles.setVisible(running)
     if (running && !frame) { lastTime = 0; motionProgress = progress; frame = requestAnimationFrame(tick) }
     if (!running) { cancelAnimationFrame(frame); frame = 0; lastTime = 0; motionProgress = progress; activity = 0 }
   }
@@ -254,6 +258,7 @@ export function initAboutFish(section, portfolio) {
   function measure() {
     width = stage.clientWidth
     height = stage.clientHeight
+    bubbles.resize(width, height)
     fish.forEach(item => {
       item.width = item.node.offsetWidth
       item.height = item.node.offsetHeight
@@ -273,6 +278,7 @@ export function initAboutFish(section, portfolio) {
       controller.abort()
       observer.disconnect()
       swimmer?.destroy()
+      bubbles.destroy()
       restoreLayer()
       section.classList.remove('is-fish-swimming')
       gsap.set(nodes, { clearProps: 'transform,opacity' })

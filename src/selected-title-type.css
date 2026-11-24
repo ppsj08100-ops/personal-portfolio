@@ -1,0 +1,32 @@
+/* One centered line travels left; the first work keeps its own scenery. */
+#design-code.is-editorial-type {
+  --selected-title-size: min(10.8vw, 25svh);
+}
+#design-code.is-editorial-type .ocean-entry__scene,
+#design-code.is-editorial-type .ocean-type__title-stage > .ocean-continuity__water,
+#design-code.is-editorial-type .ocean-type__title-stage > .work-water-atmosphere {
+  display: none;
+}
+#design-code.is-editorial-type .ocean-type__title-stage { background: #020b1d; }
+/* The first exhibit's playback belongs to the exhibit after its arrival. */
+#design-code.is-descent-ready .sail-project:not(.is-readable) .project-story__playback {
+  visibility: hidden;
+  pointer-events: none;
+}
+#design-code.is-editorial-type .ocean-type__text {
+  flex-direction: row;
+  align-items: center;
+  gap: .24em;
+  line-height: 1.08;
+  letter-spacing: -.035em;
+  text-shadow: none;
+}
+#design-code.is-editorial-type .ocean-type__text > [data-work-title-run] { color: #dce6ee; }
+#design-code.is-editorial-type .ocean-entry__caption {
+  top: calc(46% + var(--selected-title-size) * .54 + clamp(28px, 4svh, 40px));
+  color: #91a9be;
+  letter-spacing: .2em;
+}
+@media (max-width: 767px) {
+  #design-code.is-editorial-type { --selected-title-size: min(10.6vw, 18svh); }
+}

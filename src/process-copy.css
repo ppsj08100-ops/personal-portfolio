@@ -1,0 +1,100 @@
+/* Process labels follow the same reading hierarchy as the project overview. */
+#diptyque-process.has-process-exhibition .process-copy .process-copy__title {
+  display: block;
+  margin: 0 0 clamp(22px, 3svh, 32px);
+  color: #e1ebf3;
+  font: 400 clamp(40px, min(4.3vw, 8svh), 78px)/1.04 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -.055em;
+  text-align: left;
+}
+.process-copy__title > span { display: block; white-space: normal; }
+.process-copy__title > span:first-child { color: #a9c3d5; }
+.process-copy__summary {
+  margin: 0;
+  color: #e0e9e9;
+  font: 300 clamp(20px, 1.35vw, 24px)/1.55 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.035em;
+  word-break: keep-all;
+}
+#diptyque-process.has-process-exhibition .process-copy :is(.project-research__description, .project-planning__method > p) {
+  max-width: 520px;
+  margin-top: 18px;
+  font-size: clamp(13px, .9vw, 14px);
+  line-height: 1.9;
+  text-wrap: pretty;
+}
+#diptyque-process.has-process-exhibition .process-copy .project-research__tabs { gap: 8px 20px; margin-top: 22px; }
+#diptyque-process.has-process-exhibition .process-copy .project-research__tabs > button {
+  min-height: 44px;
+  padding: 8px 0;
+  border-bottom-color: transparent;
+  color: #97afbf;
+  font-size: 13px;
+  letter-spacing: -.015em;
+}
+#diptyque-process.has-process-exhibition .process-copy .project-research__tabs > button:is([aria-selected='true'], [aria-pressed='true']) { border-bottom-color: #c9dee7; color: #e0e9e9; }
+#diptyque-process.has-process-exhibition .process-copy .project-research__tabs > button:focus-visible { outline: 1px solid #c4dce9; outline-offset: 4px; border-radius: 2px; }
+#diptyque-process.has-process-exhibition [data-structure-flows] { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 0; }
+#diptyque-process.has-process-exhibition [data-structure-flows][hidden] { display: none; }
+#diptyque-process.has-process-exhibition [data-structure-flows] button {
+  min-height: 44px;
+  padding: 6px 10px;
+  border: 1px solid #a4c1d32b;
+  border-radius: 999px;
+  background: #abcde408;
+  color: #97afbf;
+  font: 300 12px/1.5 'Intro Pretendard', var(--font-family-body);
+}
+#diptyque-process.has-process-exhibition [data-structure-flows] button[aria-pressed='true'] { border-color: #a4c1d37a; background: #abcde414; color: #d8e7ef; }
+#diptyque-process.has-process-exhibition [data-structure-flows] button:focus-visible { outline: 1px solid #c4dce9; outline-offset: 3px; }
+.process-dialog__context { margin: 0 0 16px; }
+.process-dialog__context > p { margin: 0; color: #566763; font: 400 13px/1.75 'Intro Pretendard', var(--font-family-body); word-break: keep-all; }
+#diptyque-process.has-process-exhibition .process-copy .project-planning__method { margin-top: 0; }
+#diptyque-process.has-process-exhibition .process-copy .project-planning__direction dl {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+}
+#diptyque-process.has-process-exhibition .process-copy .project-planning__direction dt {
+  color: #a9c4d0;
+  font: 400 8px/1.8 'Julius Sans One', sans-serif;
+  letter-spacing: .07em;
+}
+.process-copy__note {
+  margin: 18px 0 0;
+  color: #92adbd;
+  font: 300 11px/1.75 'Intro Pretendard', var(--font-family-body);
+  word-break: keep-all;
+}
+.process-copy__note[hidden] { display: none; }
+.process-copy__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 24px; }
+.process-copy__reference {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  min-height: 44px;
+  padding: 11px 19px;
+  border: 1px solid #a4c1d361;
+  border-radius: 999px;
+  background: #071b2d66;
+  color: #cbdce7;
+  font: 400 10px/1.4 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .04em;
+  text-decoration: none;
+  transition: border-color .25s, background-color .25s;
+}
+.process-copy__reference:hover { border-color: #c5dbe8; background: #adcede12; }
+.process-copy__reference:focus-visible { outline: var(--focus-ring); outline-offset: 5px; }
+.process-copy__reference svg { width: 14px; height: 14px; stroke: currentColor; stroke-width: 1; }
+@media (min-width: 900px) and (max-height: 800px) {
+  #diptyque-process.has-process-exhibition .process-copy .process-copy__title { margin-bottom: 18px; font-size: clamp(36px, 4vw, 56px); }
+  .process-copy__summary { font-size: 19px; line-height: 1.55; }
+  #diptyque-process.has-process-exhibition .process-copy :is(.project-research__description, .project-planning__method > p) { margin-top: 15px; font-size: 13px; line-height: 1.85; }
+}
+@media (max-width: 899px) {
+  #diptyque-process.has-process-exhibition .process-copy .process-copy__title { font-size: clamp(36px, 8vw, 52px); }
+  .process-copy__summary { font-size: 20px; }
+  #diptyque-process.has-process-exhibition .process-copy .project-planning__direction dl { gap: 12px; }
+  #diptyque-process.has-process-exhibition .process-copy .project-planning__direction dd { font-size: 12px; }
+}

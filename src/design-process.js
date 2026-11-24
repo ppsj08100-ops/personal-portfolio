@@ -1,19 +1,11 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createApproachEditorial } from './approach-editorial.js'
 
 gsap.registerPlugin(ScrollTrigger)
 const clamp = value => Math.max(0, Math.min(1, value))
 const smooth = value => { const t = clamp(value); return t * t * (3 - 2 * t) }
 const orbitAt = value => smooth((value - .22) / .22) + smooth((value - .55) / .22)
-function progressAtOrbit(orbit) {
-  let low = 0, high = 1
-  for (let i = 0; i < 20; i++) {
-    const middle = (low + high) / 2
-    if (orbitAt(middle) < orbit) low = middle
-    else high = middle
-  }
-  return (low + high) / 2
-}
 
 export function initDesignProcess(section) {
   if (!section) return () => {}
@@ -22,22 +14,19 @@ export function initDesignProcess(section) {
   const scenes = [...section.querySelectorAll('[data-approach-scene]')]
   if (!journey || !stage || scenes.length !== 3) return () => {}
   const centers = scenes.map(scene => scene.querySelector('.design-process__center'))
-  const visuals = scenes.map(scene => scene.querySelector('[data-approach-visual]'))
-  const helm = section.querySelector('[data-approach-helm]')
   const lines = scenes.map(scene => [...scene.querySelectorAll('[data-approach-reveal]')])
   const actions = scenes.map(scene => scene.querySelector('[data-approach-action]'))
   const buttons = [...section.querySelectorAll('[data-approach-step]')]
-  const counter = section.querySelector('[data-approach-counter]')
-  const elements = [section, ...scenes, ...centers, ...visuals.filter(Boolean), ...lines.flat(), ...actions]
+  const elements = [section, ...scenes, ...centers, ...lines.flat(), ...actions].filter(Boolean)
   const originals = new Map(elements.map(element => [element, {
     style: element.getAttribute('style'),
     active: element.classList.contains('is-active'),
     hidden: element.getAttribute('aria-hidden'),
     inert: element.hasAttribute('inert'),
+    tabindex: element.getAttribute('tabindex'),
   }]))
   const originalButtons = buttons.map(button => button.getAttribute('aria-current'))
   const originalStep = section.getAttribute('data-active-step')
-  const originalCounter = counter?.textContent
   const controller = new AbortController()
   const { signal } = controller
   const media = gsap.matchMedia()
@@ -54,12 +43,24 @@ export function initDesignProcess(section) {
   let active = -1
   let trigger
   let transition
+  let nativeVisualTrigger
   let refreshFrame = 0
   let hashFrame = 0
   let pendingFocus = -1
   let drag = null
-  let wheelDrag = null
   const state = { progress: 0 }
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)')
+  const editorial = createApproachEditorial(section, {
+    onFrame: frame => renderCopy(state.progress, frame),
+  })
+
+  function paintJourney(progress) {
+    const frame = editorial.setProgress(progress)
+    const orbit = reducedMotion.matches ? Math.round(orbitAt(progress)) : orbitAt(progress)
+    section.dataset.approachProgress = clamp(progress).toFixed(4)
+    if (!pinned && Math.round(orbit) !== active) updateSelection(Math.round(orbit))
+    return frame
+  }
 
   function updateAtmosphere() {
     if (destroyed) return
@@ -75,7 +76,6 @@ export function initDesignProcess(section) {
   function updateSelection(index) {
     active = index
     section.dataset.activeStep = String(index)
-    if (counter) counter.textContent = String(index + 1).padStart(2, '0')
     buttons.forEach(button => {
       if (Number(button.dataset.approachStep) === index) button.setAttribute('aria-current', 'step')
       else button.removeAttribute('aria-current')
@@ -95,42 +95,48 @@ export function initDesignProcess(section) {
   function render(progress) {
     if (destroyed || !pinned) return
     const value = clamp(progress)
+    const frame = paintJourney(value)
+    renderCopy(value, frame)
+  }
+
+  function renderCopy(progress, frame) {
+    if (destroyed || !pinned) return
+    const value = clamp(progress)
     const orbit = orbitAt(value)
-    section.style.setProperty('--approach-wheel-turn', `${(orbit * 120).toFixed(4)}deg`)
     const index = Math.round(orbit)
     if (index !== active) {
       const focusedInOld = active >= 0 && scenes[active].contains(document.activeElement)
       const moveFocus = pendingFocus === index || (focusedInOld && pendingFocus < 0)
-      // Transfer focus before making the departing chapter inert.
+      // The destination receives focus after its delayed copy becomes readable.
       scenes[index].style.visibility = 'visible'
       scenes[index].inert = false
       scenes[index].removeAttribute('aria-hidden')
-      if (moveFocus) {
-        scenes[index].querySelector('h3')?.focus({ preventScroll: true })
-        pendingFocus = -1
-      }
+      if (moveFocus) pendingFocus = index
       updateSelection(index)
     }
     scenes.forEach((scene, position) => {
+      const action = actions[position]
       const distance = position - orbit
-      const opacity = 1 - smooth(Math.abs(distance) * 2)
+      // Entrance time belongs to the creature, so the message can finish
+      // appearing even when the visitor stops between scroll chapters.
+      const opacity = clamp(frame?.copyWeights?.[position] ?? (position === index ? 1 : 0))
       const shift = Math.sign(distance) * (1 - opacity) * 18
-      const artOpacity = distance < 0 ? 1 - smooth(-distance / .6)
-        : distance <= 1 ? 1 - smooth(distance) * .86 : .14 * (1 - smooth((distance - 1) / .18))
       scene.style.opacity = '1'
-      scene.style.visibility = position === index || opacity > .0001 || artOpacity > .0001 ? 'visible' : 'hidden'
+      scene.style.visibility = position === index || opacity > .0001 ? 'visible' : 'hidden'
       scene.style.pointerEvents = position === index && opacity > .8 ? 'auto' : 'none'
-      centers[position].style.opacity = opacity.toFixed(5)
-      if (visuals[position]) {
-        const visual = visuals[position]
-        visual.style.setProperty('--approach-art-x', `${(distance * 68).toFixed(4)}%`)
-        const turn = distance < 0 ? -smooth(-distance / .4) * 45 : clamp(distance) * 30
-        visual.style.setProperty('--approach-art-turn', `${turn.toFixed(4)}deg`)
-        visual.style.setProperty('--approach-art-scale', (1 - clamp(Math.abs(distance)) * .16).toFixed(5))
-        visual.style.setProperty('--approach-art-opacity', clamp(artOpacity).toFixed(5))
+      if (opacity <= .8 && centers[position].contains(document.activeElement)) {
+        buttons.find(button => Number(button.dataset.approachStep) === position)?.focus({ preventScroll: true })
       }
-      for (const line of [...lines[position], actions[position]]) {
+      centers[position].style.opacity = opacity.toFixed(5)
+      centers[position].style.pointerEvents = position === index && opacity > .8 ? 'auto' : 'none'
+      centers[position].setAttribute('aria-hidden', String(opacity < .001))
+      if (action) action.tabIndex = position === index && opacity > .8 ? 0 : -1
+      for (const line of [...lines[position], action].filter(Boolean)) {
         line.style.transform = `translate3d(0, ${shift.toFixed(3)}px, 0)`
+      }
+      if (position === index && pendingFocus === position && opacity > .8) {
+        scene.querySelector('h3')?.focus({ preventScroll: true })
+        pendingFocus = -1
       }
     })
   }
@@ -155,7 +161,7 @@ export function initDesignProcess(section) {
       return
     }
     const target = trigger.start + (trigger.end - trigger.start) * ((index + .5) / 3)
-    if (active === index && focus) {
+    if (active === index && focus && Number(centers[index].style.opacity) > .8) {
       scenes[index].querySelector('h3')?.focus({ preventScroll: true })
       pendingFocus = -1
     }
@@ -185,6 +191,7 @@ export function initDesignProcess(section) {
     refreshFrame = requestAnimationFrame(() => {
       refreshFrame = 0
       if (destroyed) return
+      editorial.refresh?.()
       ScrollTrigger.refresh()
       if (preserved !== null && trigger) {
         window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * preserved, behavior: 'instant' })
@@ -194,15 +201,18 @@ export function initDesignProcess(section) {
   }
 
   function stopPinned() {
-    if (wheelDrag && helm?.hasPointerCapture(wheelDrag.id)) helm.releasePointerCapture(wheelDrag.id)
-    wheelDrag = null
     trigger?.kill()
     trigger = undefined
     transition?.kill()
     gsap.killTweensOf(elements)
     pinned = false
     section.classList.remove('is-pinned')
-    originals.forEach((original, element) => restore(element, 'style', original.style))
+    originals.forEach((original, element) => {
+      restore(element, 'style', original.style)
+      restore(element, 'tabindex', original.tabindex)
+      restore(element, 'aria-hidden', original.hidden)
+    })
+    editorial.refresh?.()
     updateAtmosphere()
     updateSelection(Math.max(0, active))
   }
@@ -211,6 +221,7 @@ export function initDesignProcess(section) {
     pinned = true
     active = -1
     section.classList.add('is-pinned')
+    editorial.refresh?.()
     updateAtmosphere()
     state.progress = 0
     transition = gsap.to(state, {
@@ -259,8 +270,7 @@ export function initDesignProcess(section) {
   // Horizontal swipes advance the collection; vertical touch scrolling remains
   // native and continues to scrub the same three-chapter timeline.
   stage.addEventListener('pointerdown', event => {
-    if (!pinned || event.button !== 0 || event.target.closest('a, button')
-      || !event.target.closest('[data-approach-visual]')) return
+    if (!pinned || event.button !== 0 || event.target.closest('a, button, .design-process__center')) return
     drag = { id: event.pointerId, x: event.clientX, y: event.clientY, index: active }
   }, { signal })
   stage.addEventListener('pointerup', event => {
@@ -272,53 +282,6 @@ export function initDesignProcess(section) {
     navigate(Math.max(0, Math.min(2, start.index + (dx < 0 ? 1 : -1))), { hash: true })
   }, { signal })
   stage.addEventListener('pointercancel', () => { drag = null }, { signal })
-  function wheelAngle(event) {
-    const box = helm.getBoundingClientRect()
-    return Math.atan2(event.clientY - box.top - box.height / 2, event.clientX - box.left - box.width / 2) * 180 / Math.PI
-  }
-  helm?.addEventListener('pointerdown', event => {
-    if (!pinned || event.button !== 0) return
-    event.preventDefault()
-    wheelDrag = { id: event.pointerId, angle: wheelAngle(event), total: 0, orbit: orbitAt(state.progress) }
-    helm.setPointerCapture(event.pointerId)
-  }, { signal })
-  helm?.addEventListener('pointermove', event => {
-    if (!wheelDrag || wheelDrag.id !== event.pointerId || !trigger) return
-    const angle = wheelAngle(event)
-    let delta = angle - wheelDrag.angle
-    if (delta > 180) delta -= 360
-    if (delta < -180) delta += 360
-    wheelDrag.angle = angle
-    wheelDrag.total += delta
-    const orbit = clamp((wheelDrag.orbit + wheelDrag.total / 120) / 2) * 2
-    const progress = progressAtOrbit(orbit)
-    window.scrollTo({ top: trigger.start + (trigger.end - trigger.start) * progress, behavior: 'instant' })
-    ScrollTrigger.update()
-    syncProgress(progress)
-  }, { signal })
-  const finishWheel = event => {
-    const gesture = wheelDrag
-    if (!gesture || gesture.id !== event.pointerId) return
-    wheelDrag = null
-    if (helm.hasPointerCapture(event.pointerId)) helm.releasePointerCapture(event.pointerId)
-    const index = Math.abs(gesture.total) < 8 ? (active + 1) % 3 : Math.round(orbitAt(state.progress))
-    navigate(index, { hash: true })
-  }
-  helm?.addEventListener('pointerup', finishWheel, { signal })
-  helm?.addEventListener('pointercancel', event => {
-    if (wheelDrag?.id !== event.pointerId) return
-    wheelDrag = null
-    navigate(Math.round(orbitAt(state.progress)))
-  }, { signal })
-  helm?.addEventListener('click', event => {
-    if (event.detail === 0) navigate((active + 1) % 3, { hash: true })
-  }, { signal })
-  helm?.addEventListener('keydown', event => {
-    const direction = event.key === 'ArrowRight' ? 1 : event.key === 'ArrowLeft' ? -1 : 0
-    if (!direction) return
-    event.preventDefault()
-    navigate(Math.max(0, Math.min(2, active + direction)), { hash: true })
-  }, { signal })
   const cancelPendingFocus = () => { pendingFocus = -1 }
   window.addEventListener('wheel', cancelPendingFocus, { signal, passive: true })
   window.addEventListener('touchstart', cancelPendingFocus, { signal, passive: true })
@@ -330,7 +293,14 @@ export function initDesignProcess(section) {
     if (!image.complete) image.addEventListener('load', queueRefresh, { signal, once: true })
   })
   media.add('(prefers-reduced-motion: no-preference) and (min-width: 900px) and (min-height: 600px), (prefers-reduced-motion: no-preference) and (min-width: 360px) and (min-height: 820px)', startPinned)
-  if (!pinned) updateSelection(0)
+  nativeVisualTrigger = ScrollTrigger.create({
+    id: 'design-process-editorial-native', trigger: journey,
+    start: 'top top', end: 'bottom bottom', invalidateOnRefresh: true,
+    onUpdate: self => { if (!pinned) paintJourney(self.progress) },
+    onRefresh: self => { if (!pinned) paintJourney(self.progress) },
+  })
+  if (!pinned) paintJourney(nativeVisualTrigger.progress)
+  if (!pinned && active < 0) updateSelection(0)
   revealHash()
   document.fonts?.ready.then(() => { if (!destroyed) queueRefresh() })
   window.addEventListener('load', queueRefresh, { signal, once: true })
@@ -343,15 +313,18 @@ export function initDesignProcess(section) {
     cancelAnimationFrame(refreshFrame)
     cancelAnimationFrame(hashFrame)
     media.revert()
+    nativeVisualTrigger?.kill()
+    editorial.destroy()
     stopPinned()
     originals.forEach((original, element) => {
       restore(element, 'style', original.style)
       restore(element, 'aria-hidden', original.hidden)
+      restore(element, 'tabindex', original.tabindex)
       element.toggleAttribute('inert', original.inert)
       element.classList.toggle('is-active', original.active)
     })
     buttons.forEach((button, index) => restore(button, 'aria-current', originalButtons[index]))
     restore(section, 'data-active-step', originalStep)
-    if (counter) counter.textContent = originalCounter
+    delete section.dataset.approachProgress
   }
 }

@@ -1,6 +1,5 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createMirrorSurfaceRipples } from './mirror-surface-ripples.js'
 import './mirror-current-transition.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -30,7 +29,6 @@ export function initMirrorCurrentTransition(section) {
     layer.setAttribute('aria-hidden', 'true')
     layer.hidden = true
     layer.innerHTML = `<div class="mirror-current__shade"></div>
-      <div class="mirror-current__water-plane"></div>
       <svg class="mirror-current__drawing" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
         <defs>
           <filter id="${id}-water" x="-12%" y="-10%" width="124%" height="120%" color-interpolation-filters="sRGB">
@@ -66,13 +64,7 @@ export function initMirrorCurrentTransition(section) {
     const waterTint = layer.querySelector('.mirror-current__water-tint')
     const face = layer.querySelector('.mirror-current__portrait-image')
     const shade = layer.querySelector('.mirror-current__shade')
-    const waterPlane = layer.querySelector('.mirror-current__water-plane')
     layer.querySelectorAll('image').forEach(copy => copy.setAttribute('href', image.currentSrc || image.src))
-    const canvas = document.createElement('canvas')
-    canvas.className = 'mirror-current__surface'
-    canvas.setAttribute('aria-hidden', 'true')
-    layer.insertBefore(canvas, waterPlane)
-    const ripples = createMirrorSurfaceRipples(canvas)
 
     let disposed = false
     let ready = false
@@ -87,10 +79,11 @@ export function initMirrorCurrentTransition(section) {
       const rect = image.getBoundingClientRect()
       const top = rect.top + window.scrollY
       const end = Math.max(boundary, Math.min(boundary + height * .45, top + rect.height - height * .96))
-      // Let the next sea peek beneath the coral hold before its mirror and
-      // full-screen water cover the foreground helm.
+      // Let the final approach chapter be read before the profile enters.
+      // Native document flow has no pin trigger, but still needs this boundary.
       const approachEnd = ScrollTrigger.getById('design-process-pinned')?.end
-      const start = Math.max(boundary - height * 1.45, approachEnd ?? -Infinity)
+        ?? previous.getBoundingClientRect().bottom + window.scrollY - height
+      const start = Math.max(boundary - height * 1.45, approachEnd)
       const fitHeight = Math.min(rect.height, height * .76)
       geometry = {
         width, height, start, end,
@@ -98,7 +91,6 @@ export function initMirrorCurrentTransition(section) {
         origin: { x: (width - fitHeight * 2 / 3) / 2, y: height * .43 - fitHeight / 2, width: fitHeight * 2 / 3, height: fitHeight },
       }
       svg.setAttribute('viewBox', `0 0 ${width} ${height}`)
-      ripples.resize(width, height)
       last = -1
     }
 
@@ -136,7 +128,6 @@ export function initMirrorCurrentTransition(section) {
       else submerged.setAttribute('filter', `url(#${id}-water)`)
       face.setAttribute('opacity', String(smooth((p - .39) / .30)))
 
-      ripples.render({ progress: p, rect, width, height })
       const title = smooth((p - .72) / .22)
       section.style.setProperty('--current-title-opacity', String(title))
       section.style.setProperty('--current-title-offset', `${16 * (1 - title)}px`)
@@ -145,8 +136,6 @@ export function initMirrorCurrentTransition(section) {
       // The previous scene sinks into navy before the reflection approaches.
       // Clear that veil only after the mirror has regained its original light.
       shade.style.opacity = String(smooth((p - .01) / .18) * (1 - smooth((p - .72) / .23)))
-      waterPlane.style.opacity = String(.65 * smooth((p - .03) / .14) * (1 - smooth((p - .42) / .30)))
-      waterPlane.style.transform = `translate(${mix(-5, 5, rising)}px, ${mix(7, -7, rising)}px)`
       mirror.style.visibility = p <= .12 ? 'hidden' : 'visible'
       const landed = p >= .99999
       section.classList.toggle('is-current-landed', landed)
@@ -174,7 +163,6 @@ export function initMirrorCurrentTransition(section) {
     return () => {
       disposed = true
       trigger?.kill()
-      ripples.destroy()
       layer.remove()
       image.loading = originalLoading
       section.classList.remove('is-current-linked', 'is-current-landed')

@@ -1,0 +1,63 @@
+#diptyque-process #diptyque-planning [data-lean-preview] > img { display: block; width: 100%; height: 100%; object-fit: contain; }
+#diptyque-process.has-process-exhibition .lean-canvas__tabs > button[aria-pressed='true'] { border-bottom-color: #d7e7e5; color: #e0e9e9; }
+/* One main document and two matching side displays remain unobstructed. */
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit {
+  --lean-gap: clamp(14px, 1.4vw, 22px);
+  display: grid;
+  grid-template-columns: minmax(0, 2.18fr) minmax(0, 1fr);
+  align-content: end;
+  align-items: center;
+  gap: var(--lean-gap);
+  padding-bottom: var(--process-air-lift);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  aspect-ratio: auto;
+  filter: drop-shadow(0 8px 12px #000b2526);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device--monitor {
+  grid-area: 1 / 1 / 3 / 2;
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__canvas-companion { grid-area: 1 / 2; }
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__canvas-companion--two { grid-area: 2 / 2; }
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device > .process-device__viewport {
+  padding: 5px;
+  border-color: #9ab9d15c;
+  border-radius: 9px;
+  background: #0b1c2c;
+  box-shadow: inset 0 0 0 1px #a4c3d312;
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device--monitor > .process-device__viewport { border-color: #b0cbd684; }
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device__screen { border-radius: 4px; }
+#diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__canvas-companion .process-device__screen { height: auto; aspect-ratio: 4 / 3; }
+#diptyque-planning .process-exhibit__canvas-companion img { display: block; width: 100%; height: 100%; object-fit: contain; }
+.lean-dialog__selection { display: flex; flex-wrap: wrap; gap: 8px 16px; margin-bottom: 12px; }
+.lean-dialog__selection button, .lean-dialog__tools button { min-height: 44px; padding: 8px 6px; border: 0; border-bottom: 1px solid #65736b40; background: transparent; color: #758178; font: 400 13px/1.5 'Intro Pretendard', var(--font-family-body); cursor: pointer; }
+.lean-dialog__selection button[aria-pressed='true'], .lean-dialog__tools button[aria-pressed='true'] { border-color: #3e5048; color: #273d33; }
+.lean-dialog__tools { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 16px; margin-bottom: 12px; }
+.lean-dialog__tools > div { display: flex; gap: 12px; }
+.lean-dialog__tools a { display: inline-flex; align-items: center; min-height: 44px; color: #465f57; font-size: 12px; text-underline-offset: 4px; }
+.lean-dialog :is(button, a, [data-lean-full]):focus-visible { outline: 2px solid #536e83; outline-offset: -2px; }
+.lean-dialog [data-lean-full] { overflow: auto; overscroll-behavior: contain; background: #f8f8f5; }
+.lean-dialog [data-lean-full] > img { display: block; width: var(--lean-image-width, 100%); max-width: none; height: auto; margin-inline: auto; }
+@media (max-width: 899px) {
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit {
+    --lean-gap: 12px;
+    --process-air-lift: 0px;
+    height: auto;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    padding: 16px 4% 0;
+    margin-bottom: calc(var(--process-readout-height) + 40px);
+  }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device > .process-device__viewport { padding: 3px; border-radius: 6px; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device__screen { border-radius: 2px; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-device--monitor { grid-area: 1 / 1 / 2 / -1; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__canvas-companion { grid-area: 2 / 1; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__canvas-companion--two { grid-area: 2 / 2; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-planning .process-exhibit__readout { top: calc(100% + 20px); }
+  .lean-dialog .project-planning__dialog-body { padding: 12px; }
+  .lean-dialog__selection { gap: 6px; }
+  .lean-dialog__selection button { flex: 1; padding-inline: 2px; font-size: 12px; }
+}

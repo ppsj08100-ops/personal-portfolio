@@ -55,6 +55,53 @@
   opacity: 0;
 }
 .team-air__mote--two { left: auto; right: -2%; width: 2px; }
+
+/* Fine air beads sit below each device and drift quietly along its edges. */
+.team-air__field--bubbles .team-air__pocket {
+  right: auto;
+  top: calc(100% - var(--team-air-size, 36px) * .22);
+  width: calc(var(--team-air-size, 36px) * var(--team-pocket-scale, 1));
+  border-width: .7px;
+  border-color: #c4e3f594;
+  background: radial-gradient(ellipse at 30% 22%, #e2f5ff1f, transparent 58%);
+  box-shadow: inset .5px .5px 2px #e3f4ff24;
+  opacity: .78;
+  transform: translateX(-50%);
+}
+.team-air__bubble {
+  position: absolute;
+  top: calc(100% + var(--team-air-size, 36px) * .6);
+  width: clamp(3px, calc(var(--team-air-size, 18px) * var(--team-bubble-scale)), 8.5px);
+  aspect-ratio: 1;
+  border: .75px solid #c4e4f5ba;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at 30% 22%, #e9faff21, transparent 54%);
+  box-shadow: inset .5px .5px 1px #edfaff3d;
+  opacity: 0;
+  pointer-events: none;
+}
+.team-air__bubble::before {
+  content: '';
+  position: absolute;
+  left: 16%;
+  top: 13%;
+  width: 31%;
+  height: 22%;
+  border-top: .75px solid #effbffe0;
+  border-radius: 50%;
+  transform: rotate(-32deg);
+}
+.team-air__bubble::after {
+  content: '';
+  position: absolute;
+  left: 15%;
+  top: 41%;
+  width: 7%;
+  height: 13%;
+  border-radius: 50%;
+  background: #d5f1ff40;
+  transform: rotate(-24deg);
+}
 @media (prefers-reduced-motion: reduce) {
   .team-air__mote { display: none; }
 }

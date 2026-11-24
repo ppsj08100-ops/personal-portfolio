@@ -2,7 +2,12 @@
 .short-form {
   --project-page-count: 3;
   --short-portrait-frame-ratio: .6712328767;
-  --short-title-size: clamp(30px, 2.9vw, 42px);
+  --short-title-size: clamp(40px, min(4.3vw, 8svh), 78px);
+  --short-korean-title-size: clamp(30px, min(3.1vw, 5.6svh), 52px);
+  --short-summary-size: clamp(20px, 1.35vw, 24px);
+  --short-body-size: clamp(13px, .9vw, 14px);
+  --short-title-space: clamp(22px, 3svh, 32px);
+  --short-body-space: 18px;
   position: relative;
   isolation: isolate;
   min-height: 100svh;
@@ -174,58 +179,71 @@
 .short-form__header,
 .short-form__info { min-width: 0; }
 .short-form__eyebrow {
-  margin: 0 0 10px;
-  color: #8faabf;
-  font: 400 10px/1.6 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
-  letter-spacing: .12em;
+  display: flex;
+  align-items: center;
+  gap: 13px;
+  margin: 0 0 24px;
+  color: #b5cae3;
+  font: 400 9px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .15em;
   overflow-wrap: break-word;
 }
+.short-form__eyebrow::before {
+  content: '';
+  flex: 0 0 27px;
+  height: 1px;
+  background: linear-gradient(90deg, #dce9f6, #a7c6ec2b);
+}
 .short-form__title {
-  margin: 0;
-  color: #e0eaf2;
-  font: 400 var(--short-title-size)/1.18 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
-  letter-spacing: -.02em;
+  margin: 0 0 var(--short-title-space);
+  color: #e1ebf3;
+  font: 400 var(--short-title-size)/1.04 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -.055em;
   word-break: keep-all;
   overflow-wrap: normal;
   text-wrap: balance;
 }
 .short-form__film--flavour .short-form__title {
-  font-family: var(--font-family-body, 'Pretendard', sans-serif);
-  letter-spacing: -.045em;
+  font: 300 var(--short-korean-title-size)/1.2 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.035em;
 }
 .short-form__description {
-  display: none;
-}
-.short-form__info { margin-top: 14px; }
-.short-form__note {
-  max-width: 52ch;
   margin: 0;
-  color: #b2c8d8;
-  font-size: 14px;
-  line-height: 1.8;
-  letter-spacing: -.025em;
+  color: #e0e9e9;
+  font: 300 var(--short-summary-size)/1.55 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.035em;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
+.short-form__info { margin-top: var(--short-body-space); }
+.short-form__note {
+  max-width: 520px;
+  margin: 0;
+  color: #aabfce;
+  font: 300 var(--short-body-size)/1.9 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
 .short-form__meta {
   display: flex;
-  gap: clamp(24px, 4vw, 64px);
-  margin: 18px 0 0;
-  padding: 15px 0 0;
-  border-top: 1px solid #8aafc92b;
+  gap: clamp(24px, 3vw, 48px);
+  margin: 24px 0 0;
+  padding: 0;
 }
 .short-form__meta > div { min-width: 0; }
 .short-form__meta dt {
   margin: 0;
-  color: #8faabf;
-  font: 400 9px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
-  letter-spacing: .13em;
+  color: #a9c4d0;
+  font: 400 8px/1.8 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .07em;
 }
 .short-form__meta dd {
-  margin: 5px 0 0;
-  color: #d0e0ec;
-  font-size: 13px;
-  line-height: 1.6;
+  margin: 9px 0 0;
+  color: #d1dee5;
+  font: 300 13px/1.75 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
   font-variant-numeric: tabular-nums;
   word-break: keep-all;
 }
@@ -236,14 +254,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: space-between;
-  gap: 24px;
+  gap: 20px;
   min-height: 44px;
   margin: 0;
-  padding: 4px 0;
-  border-bottom: 1px solid #9fbfd480;
-  color: #d6e6f1;
-  font-size: 13px;
-  line-height: 1.6;
+  padding: 11px 19px;
+  border: 1px solid #a4c1d361;
+  border-radius: 999px;
+  color: #cbdce7;
+  background: #071b2d66;
+  font: 300 12px/1.4 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
   list-style: none;
   cursor: pointer;
 }
@@ -283,9 +303,8 @@
   min-width: 0;
   margin: 0;
   color: #bbd0df;
-  font-size: 14px;
-  line-height: 1.85;
-  letter-spacing: -.02em;
+  font: 300 var(--short-body-size)/1.9 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
@@ -352,14 +371,30 @@
 .short-form .short-form__navigation > span { display: none; }
 
 @media (hover: hover) and (pointer: fine) {
-  .short-form__explanation-toggle:hover { color: #fff; border-bottom-color: #d1e3ef; }
+  .short-form__explanation-toggle:hover { border-color: #c5dbe8; background: #adcede12; }
   .short-form .short-form__navigation > button:hover { color: #e5f0f7; }
 }
-@media (max-width: 1100px) {
-  .short-form__eyebrow { font-size: 9px; letter-spacing: .08em; }
+@media (min-width: 900px) and (max-height: 800px) {
+  .short-form {
+    --short-title-size: clamp(36px, 4vw, 56px);
+    --short-korean-title-size: clamp(30px, 3vw, 44px);
+    --short-summary-size: 19px;
+    --short-body-size: 13px;
+    --short-title-space: 18px;
+    --short-body-space: 15px;
+  }
+  .short-form__eyebrow { margin-bottom: 16px; }
+  .short-form__note { line-height: 1.85; }
+}
+@media (max-width: 899px) {
+  .short-form {
+    --short-title-size: clamp(36px, 8vw, 52px);
+    --short-korean-title-size: clamp(30px, 7vw, 42px);
+    --short-summary-size: 20px;
+  }
+  .short-form__eyebrow { margin-bottom: 17px; }
 }
 @media (max-width: 760px) {
-  .short-form { --short-title-size: clamp(28px, 7.8vw, 36px); }
   .short-form__film { --film-height: min(44svh, 400px); }
   .short-form__inner {
     grid-template-columns: minmax(0, 1fr);
@@ -375,17 +410,12 @@
   }
   .short-form__screen { grid-column: 1; }
   .short-form__caption { grid-column: 1; }
-  .short-form__info { margin-top: 12px; }
-  .short-form__description { display: none; }
-  .short-form__eyebrow { margin-bottom: 8px; font-size: 10px; letter-spacing: .07em; }
   .short-form__note { max-width: none; }
-  .short-form__meta { gap: 36px; margin-top: 13px; }
-  .short-form__meta dt { font-size: 10px; }
+  .short-form__meta { gap: 32px; margin-top: 22px; }
   .short-form__brief { margin-top: 26px; }
   .short-form__brief-title { font-size: 25px; }
   .short-form__brief-tagline { margin-bottom: 22px; font-size: 15px; }
   .short-form__brief-rows > div { grid-template-columns: 64px minmax(0, 1fr); gap: 14px; padding-block: 17px; }
-  .short-form__brief-rows dd { font-size: 14px; }
 }
 @media (max-width: 600px) {
   body.has-short-film-in-view .portfolio-chat__launcher-label { display: none; }

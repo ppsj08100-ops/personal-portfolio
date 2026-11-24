@@ -44,7 +44,6 @@ import { initScrollCue } from './scroll-cue.js'
 import { initInsightReveal } from './insight-section.js'
 import { initIntroduction } from './introduction.js'
 import { initDesignProcess } from './design-process.js'
-import { initIntroductionApproachWater } from './introduction-approach-water.js'
 import { initCapabilities } from './capabilities.js'
 import { initOceanType } from './ocean-type.js'
 import { initWorkChapters } from './work-chapters.js'
@@ -75,6 +74,8 @@ import { initFooter } from './footer.js'
 import { initPortfolioChat } from './portfolio-chat.js'
 import { initOceanContinuity } from './ocean-continuity.js'
 import { initWorkChapterDiscovery } from './work-chapter-discovery.js'
+import './section-step-navigation.css'
+import { initSectionStepNavigation } from './section-step-navigation.js'
 
 const destroyHero = initHero(document.querySelector('.hero'))
 const destroyHeroStars = initHeroStars(document.querySelector('.hero'))
@@ -84,7 +85,6 @@ const destroyScrollCue = initScrollCue()
 const destroyInsightReveal = initInsightReveal(document.querySelector('.insight-section'))
 const destroyIntroduction = initIntroduction(document.querySelector('.introduction'))
 const destroyDesignProcess = initDesignProcess(document.querySelector('.design-process'))
-const destroyIntroductionApproachWater = initIntroductionApproachWater()
 const destroyProjectExhibition = initProjectExhibition(document.querySelector('#diptyque-details'))
 const destroyWorkChapters = initWorkChapters()
 const destroyOceanType = initOceanType(document.querySelector('.ocean-type'))
@@ -116,6 +116,7 @@ const destroyFooter = initFooter(document.querySelector('.site-footer'))
 const destroyPortfolioChat = initPortfolioChat()
 const destroyOceanContinuity = initOceanContinuity()
 const destroyWorkChapterDiscovery = initWorkChapterDiscovery()
+const destroySectionStepNavigation = initSectionStepNavigation()
 let destroyPortfolioGallery = () => {}
 let galleryDisposed = false
 // Load the gallery renderer separately so the opening scenes keep their small bundle.
@@ -134,7 +135,6 @@ if (import.meta.hot) {
   import.meta.hot.dispose(destroyInsightReveal)
   import.meta.hot.dispose(destroyIntroduction)
   import.meta.hot.dispose(destroyDesignProcess)
-  import.meta.hot.dispose(destroyIntroductionApproachWater)
   import.meta.hot.dispose(destroyProjectExhibition)
   import.meta.hot.dispose(destroyOceanType)
   import.meta.hot.dispose(destroyOceanDescent)
@@ -166,5 +166,6 @@ if (import.meta.hot) {
   import.meta.hot.dispose(destroyPortfolioChat)
   import.meta.hot.dispose(destroyOceanContinuity)
   import.meta.hot.dispose(destroyWorkChapterDiscovery)
+  import.meta.hot.dispose(destroySectionStepNavigation)
   import.meta.hot.dispose(() => { galleryDisposed = true; destroyPortfolioGallery() })
 }

@@ -1,30 +1,31 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createTidalSpatialField } from './tidal-spatial-field.js'
-import { initWorkWaterAtmosphere } from './work-water-atmosphere.js'
+import './skills-title-type.css'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const clamp = gsap.utils.clamp(0, 1)
-const smooth = value => value * value * (3 - 2 * value)
+const clamp = value => Math.max(0, Math.min(1, value))
+const smooth = (start, end, value) => {
+  const p = clamp((value - start) / (end - start))
+  return p * p * (3 - 2 * p)
+}
 
-/** The complete title shares the same submerged passage as the other titles. */
+/** Hold one complete line for reading, then carry it left into the next scene. */
 export function initSkillsCurrentTitle(section) {
   if (!section) return () => {}
   const voyage = section.querySelector('[data-skills-voyage]')
   const stage = section.querySelector('[data-skills-stage]')
-  const first = section.querySelector('[data-skills-first]')
-  const final = section.querySelector('[data-skills-final]')
-  const canvas = section.querySelector('[data-skills-wave]')
-  const cue = section.querySelector('[data-skills-cue]')
-  if (!voyage || !stage || !first || !final || !canvas) return () => {}
+  if (!voyage || !stage) return () => {}
 
-  const destroyAtmosphere = initWorkWaterAtmosphere(section, {
-    opening: stage, variant: 'selected', depthLinked: false,
-  })
   const media = gsap.matchMedia()
-  let disposed = false
-  let refreshFrame = 0
+  const hadType = section.classList.contains('has-skills-typography')
+  const originalVariant = stage.dataset.backgroundVariant
+  const properties = ['--skills-current-progress', '--skills-type-copy-opacity',
+    '--skills-type-copy-x', '--skills-type-cue-opacity']
+  const originals = properties.map(name => [name, section.style.getPropertyValue(name), section.style.getPropertyPriority(name)])
+  section.classList.add('has-skills-typography')
+  stage.dataset.backgroundVariant = 'typography'
+  let disposed = false, refreshFrame = 0
   function requestRefresh() {
     cancelAnimationFrame(refreshFrame)
     refreshFrame = requestAnimationFrame(() => {
@@ -33,69 +34,44 @@ export function initSkillsCurrentTitle(section) {
     })
   }
 
-  media.add('(prefers-reduced-motion: no-preference)', () => {
+  media.add({ moving: '(prefers-reduced-motion: no-preference)', still: '(prefers-reduced-motion: reduce)' }, context => {
+    const moving = context.conditions.moving
     const controller = new AbortController()
     const { signal } = controller
-    const savedCueStyle = cue?.getAttribute('style')
-    const savedProgress = section.style.getPropertyValue('--skills-current-progress')
-    const savedPriority = section.style.getPropertyPriority('--skills-current-progress')
     const hadCurrent = section.classList.contains('is-skills-current')
     const state = { progress: 0 }
     let active = true
-
-    const field = createTidalSpatialField({
-      stage, canvas,
-      runs: [first, final.querySelector('[data-skills-amp]'), final.querySelector('[data-skills-tools]')],
-    })
-    section.classList.add('is-skills-current')
+    section.classList.toggle('is-skills-current', moving)
 
     function render() {
       if (!active) return
-      const progress = clamp(state.progress)
-      field.render(progress)
-      section.style.setProperty('--skills-current-progress', progress.toFixed(4))
-      if (cue) cue.style.opacity = (1 - smooth(clamp((progress - .25) / .2))).toFixed(4)
+      const p = clamp(state.progress)
+      section.style.setProperty('--skills-current-progress', p.toFixed(4))
+      section.style.setProperty('--skills-type-copy-opacity', String(moving ? 1 - smooth(.94, 1, p) : 1))
+      section.style.setProperty('--skills-type-copy-x', `${moving ? -(stage.clientWidth + 24) * smooth(.15, 1, p) : 0}px`)
+      section.style.setProperty('--skills-type-cue-opacity', String(moving ? 1 - smooth(.48, .75, p) : 1))
+      stage.dataset.typographyProgress = p.toFixed(4)
     }
-
-    function measure() {
-      if (!active) return
-      field.measure()
-      render()
-    }
-
-    measure()
-    const timeline = gsap.timeline({
+    const timeline = moving ? gsap.timeline({
       scrollTrigger: {
         id: 'skills-current-title', trigger: voyage, start: 'top top',
         end: () => `+=${Math.max(1, voyage.clientHeight - stage.clientHeight)}`,
-        scrub: .6, invalidateOnRefresh: true,
-        onRefreshInit: measure, onRefresh: render,
+        scrub: .5, invalidateOnRefresh: true,
+        onRefresh: render,
       },
-    }).fromTo(state, { progress: 0 }, {
-      progress: 1, duration: 1, ease: 'none', immediateRender: false, onUpdate: render,
-    })
-
-    field.ready.then(() => {
-      if (active && !disposed) render()
-    })
+    }).to(state, { progress: 1, duration: 1, ease: 'none', onUpdate: render }) : null
     window.addEventListener('resize', requestRefresh, { signal, passive: true })
     document.fonts?.addEventListener('loadingdone', requestRefresh, { signal })
     document.fonts?.ready.then(() => { if (active && !disposed) requestRefresh() })
+    render()
     requestRefresh()
 
     return () => {
       active = false
       controller.abort()
-      timeline.scrollTrigger?.kill()
-      timeline.kill()
-      field.destroy()
-      if (cue) {
-        if (savedCueStyle === null) cue.removeAttribute('style')
-        else cue.setAttribute('style', savedCueStyle)
-      }
-      if (savedProgress) section.style.setProperty('--skills-current-progress', savedProgress, savedPriority)
-      else section.style.removeProperty('--skills-current-progress')
-      if (!hadCurrent) section.classList.remove('is-skills-current')
+      timeline?.scrollTrigger?.kill()
+      timeline?.kill()
+      section.classList.toggle('is-skills-current', hadCurrent)
       if (!disposed) requestRefresh()
     }
   })
@@ -103,7 +79,14 @@ export function initSkillsCurrentTitle(section) {
   return () => {
     disposed = true
     media.revert()
-    destroyAtmosphere()
     cancelAnimationFrame(refreshFrame)
+    if (!hadType) section.classList.remove('has-skills-typography')
+    if (originalVariant === undefined) delete stage.dataset.backgroundVariant
+    else stage.dataset.backgroundVariant = originalVariant
+    delete stage.dataset.typographyProgress
+    originals.forEach(([name, value, priority]) => {
+      if (value) section.style.setProperty(name, value, priority)
+      else section.style.removeProperty(name)
+    })
   }
 }

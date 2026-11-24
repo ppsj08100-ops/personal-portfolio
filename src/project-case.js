@@ -200,7 +200,7 @@ export function initProjectCase(section, { id = 'diptyque-project-pages' } = {})
         onRefresh: render,
       },
     })
-    // The completed cover is the first page; its seven details continue to its right.
+    // The completed cover is the first page; its details continue to its right.
     animation.to({}, { duration: timing.entry })
     pages.slice(1).forEach((_, index) => {
       animation.to(position, { page: index + 1, duration: timing.slide, ease: 'sine.inOut' })

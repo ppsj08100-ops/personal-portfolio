@@ -1,15 +1,19 @@
 import './team-exhibition-simple.css'
+import './team-exhibition-type.css'
 
-const exhibitionScenes = [
-  { motif: 'air', support: 'air', emphasis: true, omit: '[data-exhibition-device="tablet"]' },
-  { motif: 'air', support: 'air', omit: '.project-overview__sheet--collection' },
-  { motif: 'air', support: 'air', omit: '.project-overview__object--tertiary' },
-  { motif: 'air', support: 'air', emphasis: true },
-  { motif: 'air', support: 'air' },
-  { motif: 'air', support: 'air' },
-  { motif: 'air', support: 'air', choices: true },
-  { motif: 'air', support: 'air', emphasis: true },
-]
+// Layout indices identify the original screen arrangements, independently of
+// page numbers. Removing a chapter must not change another chapter's devices.
+const exhibitionScenes = {
+  'team-projects': { index: 1, motif: 'air', support: 'air', emphasis: true, omit: '[data-exhibition-device="tablet"]' },
+  'diptyque-overview': { index: 2, motif: 'air', support: 'air', omit: '.project-overview__sheet--collection' },
+  'diptyque-experience': { index: 3, motif: 'air', support: 'air', omit: '.project-overview__object--tertiary' },
+  'diptyque-typography': { index: 4, motif: 'air', support: 'air', emphasis: true },
+  'diptyque-galerie': { index: 9, motif: 'air', support: 'air', emphasis: true },
+  'diptyque-history': { index: 10, motif: 'air', support: 'air', emphasis: true },
+  'diptyque-planet': { index: 11, motif: 'air', support: 'air', emphasis: true },
+  'diptyque-contribution': { index: 7, motif: 'air', support: 'air', choices: true },
+  'diptyque-together': { index: 8, motif: 'air', support: 'air', emphasis: true },
+}
 
 // The existing chapter still owns paging, previews, videos and their controls.
 // Decorations share each screen's surface, so entry opacity and travel stay aligned.
@@ -35,8 +39,8 @@ export function initProjectExhibition(chapter) {
     if (!show) element.querySelectorAll('video').forEach(video => video.pause())
   }
 
-  function decorate(page, index) {
-    const scene = exhibitionScenes[index]
+  function decorate(page) {
+    const scene = exhibitionScenes[page.id]
     const figure = page.querySelector('.sail-project__screen, .project-overview__scene')
     const surface = figure?.querySelector('.sail-project__surface, .project-overview__depth')
     if (!scene || !figure || !surface) return
@@ -53,7 +57,7 @@ export function initProjectExhibition(chapter) {
     const hadEmphasisClass = figure.classList.contains('project-exhibition--emphasis')
     const originalLabel = figure.getAttribute('aria-label')
     roots.forEach(root => {
-      root.dataset.exhibitionIndex = String(index + 1)
+      root.dataset.exhibitionIndex = String(scene.index)
       root.dataset.exhibitionMotif = scene.motif
       root.dataset.exhibitionSupport = scene.support
     })
@@ -71,7 +75,7 @@ export function initProjectExhibition(chapter) {
       previewStates.push(previewState(element))
       showPreview(element, false)
     })
-    if (index === 0) figure.setAttribute('aria-label', '컴퓨터와 휴대폰으로 배치한 딥디크 실제 웹사이트 화면')
+    if (scene.index === 1) figure.setAttribute('aria-label', '컴퓨터와 휴대폰으로 배치한 딥디크 실제 웹사이트 화면')
 
     // The two secondary contribution recordings share one display position.
     // Both original links and playback controls remain available on demand.
@@ -119,7 +123,7 @@ export function initProjectExhibition(chapter) {
     records.push({ page, figure, scenery, switcher, attributes, exhibitState, previewStates, originalLabel, hadFigureClass, hadPageClass, hadEmphasisClass, intersecting: false })
   }
 
-  ;[...track.children].slice(0, 8).forEach(decorate)
+  ;[...track.children].forEach(decorate)
 
   function sync() {
     chapter.classList.toggle('has-exhibition-motion', !reducedMotion.matches)

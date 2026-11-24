@@ -6,11 +6,14 @@ gsap.registerPlugin(ScrollTrigger)
 
 const clamp = value => Math.max(0, Math.min(1, value))
 const smooth = (a, b, value) => { const t = clamp((value - a) / (b - a)); return t * t * (3 - 2 * t) }
+const random = seed => { const value = Math.sin(seed * 127.1 + 311.7) * 43758.5453; return value - Math.floor(value) }
+const tau = Math.PI * 2
 
-/** Worn stone stairs join the shell's floor to the deeper seabed. */
+/** Scroll through refracted water, then settle on the deeper archive floor. */
 export function initProcessDescentTransition(chapter) {
   const source = document.querySelector('#diptyque-together')
   const sourceChapter = source?.closest('.project-details')
+  const sourceTrack = sourceChapter?.querySelector(':scope > .project-details__stage > .project-pages')
   const sourceFigure = source?.querySelector('.project-exhibition')
   const section = chapter?.querySelector('#diptyque-planning')
   const scene = section?.querySelector('.process-exhibit')
@@ -18,175 +21,189 @@ export function initProcessDescentTransition(chapter) {
 
   const layer = document.createElement('div')
   layer.className = 'process-descent-transition'
+  layer.dataset.descentStyle = 'water-drift'
   layer.setAttribute('aria-hidden', 'true')
   layer.hidden = true
-  const ground = document.createElement('canvas')
-  const mist = document.createElement('canvas')
-  ground.dataset.descentGround = ''
-  mist.dataset.descentMist = ''
-  layer.append(ground, mist)
+  const light = document.createElement('canvas')
+  const particles = document.createElement('canvas')
+  light.dataset.descentLight = ''
+  particles.dataset.descentParticles = ''
+  layer.append(light, particles)
   document.body.append(layer)
-  const groundContext = ground.getContext('2d')
-  const mistContext = mist.getContext('2d')
-  const image = new Image()
-  image.decoding = 'async'
+  const lightContext = light.getContext('2d')
+  const particleContext = particles.getContext('2d')
   const reduced = matchMedia('(prefers-reduced-motion: reduce)')
   const controller = new AbortController()
   const originalArrival = chapter.style.getPropertyValue('--process-arrival')
-  const protectedElements = [
-    sourceFigure,
-    source.querySelector('.project-overview__copy'),
-    ...source.querySelectorAll('.project-overview__masthead a, .project-overview__chapter'),
-    sourceChapter.querySelector(':scope > .project-details__stage > .project-pages__navigation'),
-    section.querySelector('.project-planning__content'),
-    section.querySelector('.process-exhibit__caption'),
-    ...scene.querySelectorAll('[data-process-contact]'),
-    chapter.querySelector(':scope > .project-details__stage > .project-pages__navigation'),
-  ].filter(Boolean)
+  const copyElements = [source.querySelector('.project-overview__copy'), section.querySelector('.project-planning__content')].filter(Boolean)
+  const frameElements = [...sourceFigure.querySelectorAll('.project-exhibition__exhibit'), ...scene.querySelectorAll('[data-process-contact]')]
+  const navigationElements = [sourceChapter, chapter].map(root => root.querySelector(':scope > .project-details__stage > .project-pages__navigation')).filter(Boolean)
   let disposed = false
   let progress = 0
   let frame = 0
   let width = document.documentElement.clientWidth
   let height = innerHeight
 
-  function loadIllustration() {
-    if (!reduced.matches && !image.src) image.src = '/images/process-descent-stairs-v3.png'
-  }
-  image.onload = () => { if (!disposed) sync() }
-  // Load while the upper exhibition approaches, before its final shell scene.
-  const preload = new IntersectionObserver(entries => {
-    if (entries.some(entry => entry.isIntersecting) && !reduced.matches) {
-      loadIllustration()
-      preload.disconnect()
-    }
-  }, { rootMargin: '200% 0px' })
-  preload.observe(sourceChapter.querySelector(':scope > .project-details__stage'))
-
   function prepare(canvas, context) {
     const density = Math.min(devicePixelRatio || 1, 1.5, 1800 / Math.max(width, height))
     const w = Math.ceil(width * density), h = Math.ceil(height * density)
     if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h }
     context.setTransform(density, 0, 0, density, 0, 0)
+    context.globalCompositeOperation = 'source-over'
+    context.globalAlpha = 1
+    context.shadowBlur = 0
+    context.filter = 'none'
     context.clearRect(0, 0, width, height)
   }
 
-  function protect(context, regions) {
+  function regions(elements) {
+    return elements.flatMap(element => {
+      const rect = element.getBoundingClientRect()
+      const opacity = Number(getComputedStyle(element).opacity)
+      return rect.width && rect.height && opacity > 0 && rect.bottom > 0 && rect.top < height
+        ? [{ x: rect.x, y: rect.y, width: rect.width, height: rect.height, opacity }] : []
+    })
+  }
+
+  // Documents occlude the water; reading areas use soft ellipses, never a plate.
+  function protect(context, frames, reading) {
     context.save()
     context.globalCompositeOperation = 'destination-out'
+    context.shadowBlur = 0
     context.fillStyle = '#000'
-    context.shadowColor = '#000'
-    context.shadowBlur = 14
-    for (const region of regions) {
-      context.globalAlpha = region.opacity
+    for (const rect of frames) {
+      context.globalAlpha = rect.opacity
       context.beginPath()
-      context.roundRect(region.x - 5, region.y - 5, region.width + 10, region.height + 10, 12)
+      context.roundRect(rect.x - 1, rect.y - 1, rect.width + 2, rect.height + 2, 6)
       context.fill()
+    }
+    context.globalAlpha = 1
+    for (const rect of reading) {
+      context.save()
+      context.translate(rect.x + rect.width / 2, rect.y + rect.height / 2)
+      context.scale(rect.width * .72 + 16, rect.height * .72 + 20)
+      const fade = context.createRadialGradient(0, 0, 0, 0, 0, 1)
+      fade.addColorStop(0, `rgba(0,0,0,${rect.opacity * .98})`)
+      fade.addColorStop(.6, `rgba(0,0,0,${rect.opacity * .94})`)
+      fade.addColorStop(1, 'transparent')
+      context.fillStyle = fade
+      context.fillRect(-1, -1, 2, 2)
+      context.restore()
     }
     context.restore()
   }
 
-  function fog(context, x, y, rx, ry, opacity) {
+  function waterReflection(context, x, y, rx, ry, opacity) {
     context.save()
     context.translate(x, y)
+    context.rotate(-.08)
     context.scale(rx, ry)
-    const gradient = context.createRadialGradient(0, 0, .05, 0, 0, 1)
-    gradient.addColorStop(0, `rgba(34, 54, 96, ${opacity})`)
-    gradient.addColorStop(.45, `rgba(24, 42, 81, ${opacity * .6})`)
-    gradient.addColorStop(1, 'rgba(16, 29, 65, 0)')
-    context.fillStyle = gradient
+    const reflection = context.createRadialGradient(0, 0, 0, 0, 0, 1)
+    reflection.addColorStop(0, `rgba(137,205,225,${opacity})`)
+    reflection.addColorStop(.28, `rgba(71,157,194,${opacity * .62})`)
+    reflection.addColorStop(.65, `rgba(35,112,163,${opacity * .24})`)
+    reflection.addColorStop(1, 'transparent')
+    context.fillStyle = reflection
     context.fillRect(-1, -1, 2, 2)
     context.restore()
+  }
+
+  function drawRefraction(seam) {
+    const context = lightContext
+    const waterY = seam + height * (.15 - progress * .42)
+    context.save()
+    context.globalCompositeOperation = 'screen'
+    // Soft, uneven pools of reflected water pass the camera at two depths.
+    // They have no outlines, closed hoops, rays or geometric highlight marks.
+    for (let depth = 0; depth < 2; depth++) {
+      for (let index = 0; index < 8; index++) {
+        const seed = index * 17 + depth * 53
+        const x = width * (-.12 + index * .18 + Math.sin(progress * 2.7 + seed) * .025)
+        const y = waterY + depth * height * .23 + Math.sin(index * 1.2 + progress * 2.8 + depth * 2) * height * .12
+        waterReflection(context, x, y, width * (.16 + random(seed) * .1), height * (.025 + random(seed + 1) * .025), .13 - depth * .035)
+        if (index % 2 === depth) {
+          waterReflection(context, x + width * .025, y - height * .009, width * (.025 + random(seed + 2) * .045), height * .007, .18)
+        }
+      }
+    }
+    context.restore()
+    light.dataset.waveCount = '0'
+    light.dataset.waterLayers = '2'
+    light.dataset.lightSignature = [progress.toFixed(5), waterY.toFixed(2), width, height].join(',')
+  }
+
+  function drawParticles(seam) {
+    const context = particleContext
+    const mobile = width < 700
+    const bubbleCount = mobile ? 38 : 62
+    const planktonCount = mobile ? 46 : 76
+    context.save()
+    for (let index = 0; index < bubbleCount + planktonCount; index++) {
+      const seed = index * 13 + 7
+      const depth = .25 + random(seed) * .75
+      const bubble = index < bubbleCount
+      const lane = index % 5 === 0 ? random(seed + 1) : index % 2 ? .035 + random(seed + 1) * .32 : .65 + random(seed + 1) * .32
+      const x = width * lane + Math.sin(progress * 3.6 + seed) * (8 + depth * 18)
+      const y = seam + height * (random(seed + 2) * 2.1 - .32 - progress * (.55 + depth * 1.05))
+      if (y < -25 || y > height + 25) continue
+      const shimmer = .42 + Math.sin(seed + progress * (bubble ? 4 : 12)) ** 2 * .58
+      if (bubble) {
+        const radius = (1.3 + random(seed + 3) * 3.2) * (.7 + depth * .7)
+        context.lineWidth = .7
+        context.strokeStyle = `rgba(151,218,240,${(.2 + depth * .3) * shimmer})`
+        context.fillStyle = 'rgba(153,221,245,.035)'
+        context.beginPath()
+        context.arc(x, y, radius, 0, tau)
+        context.fill()
+        context.stroke()
+        context.strokeStyle = `rgba(224,252,255,${(.5 + depth * .4) * shimmer})`
+        context.beginPath()
+        context.ellipse(x - radius * .15, y - radius * .13, radius * .76, radius * .72, -.4, Math.PI * 1.02, Math.PI * 1.62)
+        context.stroke()
+      } else {
+        const radius = .55 + depth * 1.25
+        const glow = context.createRadialGradient(x, y, 0, x, y, radius * 5)
+        glow.addColorStop(0, `rgba(174,213,228,${shimmer * .42})`)
+        glow.addColorStop(.24, `rgba(97,157,187,${shimmer * .14})`)
+        glow.addColorStop(1, 'transparent')
+        context.fillStyle = glow
+        context.fillRect(x - radius * 5, y - radius * 5, radius * 10, radius * 10)
+      }
+    }
+    context.restore()
+    particles.dataset.bubbleCount = String(bubbleCount)
+    particles.dataset.planktonCount = String(planktonCount)
+    particles.dataset.particleSignature = [progress.toFixed(5), seam.toFixed(2), width, height].join(',')
   }
 
   function draw() {
     if (disposed) return
     const paged = chapter.classList.contains('is-project-paged') && sourceChapter.classList.contains('is-project-paged')
-    // Finish the floor handoff before revealing the stationary exhibits.
-    const arrival = reduced.matches || !paged ? 1 : smooth(.74, .98, progress)
+    const arrival = reduced.matches || !paged ? 1 : smooth(.62, .96, progress)
     const value = arrival.toFixed(5)
     if (chapter.style.getPropertyValue('--process-arrival') !== value) chapter.style.setProperty('--process-arrival', value)
     layer.dataset.descentProgress = progress.toFixed(5)
     const page = Number(chapter.dataset.projectPage || 0)
     const sourceIndex = Number(sourceChapter.dataset.projectPageIndex || 0)
+    const sourceActive = sourceTrack?.children[sourceIndex] === source
     const area = scene.getBoundingClientRect()
-    const visible = paged && !reduced.matches && !document.hidden && sourceIndex === 7
+    const visible = paged && !reduced.matches && !document.hidden && sourceActive
       && page < .1 && progress > .035 && progress < .998
       && area.bottom > -height * .15 && area.top < height * 2.2
-    layer.hidden = !visible || !groundContext || !mistContext
+    layer.hidden = !visible || !lightContext || !particleContext
     if (layer.hidden) return
-    loadIllustration()
-    prepare(ground, groundContext)
-    prepare(mist, mistContext)
-    const figure = sourceFigure.getBoundingClientRect()
+    prepare(light, lightContext)
+    prepare(particles, particleContext)
     const seam = source.getBoundingClientRect().bottom
-    const floor = parseFloat(getComputedStyle(scene).getPropertyValue('--process-floor')) || 56
-    // These two illustrated landings remain on real ground in both chapters.
-    // The image's core continues between them; its end never hangs in water.
-    const start = { x: figure.left + figure.width * .14,
-      y: Math.max(figure.bottom - figure.width * .04, seam - height * .15) }
-    const end = { x: area.left + area.width * .84,
-      y: area.bottom - floor - area.width * .01 }
-    const w = Math.max(1, (end.x - start.x) / .64)
-    const h = Math.max(1, (end.y - start.y) / .76)
-    const x = start.x - w * .18
-    const y = start.y - h * .14
-    const groundOpacity = smooth(.08, .23, progress) * (1 - smooth(.55, .75, progress))
-    const mistOpacity = smooth(.1, .35, progress) * (1 - smooth(.68, .97, progress))
-    const regions = protectedElements.flatMap(element => {
-      const opacity = Number(getComputedStyle(element).opacity)
-      const bounds = []
-      if (element.matches('.project-pages__navigation')) {
-        for (const button of element.querySelectorAll('button')) {
-          const range = document.createRange()
-          range.selectNodeContents(button)
-          bounds.push(...range.getClientRects())
-        }
-      } else bounds.push(element.getBoundingClientRect())
-      return bounds.map(rect => ({ x: rect.left, y: rect.top, width: rect.width, height: rect.height, opacity }))
-    }).filter(region => region.width > 0 && region.height > 0 && region.opacity > 0)
-
-    if (image.complete && image.naturalWidth) {
-      groundContext.drawImage(image, x, y, w, h)
-      // Light falls away down the stairs into the darker archive floor.
-      groundContext.save()
-      groundContext.globalCompositeOperation = 'source-atop'
-      const depth = groundContext.createLinearGradient(0, y, 0, y + h)
-      depth.addColorStop(0, '#071a3614')
-      depth.addColorStop(.4, '#03112760')
-      depth.addColorStop(1, '#020a1bcc')
-      groundContext.fillStyle = depth
-      groundContext.fillRect(0, 0, width, height)
-      groundContext.restore()
-      // The lower bank lands on the illustrated seabed and dissolves into it.
-      groundContext.save()
-      groundContext.globalCompositeOperation = 'destination-in'
-      const edge = groundContext.createLinearGradient(0, y, 0, y + h)
-      edge.addColorStop(0, 'transparent')
-      edge.addColorStop(.1, '#000')
-      edge.addColorStop(.87, '#000')
-      edge.addColorStop(1, 'transparent')
-      groundContext.fillStyle = edge
-      groundContext.fillRect(x, y, w, h)
-      groundContext.restore()
-    }
-    ground.style.opacity = groundOpacity.toFixed(5)
-    ground.dataset.groundSignature = [x, y, w, h, groundOpacity].map(n => n.toFixed(3)).join(',')
-    ground.dataset.groundAnchors = [start.x, start.y, end.x, end.y].map(n => n.toFixed(2)).join(',')
-    mist.style.opacity = mistOpacity.toFixed(5)
-    mist.dataset.mistSignature = [seam, progress, mistOpacity].map(n => n.toFixed(3)).join(',')
-    fog(mistContext, width * (.36 + progress * .035), seam + height * .045, width * .64, height * .19, .18)
-    fog(mistContext, width * .74, seam + height * .14, width * .48, height * .14, .085)
-    // Sparse silt drifts only with scroll. There is no time-based fog loop.
-    for (let i = 0; i < 12; i++) {
-      const px = width * (.07 + ((i * .173) % .8))
-      const py = seam + height * ((((i * .271) % 1) - .5) * .36 - progress * .045)
-      mistContext.fillStyle = `rgba(159, 177, 207, ${.045 + (i % 3) * .018})`
-      mistContext.beginPath()
-      mistContext.arc(px, py, .45 + i % 3 * .22, 0, Math.PI * 2)
-      mistContext.fill()
-    }
-    protect(groundContext, regions)
-    protect(mistContext, regions)
+    const opacity = smooth(.035, .2, progress) * (1 - smooth(.76, .998, progress))
+    light.style.opacity = opacity.toFixed(5)
+    particles.style.opacity = opacity.toFixed(5)
+    drawRefraction(seam)
+    drawParticles(seam)
+    const frames = regions(frameElements)
+    const reading = regions([...copyElements, ...navigationElements])
+    protect(lightContext, frames, reading)
+    protect(particleContext, frames, reading)
   }
 
   function followScrub() {
@@ -230,8 +247,6 @@ export function initProcessDescentTransition(chapter) {
     controller.abort()
     state.disconnect()
     resize.disconnect()
-    preload.disconnect()
-    image.onload = null
     if (originalArrival) chapter.style.setProperty('--process-arrival', originalArrival)
     else chapter.style.removeProperty('--process-arrival')
     layer.remove()

@@ -1,0 +1,101 @@
+/* INTRO–08 uses the same reading scale as CANVAS–SCREENS. Keep source
+   screenshots and their typography outside this presentation label. */
+#diptyque-details {
+  --team-type-title: clamp(40px, min(4.3vw, 8svh), 78px);
+  --team-type-summary: clamp(20px, 1.35vw, 24px);
+  --team-type-body: clamp(13px, .9vw, 14px);
+  --team-type-title-space: clamp(22px, 3svh, 32px);
+  --team-type-body-space: 18px;
+}
+
+#diptyque-details.has-simple-team-exhibition :is(.project-overview__reading-label, .sail-project__intro-label, .sail-project__kind) {
+  color: #b5cae3;
+  font: 400 9px/1.5 'Julius Sans One', sans-serif;
+  letter-spacing: .15em;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview__reading-label {
+  margin-bottom: 24px;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview[data-overview-reading] .project-overview__title,
+#diptyque-details.has-simple-team-exhibition .sail-project--seabed .sail-project__title {
+  color: #e1ebf3;
+  font: 400 var(--team-type-title)/1.04 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: -.055em;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview[data-overview-reading] .project-overview__title {
+  margin: 0 0 var(--team-type-title-space);
+}
+
+#diptyque-details.has-simple-team-exhibition .sail-project--seabed {
+  --cover-title-size: var(--team-type-title);
+}
+
+#diptyque-details.has-simple-team-exhibition .sail-project--seabed .sail-project__subtitle {
+  color: #a9c3d5;
+  font: 400 10px/1.5 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .15em;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview[data-overview-reading] .project-overview__summary > p {
+  margin: 0;
+  color: #e0e9e9;
+  font: 300 var(--team-type-summary)/1.55 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.035em;
+  word-break: keep-all;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview__narrative {
+  margin-top: var(--team-type-body-space);
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview__narrative p,
+#diptyque-details.has-simple-team-exhibition .sail-project--seabed .sail-project__description {
+  max-width: 520px;
+  margin: 0;
+  color: #aabfce;
+  font: 300 var(--team-type-body)/1.9 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
+  word-break: keep-all;
+  overflow-wrap: break-word;
+  text-wrap: pretty;
+}
+
+#diptyque-details.has-simple-team-exhibition :is(.project-overview__facts p, .project-overview__role-list p) {
+  font: 300 13px/1.75 'Intro Pretendard', var(--font-family-body);
+  letter-spacing: -.015em;
+}
+
+#diptyque-details.has-simple-team-exhibition .project-overview[data-overview-reading] :is(.project-overview__facts, .project-overview__meta, .project-overview__role-list) {
+  border-top: 0;
+}
+
+#diptyque-details.has-simple-team-exhibition .sail-project--seabed .sail-project__link {
+  color: #cbdce7;
+  font: 400 10px/1.4 'Julius Sans One', 'Helvetica Neue', Arial, sans-serif;
+  letter-spacing: .04em;
+}
+
+@media (min-width: 900px) and (max-height: 800px) {
+  #diptyque-details {
+    --team-type-title: clamp(36px, 4vw, 56px);
+    --team-type-summary: 19px;
+    --team-type-body: 13px;
+    --team-type-title-space: 18px;
+    --team-type-body-space: 15px;
+  }
+  #diptyque-details.has-simple-team-exhibition .project-overview__reading-label { margin-bottom: 16px; }
+  #diptyque-details.has-simple-team-exhibition .project-overview__narrative p,
+  #diptyque-details.has-simple-team-exhibition .sail-project--seabed .sail-project__description { line-height: 1.85; }
+}
+
+@media (max-width: 899px) {
+  #diptyque-details {
+    --team-type-title: clamp(36px, 8vw, 52px);
+    --team-type-summary: 20px;
+  }
+  #diptyque-details.has-simple-team-exhibition .project-overview__reading-label { margin-bottom: 17px; }
+  #diptyque-details.has-simple-team-exhibition .project-overview[data-overview-reading] .project-overview__summary > p br { display: block; }
+}

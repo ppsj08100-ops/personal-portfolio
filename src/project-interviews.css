@@ -8,14 +8,41 @@
 .project-research__paper .user-research-document--survey > img:not(:nth-child(2)) { display: none; }
 
 #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion[hidden] { display: none; }
-#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-device--monitor { left: 26%; width: 48%; }
-#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-device--monitor > .process-device__viewport > .process-device__screen { aspect-ratio: 681 / 800; }
-#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion { left: 0; width: 24%; bottom: calc(var(--process-air-lift) + 36px); }
-#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion.process-device--phone { left: 76%; }
+/* One readable results sheet anchors a tidy column of supporting evidence.
+   Limit the whole group by scene height as well as width on shorter screens. */
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] {
+  --process-scene-height: clamp(440px, 76svh, 700px);
+  --survey-frame-inset: 10px;
+  --survey-gap: clamp(16px, 2cqw, 24px);
+  --survey-main-width: min(57cqw, calc((var(--process-scene-height) - var(--process-air-lift) - 34px) * .7025 + var(--survey-frame-inset)));
+  --survey-main-height: calc((var(--survey-main-width) - var(--survey-frame-inset)) / .7025 + var(--survey-frame-inset));
+  --survey-support-width: calc((var(--survey-main-height) - var(--survey-gap) - 20px) / 2.3921235 + var(--survey-frame-inset));
+  --survey-group-width: calc(var(--survey-main-width) + var(--survey-gap) + var(--survey-support-width));
+  --survey-group-left: calc((100% - var(--survey-group-width)) / 2);
+}
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] .process-device--monitor { left: var(--survey-group-left); top: 24px; bottom: auto; width: var(--survey-main-width); }
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-device--monitor > .process-device__viewport > .process-device__screen { aspect-ratio: 562 / 800; }
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion { left: calc(var(--survey-group-left) + var(--survey-main-width) + var(--survey-gap)); top: 24px; bottom: auto; width: var(--survey-support-width); }
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion.process-device--phone { top: calc(24px + (var(--survey-support-width) - var(--survey-frame-inset)) * 480 / 563 + var(--survey-frame-inset) + var(--survey-gap)); }
 #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-preview-key='survey-01'] > .process-device__viewport > .process-device__screen { aspect-ratio: 563 / 480; }
-#diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-preview-key='survey-03'] > .process-device__viewport > .process-device__screen { aspect-ratio: 858 / 867; }
+#diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-preview-key='survey-03'] > .process-device__viewport > .process-device__screen { aspect-ratio: 532 / 819.04; }
 #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='1'] .process-device--monitor { left: 50%; translate: -50% 0; width: min(88%, calc((var(--process-scene-height) - var(--process-air-lift) - 24px) * 1.105263)); }
 #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='1'] .process-device--monitor > .process-device__viewport > .process-device__screen { aspect-ratio: 1890 / 1710; }
+
+/* Remove only the gray capture margins from the live survey preview. */
+#diptyque-interviews .project-research__paper .user-research-document--survey { width: 562px; height: 800px; overflow: hidden; }
+#diptyque-interviews .project-research__paper .user-research-document--survey > img:nth-child(2) { position: absolute; left: -52px; top: 0; width: 681px; height: 800px; }
+
+/* The two source captures have different widths, so a single cover crop
+   cannot fill the companion without cutting off actual responses. */
+#diptyque-process #diptyque-interviews .survey-preview--cropped { display: block; width: 532px !important; height: 819.04px !important; padding: 0; overflow: hidden; background: #eeebf8; }
+.survey-preview__segment { position: relative; width: 532px; overflow: hidden; }
+.survey-preview__segment--overview { height: 560px; }
+#diptyque-interviews .survey-preview__segment > img { position: absolute; display: block; max-width: none; max-height: none; }
+#diptyque-interviews .survey-preview__segment--overview > img { left: -107px; top: 0; width: 858px; height: 867px; }
+.survey-preview__label { height: 24px; margin: 0; padding: 4px 10px; color: #52515b; font: 400 14px/16px 'Intro Pretendard', var(--font-family-body); }
+.survey-preview__segment--comments { height: 235.04px; }
+#diptyque-interviews .survey-preview__segment--comments > img { left: -132.21px; top: -640.08px; width: 900.31px; height: 909.81px; }
 
 .project-interviews__pages, .project-interviews__image-tools { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-bottom: 16px; }
 .project-interviews__pages[hidden] { display: none; }
@@ -29,11 +56,27 @@
 #diptyque-interviews .project-interviews__dialog .user-research-document:focus-visible { outline: 2px solid #536e83; outline-offset: -3px; }
 #diptyque-interviews .project-interviews__dialog .user-research-document > img { width: auto; max-width: 100%; max-height: max(160px, calc(100svh - 300px)); margin-inline: auto; }
 #diptyque-interviews .project-interviews__dialog[data-image-zoom='original'] .user-research-document > img { width: var(--source-width); max-width: none; max-height: none; margin-inline: 0; }
+@media (min-width: 900px) {
+  /* Seat the survey group beside the reading column, with its caption below. */
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] {
+    --survey-lower-offset: clamp(44px, 7svh, 76px);
+    --process-air-caption-clearance: calc(60px + var(--survey-lower-offset));
+  }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] .process-device--monitor,
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] .process-exhibit__companion { top: calc(24px + var(--survey-lower-offset)); }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] .process-exhibit__companion.process-device--phone { top: calc(24px + var(--survey-lower-offset) + (var(--survey-support-width) - var(--survey-frame-inset)) * 480 / 563 + var(--survey-frame-inset) + var(--survey-gap)); }
+}
 @media (max-width: 899px) {
-  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit { --process-scene-height: calc(153cqw + 126px); }
-  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-device--monitor { left: 4%; width: 92%; }
-  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion { left: 4%; top: calc(48px + 108cqw); width: 44%; bottom: auto; }
-  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion.process-device--phone { left: 52%; }
+  /* Keep the primary sheet large; equal-height supporting screens form one row. */
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .project-research__layout:has([data-process-frame-count='3']) { container-type: inline-size; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] {
+    --survey-main-height: calc((92cqw - 8px) * 800 / 562 + 8px);
+    --survey-support-height: max(calc((56cqw - 8px) * 480 / 563 + 8px), calc((32cqw - 8px) * 819.04 / 532 + 8px));
+    --process-scene-height: calc(var(--survey-main-height) + var(--survey-support-height) + 116px);
+  }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='3'] .process-device--monitor { left: 4%; top: 16px; width: 92%; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion { left: 4%; top: calc(40px + var(--survey-main-height)); width: 56%; }
+  #diptyque-process.has-simple-process-exhibition #diptyque-interviews .process-exhibit__companion.process-device--phone { left: 64%; top: calc(40px + var(--survey-main-height)); width: 32%; }
   #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='1'] { --process-scene-height: calc(84cqw + 96px); }
   #diptyque-process.has-simple-process-exhibition #diptyque-interviews [data-process-frame-count='1'] .process-device--monitor { left: 4%; translate: none; width: 92%; }
 }

@@ -184,7 +184,10 @@ export function createMarineLife(mobile = false, animated = false) {
       y: art.hipY + (.5 - MERMAID_SEAT.y) * height,
       width, height, kind: 0, texture: 0, hinge: MERMAID_SEAT.tailHinge,
       direction: 1, angle: 0, phase: 0, opacity: .94, speed: 1.05, sway: .055,
-    }]
+    }].filter(pose =>
+      pose.kind !== 1 ||
+      pose.zone === 'passing-silver-school' ||
+      pose.zone === 'open-water-school')
   }
 
   function renderFallback() {

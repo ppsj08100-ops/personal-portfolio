@@ -84,6 +84,29 @@
 }
 .about-title.is-voyage .about-title__voyage { height: 220svh; }
 .about-title.is-voyage .about-title__stage { position: sticky; top: 0; height: 100svh; min-height: 0; }
+/* A restrained baseline composition shares the other chapter titles' type,
+   palette and centered alignment while giving ABOUT a smaller introductory role. */
+#about.has-about-typography,
+#about.has-about-typography [data-about-stage] { background: #020b1d; }
+#about.has-about-typography .tidal-title__sea,
+#about.has-about-typography [data-about-stage] > .ocean-continuity__water,
+#about.has-about-typography .work-water-atmosphere { display: none; }
+#about.has-about-typography .about-title__heading { will-change: opacity, translate; }
+#about.has-about-typography .about-title__track {
+  align-items: baseline;
+  gap: clamp(20px, 3vw, 48px);
+}
+#about.has-about-typography .about-title__first {
+  font-size: .56em;
+  line-height: 1;
+  letter-spacing: .1em;
+  color: #a9bdcd;
+}
+#about.has-about-typography .about-title__final {
+  font-size: 1em;
+  line-height: 1.08;
+  letter-spacing: -.04em;
+}
 /* The actual card scene enters the wake after the title is carried aside. */
 .about-title.is-voyage + .capability-scene__viewport { margin-top: -35svh; }
 .capability-scene__viewport.has-about-wave-handoff {

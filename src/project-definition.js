@@ -9,21 +9,21 @@ const documentTypes = {
 const users = {
   1: {
     name: '이수진', type: '기존 고객형', label: 'SECONDARY PERSONA',
-    persona: '공식 제품 정보와 브랜드 소식을 한곳에서 확인하고 싶은 사용자.\n관심 제품을 저장하고 다시 찾기 쉬운 탐색을 계획했습니다.',
-    journey: '브랜드 소식과 제품 정보가 여러 채널에 흩어지는 여정.\n공식 정보 탐색부터 관심 제품 관리·재구매까지 연결합니다.',
-    canvas: '공식 정보와 제품 탐색을 하나의 채널로.\n브랜드 소식·제품 정보·저장·재구매가 이어지는 경험을 가설로 정리했습니다.',
+    persona: '공식 정보와 관심 제품을 한곳에서 확인하고 다시 찾고 싶은 사용자입니다.',
+    journey: '공식 정보 확인에서 관심 제품 저장과 재구매로 이어지는 경로입니다.',
+    canvas: '브랜드 소식·제품 정보·저장·재구매를 한 채널로 연결하는 가설입니다.',
   },
   2: {
     name: '박지은', type: '브랜드 몰입형', label: 'PRIMARY PERSONA',
-    persona: '브랜드의 분위기와 향의 이야기를 깊이 경험하고 싶은 사용자.\n이야기에서 관심 제품을 발견하는 흐름을 설계했습니다.',
-    journey: '브랜드 탐색에서 향의 이야기, 제품 발견으로 이어지는 여정.\n이야기와 제품의 연결이 약해지는 지점을 찾아 경험을 이어줍니다.',
-    canvas: '제품을 보기 전에, 딥디크의 세계를 경험하도록.\n몰입형 메인·스토리 아카이브·관련 제품 연결을 해결 가설로 정리했습니다.',
+    persona: '향의 이야기와 브랜드 분위기를 깊이 경험하고 싶은 사용자입니다.',
+    journey: '브랜드 탐색에서 향의 이야기와 관심 제품 발견으로 이어지는 경로입니다.',
+    canvas: '몰입형 메인·스토리 아카이브·관련 제품 연결로 브랜드 경험을 확장하는 가설입니다.',
   },
   3: {
     name: '최동민', type: '향 탐색형', label: 'SECONDARY PERSONA',
-    persona: '전문적인 향 지식 없이 나에게 맞는 향을 찾고 싶은 사용자.\n장면과 분위기로 향을 이해하고 후보를 비교하도록 계획했습니다.',
-    journey: '향 찾기에서 취향 발견, 추천 향 비교와 선택 판단까지.\n짧은 질문과 추천 이유를 통해 선택의 근거를 이해하도록 연결합니다.',
-    canvas: '향 용어를 해석하는 탐색에서, 장면으로 이해하는 탐색으로.\n취향 질문·추천 이유·제품 차이 비교가 선택의 확신을 돕는지 검증합니다.',
+    persona: '전문적인 향 지식 없이 취향에 맞는 향을 찾고 싶은 사용자입니다.',
+    journey: '취향 질문에서 추천 이유 확인과 향 후보 비교로 이어지는 경로입니다.',
+    canvas: '장면 표현·취향 질문·추천 이유·제품 비교가 선택의 확신을 돕는지 검증하는 가설입니다.',
   },
 }
 
@@ -42,13 +42,13 @@ export function initProjectDefinition(section) {
   function describe(key) {
     const user = users[selectedUser]
     const doc = documentTypes[key]
-    section.querySelector('[data-research-caption]').textContent = `${user.name} · ${user.type} / ${doc.caption}`
+    section.querySelector('[data-research-caption]').textContent = `${doc.caption} · 세 사용자 유형`
     section.querySelector('[data-research-insight-label]').textContent = key === 'persona'
       ? `0${selectedUser} / ${user.label} · ${user.name}`
       : `0${selectedUser} / ${doc.label} · ${user.type}`
     section.querySelector('[data-research-insight]').textContent = user[key]
     section.querySelector('[data-definition-canvas-note]').hidden = key !== 'canvas'
-    opener.setAttribute('aria-label', `${doc.title} — ${user.name}, ${user.type} 크게 보기`)
+    opener.setAttribute('aria-label', `${doc.title} 세 사용자 자료 크게 보기`)
   }
 
   function showUser(root) {
@@ -69,6 +69,7 @@ export function initProjectDefinition(section) {
     templates.forEach(template => showUser(template.content))
     showUser(section)
     describe(section.dataset.researchActive)
+    syncDialog()
   }, { signal }))
 
   function zoom(mode) {
@@ -82,7 +83,8 @@ export function initProjectDefinition(section) {
     }
   }
 
-  opener.addEventListener('click', () => {
+  function syncDialog() {
+    if (!dialog.open) return
     const user = users[selectedUser]
     const doc = documentTypes[section.dataset.researchActive]
     const image = dialog.querySelector(`img[data-definition-image="${selectedUser}"]`)
@@ -90,7 +92,8 @@ export function initProjectDefinition(section) {
     originalLink.href = image.src
     originalLink.setAttribute('aria-label', `${doc.title} — ${user.type} 원본 이미지 열기 (새 탭)`)
     zoom('fit')
-  }, { signal })
+  }
+  opener.addEventListener('click', syncDialog, { signal })
   zoomButtons.forEach(button => button.addEventListener('click', () => zoom(button.dataset.definitionZoom), { signal }))
 
   return () => {

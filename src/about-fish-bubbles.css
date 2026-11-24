@@ -1,0 +1,14 @@
+.about-fish-bubbles {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+.about-fish-bubbles[hidden] { display: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  .about-fish-bubbles { display: none; }
+}

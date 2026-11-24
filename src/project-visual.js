@@ -4,15 +4,13 @@ const documents = {
   moodboard: {
     title: '딥디크 디자인 무드보드', caption: '무드보드 · 향과 장면, 이야기를 하나의 무드로',
     label: '01 / VISUAL MOOD',
-    insight: '펜드로잉과 종이 콜라주, 식물 모티프를 중심으로\n향의 이야기와 아카이브의 분위기를 하나의 화면 언어로 모았습니다.',
-    keywords: ['PEN DRAWING', 'PAPER COLLAGE', 'BOTANICAL', 'ARCHIVE', 'VINTAGE TEXTURE'],
+    insight: '펜드로잉과 종이 콜라주, 식물 이미지를 공통 비주얼로 정리했습니다.',
     source: '딥디크 리뉴얼 · Design Mood Board', node: '3823-5795',
   },
   mindmap: {
     title: '딥디크 디자인 마인드맵', caption: '디자인 마인드맵 · 브랜드의 이미지와 이야기 확장',
     label: '02 / BRAND ASSOCIATIONS',
-    insight: '자연·향수·파리·창립자·예술·여행·기억에서\n원료와 장소, 드로잉과 감정으로 확장해 비주얼 방향의 기준을 세웠습니다.',
-    keywords: ['SCENT', 'SCENE', 'STORY', 'MEMORY'],
+    insight: '자연·여행·예술에서 연상한 이미지로 비주얼 방향의 기준을 세웠습니다.',
     source: '딥디크 리뉴얼 · Design Mind Map', node: '3624-10747',
   },
 }
@@ -23,9 +21,7 @@ export function initProjectVisual(section) {
   const { signal } = controller
   const dialog = section.querySelector('dialog')
   const opener = section.querySelector('[data-research-open]')
-  const keywords = section.querySelector('[data-visual-keywords]')
   const sourceLink = section.querySelector('[data-visual-source]')
-  const sourceCaption = section.querySelector('[data-visual-source-caption]')
   const originalLink = dialog.querySelector('[data-visual-original]')
   const zoomButtons = [...dialog.querySelectorAll('[data-visual-zoom]')]
 
@@ -33,12 +29,7 @@ export function initProjectVisual(section) {
     documents, initial: 'moodboard',
     onSelect(key) {
       const doc = documents[key]
-      keywords.replaceChildren(...doc.keywords.map(word => {
-        const item = document.createElement('li')
-        item.textContent = word
-        return item
-      }))
-      sourceCaption.textContent = doc.source
+      sourceLink.title = doc.source
       sourceLink.href = DIPTYQUE_PROPOSAL_URL
       sourceLink.setAttribute('aria-label', `${doc.title} Figma 장표 열기 (새 탭)`)
       section.querySelector('[data-visual-document-number]').textContent = doc.label.slice(0, 2)

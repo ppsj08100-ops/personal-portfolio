@@ -111,10 +111,20 @@
   background: linear-gradient(180deg, #020b1d26, transparent 26% 72%, var(--work-ocean-deep, #020b1d));
 }
 #tools-skills .skill-reef__art {
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 5% 95%, transparent), linear-gradient(180deg, #000 62%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent, #000 5% 95%, transparent), linear-gradient(180deg, #000 62%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 var(--reef-fade-start, 5%) var(--reef-fade-end, 95%), transparent), linear-gradient(180deg, #000 62%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent, #000 var(--reef-fade-start, 5%) var(--reef-fade-end, 95%), transparent), linear-gradient(180deg, #000 62%, transparent 100%);
   -webkit-mask-composite: source-in;
   mask-composite: intersect;
+}
+/* Adjacent crops are one painting. Fading their shared edges cut dark vertical
+   gutters through the coral; only the outside edges should dissolve into water. */
+@media (min-width: 768px) {
+  #tools-skills .skill-reef__rock--design { --reef-fade-end: 100%; }
+  #tools-skills .skill-reef__rock--workflow { --reef-fade-start: 0%; }
+}
+@media (min-width: 1200px) {
+  #tools-skills .skill-reef__rock--workflow { --reef-fade-end: 100%; }
+  #tools-skills .skill-reef__rock--creative { --reef-fade-start: 0%; }
 }
 
 @media (max-width: 900px) {

@@ -60,6 +60,7 @@
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='3'] .project-overview__object--primary { left: 31%; width: 66%; z-index: 3; }
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='3'] .project-overview__object--secondary { left: 4%; width: 27%; bottom: var(--simple-side-seat); z-index: 4; }
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='4'] .project-overview__object--primary { left: 10%; width: 80%; }
+#diptyque-details.has-simple-team-exhibition .project-overview--subpage .project-overview__object--primary { left: 5%; width: 90%; }
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='5'] .project-overview__object--primary { left: 64%; width: 28%; bottom: var(--simple-side-seat); z-index: 4; }
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='5'] .project-overview__object--secondary { left: 5%; width: 69%; z-index: 3; }
 #diptyque-details.has-simple-team-exhibition [data-exhibition-index='6'] .project-overview__object--primary { left: 6%; width: 76%; z-index: 3; }

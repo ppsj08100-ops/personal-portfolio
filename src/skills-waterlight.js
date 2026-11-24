@@ -5,13 +5,12 @@ gsap.registerPlugin(ScrollTrigger)
 
 const clamp = gsap.utils.clamp(0, 1)
 
-/** A broad, scroll-driven reflection passes over the existing underwater scene. */
+/** A scroll-driven reflection passes over the tool glass without painting water. */
 export function initSkillsWaterlight(section) {
   if (!section) return () => {}
   const scene = section.querySelector('[data-skills-reef]')
-  const light = scene?.querySelector('[data-skills-waterlight]')
   const glasses = [...(scene?.querySelectorAll('[data-skill-node] .skill-drop__water') || [])]
-  if (!scene || !light || !glasses.length) return () => {}
+  if (!scene || !glasses.length) return () => {}
 
   const media = gsap.matchMedia()
   let disposed = false
@@ -28,13 +27,11 @@ export function initSkillsWaterlight(section) {
   media.add('(prefers-reduced-motion: no-preference)', () => {
     const controller = new AbortController()
     const { signal } = controller
-    const originalLightStyle = light.getAttribute('style')
     const originalReflections = glasses.map(glass => ({
       glass,
       value: glass.style.getPropertyValue('--skill-light'),
       priority: glass.style.getPropertyPriority('--skill-light'),
     }))
-    const setLightX = gsap.quickSetter(light, 'x', 'px')
     const state = { progress: 0 }
     const layout = { width: 1, height: 1, anchors: [] }
     let active = true
@@ -61,10 +58,8 @@ export function initSkillsWaterlight(section) {
     function render() {
       if (!active) return
       const progress = clamp(state.progress)
-      // The CSS light is 75% of the scene width, initially centered at 50%.
-      // It travels through the water without moving the reef or its controls.
+      // The reflection travels across the glass without adding a backdrop plane.
       const centerX = (-.15 + progress * 1.3) * layout.width
-      setLightX(centerX - layout.width * .5)
 
       const bounds = scene.getBoundingClientRect()
       const viewportHeight = window.innerHeight
@@ -113,8 +108,6 @@ export function initSkillsWaterlight(section) {
       controller.abort()
       timeline.scrollTrigger?.kill()
       timeline.kill()
-      if (originalLightStyle === null) light.removeAttribute('style')
-      else light.setAttribute('style', originalLightStyle)
       originalReflections.forEach(({ glass, value, priority }) => {
         if (value) glass.style.setProperty('--skill-light', value, priority)
         else glass.style.removeProperty('--skill-light')

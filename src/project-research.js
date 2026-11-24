@@ -4,22 +4,22 @@ const researchDocuments = {
   brand: {
     title: '딥디크 자사 분석', caption: '자사 분석',
     label: 'BRAND AUDIT → RENEWAL OPPORTUNITY',
-    insight: '상품 정보에서 한 걸음 더 나아가,\n향의 기억과 원료, 분위기를 발견하는 경험으로.',
+    insight: '제품 정보에 더해 향의 기억·원료·분위기를 전하는 방향을 도출했습니다.',
   },
   competition: {
     title: '딥디크 경쟁사 분석', caption: '경쟁사 분석',
     label: 'COMPETITIVE RESEARCH → DIPTYQUE DIRECTION',
-    insight: '조말론·르라보·바이레도의 스토리와 탐색 방식을 비교해,\n딥디크의 향 이야기와 이해하기 쉬운 선택 흐름으로.',
+    insight: '조말론·르라보·바이레도의 스토리와 탐색 방식을 비교했습니다.\n딥디크의 향 이야기와 이해하기 쉬운 선택 흐름을 개선 방향으로 정했습니다.',
   },
   steep: {
     title: '딥디크 STEEP 분석', caption: 'STEEP 분석',
     label: 'STEEP → EXPERIENCE DIRECTION',
-    insight: '자기표현과 브랜드 가치, 디지털 탐색을 연결해\n감각적이면서 신뢰할 수 있는 향 경험으로.',
+    insight: '자기표현과 브랜드 가치, 디지털 탐색의 변화를 살폈습니다.\n감각적이면서 신뢰할 수 있는 향 경험을 방향으로 정했습니다.',
   },
   threec: {
     title: '딥디크 3C 분석', caption: '3C 분석',
     label: 'CUSTOMER · COMPETITOR · COMPANY → INSIGHT',
-    insight: '고객의 빠르고 명확한 탐색과 딥디크의 감성·세계관을 연결해\n빠르게 찾고, 깊게 경험하고, 자연스럽게 구매하는 온라인 경험으로.',
+    insight: '고객의 빠른 탐색 요구와 딥디크의 감성·세계관을 연결했습니다.\n제품 찾기와 브랜드 경험이 자연스럽게 이어지는 구조를 제안했습니다.',
     image: '/images/research/diptyque-threec-original-v1.webp',
   },
 }

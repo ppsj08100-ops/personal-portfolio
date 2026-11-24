@@ -1,28 +1,27 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { createTidalSpatialField } from './tidal-spatial-field.js'
-import { initWorkWaterAtmosphere } from './work-water-atmosphere.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
 const clamp = gsap.utils.clamp(0, 1)
 const smooth = value => value * value * (3 - 2 * value)
 
-/** Keep the original voyage clock while the complete title passes through water. */
+/** A centered reading hold leads into the original leftward title passage. */
 export function initAboutTitle(section) {
   if (!section) return () => {}
   const voyage = section.querySelector('[data-about-voyage]')
   const stage = section.querySelector('[data-about-stage]')
   const first = section.querySelector('[data-about-first]')
   const final = section.querySelector('[data-about-final]')
-  const canvas = section.querySelector('[data-about-wave]')
+  const track = section.querySelector('[data-about-track]')
   const cue = section.querySelector('.about-title__cue')
   const cardsViewport = document.querySelector('#capability-cards')?.closest('.capability-scene__viewport')
-  if (!voyage || !stage || !first || !final || !canvas) return () => {}
+  if (!voyage || !stage || !first || !final || !track) return () => {}
 
-  const destroyAtmosphere = initWorkWaterAtmosphere(section, {
-    opening: stage, variant: 'selected', depthLinked: false,
-  })
+  const hadTypography = section.classList.contains('has-about-typography')
+  const originalVariant = stage.getAttribute('data-bg-variant')
+  section.classList.add('has-about-typography')
+  stage.dataset.bgVariant = 'typography'
   const media = gsap.matchMedia()
   let disposed = false
   let refreshFrame = 0
@@ -39,6 +38,8 @@ export function initAboutTitle(section) {
     const { signal } = controller
     const hadVoyage = section.classList.contains('is-voyage')
     const cueStyle = cue?.getAttribute('style')
+    const heading = section.querySelector('.about-title__heading')
+    const headingStyle = heading?.getAttribute('style')
     const originalProgress = section.style.getPropertyValue('--about-wave-progress')
     const originalPriority = section.style.getPropertyPriority('--about-wave-progress')
     const hadHandoff = cardsViewport?.classList.contains('has-about-wave-handoff')
@@ -46,10 +47,10 @@ export function initAboutTitle(section) {
     const originalFeatherPriority = cardsViewport?.style.getPropertyPriority('--about-handoff-feather')
     const state = { progress: 0 }
     let active = true
+    let travel = 0
 
     section.classList.add('is-voyage')
     cardsViewport?.classList.add('has-about-wave-handoff')
-    const field = createTidalSpatialField({ stage, canvas, runs: [first, final] })
 
     function paintHandoff() {
       if (!active || !cardsViewport) return
@@ -63,14 +64,20 @@ export function initAboutTitle(section) {
     function render() {
       if (!active) return
       const progress = clamp(state.progress)
-      field.render(progress)
       section.style.setProperty('--about-wave-progress', progress.toFixed(4))
+      if (heading) {
+        const passage = smooth(clamp((progress - .16) / .8))
+        heading.style.translate = `${(-travel * passage).toFixed(2)}px 0px`
+        heading.style.opacity = (1 - smooth(clamp((progress - .97) / .03))).toFixed(4)
+      }
       if (cue) cue.style.opacity = (1 - smooth(clamp((progress - .25) / .2))).toFixed(4)
       paintHandoff()
     }
     function measure() {
       if (!active) return
-      field.measure()
+      // The track is centered before translation. offsetWidth stays independent
+      // of its current pose, so a resize never feeds travel back into itself.
+      travel = stage.clientWidth * .59 + track.offsetWidth * .5
       render()
     }
 
@@ -91,7 +98,6 @@ export function initAboutTitle(section) {
       onUpdate: paintHandoff, onRefresh: paintHandoff,
     })
 
-    field.ready.then(() => { if (active && !disposed) measure() })
     window.addEventListener('resize', refreshLayout, { signal, passive: true })
     document.fonts?.addEventListener('loadingdone', refreshLayout, { signal })
     document.fonts?.ready.then(() => { if (active && !disposed) refreshLayout() })
@@ -103,11 +109,14 @@ export function initAboutTitle(section) {
       timeline.scrollTrigger?.kill()
       timeline.kill()
       handoff?.kill()
-      field.destroy()
       if (!hadVoyage) section.classList.remove('is-voyage')
       if (cue) {
         if (cueStyle === null) cue.removeAttribute('style')
         else cue.setAttribute('style', cueStyle)
+      }
+      if (heading) {
+        if (headingStyle === null) heading.removeAttribute('style')
+        else heading.setAttribute('style', headingStyle)
       }
       if (originalProgress) section.style.setProperty('--about-wave-progress', originalProgress, originalPriority)
       else section.style.removeProperty('--about-wave-progress')
@@ -123,7 +132,9 @@ export function initAboutTitle(section) {
   return () => {
     disposed = true
     media.revert()
-    destroyAtmosphere()
+    if (!hadTypography) section.classList.remove('has-about-typography')
+    if (originalVariant === null) stage.removeAttribute('data-bg-variant')
+    else stage.setAttribute('data-bg-variant', originalVariant)
     cancelAnimationFrame(refreshFrame)
   }
 }

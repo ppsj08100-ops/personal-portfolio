@@ -9,26 +9,21 @@ const bubbles = [
   { x: 77, size: 3, duration: 16200, phase: .38, drift: 10 },
 ]
 
-/** The same viewport of seabed is cropped by both adjacent sections. Their
- * original layout, sticky journey and coral/helm clocks remain untouched. */
+/** The underwater lens arrives through the same water without adding scenery. */
 export function initIntroductionApproachWater(root = document) {
   const introduction = root.querySelector('#introduction')
   const approach = root.querySelector('#design-process')
   const stage = approach?.querySelector('[data-approach-stage]')
-  const environment = stage?.querySelector('.design-process__environment')
-  const firstCoral = approach?.querySelector('[data-approach-visual] > img')
-  const helm = approach?.querySelector('[data-approach-helm]')
-  if (!introduction || !environment || !firstCoral || !helm) return () => {}
+  const lens = approach?.querySelector('[data-approach-lens]')
+  if (!introduction || !stage || !lens) return () => {}
 
   const controller = new AbortController()
   const { signal } = controller
   const reduced = matchMedia('(prefers-reduced-motion: reduce)')
-  const compact = matchMedia('(max-width: 899px)')
   const menu = root.querySelector('#portfolio-menu')
   const hosts = []
   const animations = []
-  const variables = [[firstCoral, '--connection-art-x'], [firstCoral, '--connection-art-y'],
-    [firstCoral, '--connection-art-scale'], [helm, '--connection-helm-y']]
+  const variables = [[lens, '--connection-lens-y']]
   const originals = variables.map(([node, property]) => [node, property,
     node.style.getPropertyValue(property), node.style.getPropertyPriority(property)])
   let active = true
@@ -36,24 +31,7 @@ export function initIntroductionApproachWater(root = document) {
   let inView = false
   let enabled = false
 
-  for (const [section, backgroundParent] of [[introduction, introduction], [approach, environment]]) {
-    const background = document.createElement('div')
-    background.className = 'approach-connection__background'
-    background.setAttribute('aria-hidden', 'true')
-    const plane = document.createElement('div')
-    plane.className = 'approach-connection__water'
-    const terrain = document.createElement('img')
-    terrain.src = '/images/underwater-seabed-hero.png'
-    terrain.width = 1672
-    terrain.height = 941
-    terrain.alt = ''
-    terrain.decoding = 'async'
-    terrain.loading = 'lazy'
-    terrain.draggable = false
-    plane.append(terrain)
-    background.append(plane)
-    backgroundParent.prepend(background)
-
+  for (const section of [introduction, approach]) {
     const foreground = document.createElement('div')
     foreground.className = 'approach-connection__foreground'
     foreground.setAttribute('aria-hidden', 'true')
@@ -78,7 +56,7 @@ export function initIntroductionApproachWater(root = document) {
     }
     foreground.append(air)
     ;(section === introduction ? introduction : stage).append(foreground)
-    hosts.push({ section, background, foreground, terrain, plane, air })
+    hosts.push({ section, foreground, air })
     section.classList.add('has-approach-connection')
   }
 
@@ -100,21 +78,13 @@ export function initIntroductionApproachWater(root = document) {
     enabled = !reduced.matches && approach.classList.contains('is-pinned')
     introduction.classList.toggle('has-approach-connection-motion', enabled)
     approach.classList.toggle('has-approach-connection-motion', enabled)
-    // The entry pose is already neutral before the original pin clock starts.
-    // Later 45° departures and the three-scene orbit are owned by their clock.
+    // The entry offset settles before the chapter's lens movement starts.
     const arrival = enabled ? smooth(clamp((1 - stageBox.top / height) / .90)) : 1
-    firstCoral.style.setProperty('--connection-art-x', `${((1 - arrival) * (compact.matches ? 30 : 76)).toFixed(2)}px`)
-    firstCoral.style.setProperty('--connection-art-y', `${((1 - arrival) * 18).toFixed(2)}px`)
-    firstCoral.style.setProperty('--connection-art-scale', (1 - (1 - arrival) * .16).toFixed(4))
-    helm.style.setProperty('--connection-helm-y', `${((1 - arrival) * Math.min(58, height * .07)).toFixed(2)}px`)
-    const travel = smooth(clamp((height - introBox.top) / (height + introBox.height)))
+    lens.style.setProperty('--connection-lens-y', `${((1 - arrival) * Math.min(58, height * .07)).toFixed(2)}px`)
     for (const host of hosts) {
       const top = host.section === introduction ? introBox.top : stageBox.top
       const y = enabled ? -top : 0
-      for (const plane of [host.plane, host.air]) {
-        plane.style.setProperty('--connection-plane-y', `${y.toFixed(3)}px`)
-        plane.style.setProperty('--connection-current-x', `${(24 - travel * 48).toFixed(2)}px`)
-      }
+      host.air.style.setProperty('--connection-plane-y', `${y.toFixed(3)}px`)
     }
     approach.dataset.connectionArrival = arrival.toFixed(4)
     syncBubbles()
@@ -125,7 +95,6 @@ export function initIntroductionApproachWater(root = document) {
   const intersection = new IntersectionObserver(entries => {
     entries.forEach(entry => visible.set(entry.target, entry.isIntersecting))
     inView = [...visible.values()].some(Boolean)
-    if (inView) hosts.forEach(host => { host.terrain.loading = 'eager' })
     syncBubbles()
   })
   intersection.observe(introduction)
@@ -140,7 +109,6 @@ export function initIntroductionApproachWater(root = document) {
   window.addEventListener('scroll', schedule, { passive: true, signal })
   window.addEventListener('resize', schedule, { passive: true, signal })
   reduced.addEventListener('change', schedule, { signal })
-  compact.addEventListener('change', schedule, { signal })
   document.addEventListener('visibilitychange', syncBubbles, { signal })
   ScrollTrigger.addEventListener('refresh', schedule)
   document.fonts?.ready.then(schedule)
@@ -156,9 +124,8 @@ export function initIntroductionApproachWater(root = document) {
     ScrollTrigger.removeEventListener('refresh', schedule)
     cancelAnimationFrame(frame)
     animations.forEach(animation => animation.cancel())
-    hosts.forEach(({ section, background, foreground }) => {
+    hosts.forEach(({ section, foreground }) => {
       section.classList.remove('has-approach-connection', 'has-approach-connection-motion')
-      background.remove()
       foreground.remove()
     })
     originals.forEach(([node, property, value, priority]) => {

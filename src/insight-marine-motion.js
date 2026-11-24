@@ -7,6 +7,7 @@ const VERTEX = `
   uniform vec2 u_size;
   uniform vec2 u_artOrigin;
   uniform vec2 u_artSize;
+  uniform mat3 u_projection;
   uniform float u_time;
   uniform float u_kind;
   uniform float u_hinge;
@@ -15,7 +16,7 @@ const VERTEX = `
   uniform float u_phase;
   uniform float u_speed;
   uniform float u_sway;
-  varying vec2 v_uv;
+  varying MASK_UV_PRECISION vec2 v_uv;
   varying MASK_UV_PRECISION vec2 v_artUv;
   void main() {
     v_uv = a_uv;
@@ -44,17 +45,19 @@ const VERTEX = `
     float c = cos(u_angle), s = sin(u_angle);
     p = mat2(c, s, -s, c) * p + u_center;
     v_artUv = (p - u_artOrigin) / u_artSize;
-    gl_Position = vec4(p.x / u_viewport.x * 2.0 - 1.0,
-                       1.0 - p.y / u_viewport.y * 2.0, 0.0, 1.0);
+    vec3 projected = u_projection * vec3(p, 1.0);
+    gl_Position = vec4(projected.x / u_viewport.x * 2.0 - projected.z,
+                       projected.z - projected.y / u_viewport.y * 2.0,
+                       0.0, projected.z);
   }
 `
 const FRAGMENT = `
-  precision mediump float;
+  precision MASK_UV_PRECISION float;
   uniform sampler2D u_image;
   uniform sampler2D u_occlusion;
   uniform float u_opacity;
   uniform float u_behindWreck;
-  varying vec2 v_uv;
+  varying MASK_UV_PRECISION vec2 v_uv;
   varying MASK_UV_PRECISION vec2 v_artUv;
   void main() {
     float visibility = mix(1.0, texture2D(u_occlusion, v_artUv).r, u_behindWreck);
@@ -73,15 +76,20 @@ export function createMarineMotion(layer, images, getPoses) {
   if (!gl) return null
   const shaders = [], buffers = [], textures = []
   const occlusionTextures = new Map()
-  let program, sizeObserver
+  let program, sizeObserver, projectionObserver
   let disposed = false, active = false, frame = 0, lastTime = 0, elapsed = 0
   let width = 0, height = 0, artworkWidth = 1672, artworkHeight = 941
+  let outputWidth = 0, outputHeight = 0
+  let cameraTransform = '', cameraMatrix = null
+  let observedCamera = null
+  const projection = new Float32Array([1, 0, 0, 0, 1, 0, 0, 0, 1])
 
   function destroy() {
     if (disposed) return
     disposed = true
     cancelAnimationFrame(frame)
     sizeObserver?.disconnect()
+    projectionObserver?.disconnect()
     canvas.removeEventListener('webglcontextlost', onContextLost)
     layer.classList.remove('has-marine-canvas')
     canvas.remove()
@@ -113,6 +121,9 @@ export function createMarineMotion(layer, images, getPoses) {
     gl.linkProgram(program)
     if (!gl.getProgramParameter(program, gl.LINK_STATUS)) throw new Error('Marine shader could not link')
     gl.useProgram(program)
+    const maxTexture = 2 ** Math.floor(Math.log2(Math.min(2048, gl.getParameter(gl.MAX_TEXTURE_SIZE))))
+    const maxBuffer = gl.getParameter(gl.MAX_RENDERBUFFER_SIZE)
+    const maxViewport = gl.getParameter(gl.MAX_VIEWPORT_DIMS)
     const columns = 32, rows = 64, vertices = [], indices = []
     for (let y = 0; y <= rows; y++) for (let x = 0; x <= columns; x++) vertices.push(x / columns, y / rows)
     for (let y = 0; y < rows; y++) for (let x = 0; x < columns; x++) {
@@ -129,14 +140,15 @@ export function createMarineMotion(layer, images, getPoses) {
     gl.enableVertexAttribArray(uv)
     gl.vertexAttribPointer(uv, 2, gl.FLOAT, false, 0, 0)
     const uniforms = Object.fromEntries([
-      'viewport', 'center', 'size', 'artOrigin', 'artSize', 'time', 'kind', 'hinge', 'direction', 'angle', 'phase', 'speed', 'sway', 'opacity', 'image', 'occlusion', 'behindWreck',
+      'viewport', 'center', 'size', 'artOrigin', 'artSize', 'projection', 'time', 'kind', 'hinge', 'direction', 'angle', 'phase', 'speed', 'sway', 'opacity', 'image', 'occlusion', 'behindWreck',
     ].map(key => [key, gl.getUniformLocation(program, `u_${key}`)]))
     gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false)
     gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL, true)
-    images.forEach((image, index) => {
+    images.forEach(image => {
       // Mipmaps keep the fine engraved strokes calm when the sprites are small.
       const source = document.createElement('canvas')
-      source.width = source.height = index === 0 ? 1024 : 512
+      source.width = Math.min(maxTexture, 2 ** Math.ceil(Math.log2(Math.max(1, image.naturalWidth))))
+      source.height = Math.min(maxTexture, 2 ** Math.ceil(Math.log2(Math.max(1, image.naturalHeight))))
       const context = source.getContext('2d')
       if (!context) throw new Error('Marine texture could not be prepared')
       context.imageSmoothingQuality = 'high'
@@ -150,6 +162,7 @@ export function createMarineMotion(layer, images, getPoses) {
       gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, source)
       gl.generateMipmap(gl.TEXTURE_2D)
+      source.width = source.height = 1
     })
 
     function occlusionTexture() {
@@ -191,13 +204,92 @@ export function createMarineMotion(layer, images, getPoses) {
     gl.clearColor(0, 0, 0, 0)
     layer.append(canvas)
 
+    function syncSurface() {
+      if (disposed) return false
+      const camera = layer.closest('.approach-helm-zoom__camera')
+      const screen = camera?.parentElement
+      const projected = Boolean(camera && screen)
+      if (camera !== observedCamera) {
+        projectionObserver?.disconnect()
+        observedCamera = camera
+        if (camera) {
+          // Flush camera changes before paint even if this renderer's own RAF
+          // ran before GSAP. No animation time advances in this redraw.
+          projectionObserver ||= new MutationObserver(() => {
+            if (!disposed && active && !document.hidden) draw()
+          })
+          projectionObserver.observe(camera, { attributes: true, attributeFilter: ['style'] })
+        }
+      }
+      const host = projected ? screen : layer
+      if (canvas.parentNode !== host) host.append(canvas)
+      if (projected) {
+        canvas.style.zIndex = '1'
+        canvas.style.opacity = camera.style.opacity || '1'
+      } else {
+        canvas.style.removeProperty('z-index')
+        canvas.style.removeProperty('opacity')
+      }
+
+      // Source pixels remain in the illustration's untransformed CSS space.
+      // Fractional cover dimensions must survive the camera's magnification.
+      const style = getComputedStyle(layer)
+      const sourceWidth = style.width.endsWith('px') ? parseFloat(style.width) : layer.clientWidth
+      const sourceHeight = style.height.endsWith('px') ? parseFloat(style.height) : layer.clientHeight
+      if (!(sourceWidth > 0 && sourceHeight > 0) || !host.clientWidth || !host.clientHeight) return false
+      width = sourceWidth
+      height = sourceHeight
+      outputWidth = projected ? screen.clientWidth : width
+      outputHeight = projected ? screen.clientHeight : height
+
+      if (projected) {
+        const transform = camera.style.transform || 'none'
+        if (!cameraMatrix || cameraTransform !== transform) {
+          cameraTransform = transform
+          cameraMatrix = transform === 'none' ? new DOMMatrixReadOnly() : new DOMMatrixReadOnly(transform)
+        }
+        const worldStyle = getComputedStyle(layer.parentElement)
+        const left = parseFloat(worldStyle.left) || 0
+        const top = parseFloat(worldStyle.top) || 0
+        const m = cameraMatrix
+        // Column-major mat3: camera * translation(world cover offset).
+        projection.set([
+          m.m11, m.m12, m.m14,
+          m.m21, m.m22, m.m24,
+          m.m41 + m.m11 * left + m.m21 * top,
+          m.m42 + m.m12 * left + m.m22 * top,
+          m.m44 + m.m14 * left + m.m24 * top,
+        ])
+      } else {
+        projection.set([1, 0, 0, 0, 1, 0, 0, 0, 1])
+        cameraTransform = ''
+        cameraMatrix = null
+      }
+
+      // A screen-sized buffer keeps enlarged sprites sharp without allocating
+      // a giant canvas for the zoomed world. Never resize an unchanged buffer.
+      const ratio = Math.min(devicePixelRatio || 1, 2.5,
+        Math.sqrt(8_000_000 / (outputWidth * outputHeight)),
+        maxBuffer / outputWidth, maxBuffer / outputHeight,
+        maxViewport[0] / outputWidth, maxViewport[1] / outputHeight)
+      const pixelWidth = Math.max(1, Math.min(maxBuffer, maxViewport[0], Math.round(outputWidth * ratio)))
+      const pixelHeight = Math.max(1, Math.min(maxBuffer, maxViewport[1], Math.round(outputHeight * ratio)))
+      if (canvas.width !== pixelWidth || canvas.height !== pixelHeight) {
+        if (canvas.width !== pixelWidth) canvas.width = pixelWidth
+        if (canvas.height !== pixelHeight) canvas.height = pixelHeight
+        gl.viewport(0, 0, pixelWidth, pixelHeight)
+      }
+      return true
+    }
+
     function draw() {
-      if (disposed || !width || !height) return
+      if (disposed || !syncSurface()) return
       const scale = Math.max(width / artworkWidth, height / artworkHeight)
       const offsetX = (width - artworkWidth * scale) / 2
       const offsetY = (height - artworkHeight * scale) / 2
       gl.clear(gl.COLOR_BUFFER_BIT)
-      gl.uniform2f(uniforms.viewport, width, height)
+      gl.uniform2f(uniforms.viewport, outputWidth, outputHeight)
+      gl.uniformMatrix3fv(uniforms.projection, false, projection)
       gl.uniform1f(uniforms.time, elapsed)
       gl.uniform1i(uniforms.image, 0)
       gl.uniform1i(uniforms.occlusion, 1)
@@ -222,12 +314,6 @@ export function createMarineMotion(layer, images, getPoses) {
     }
     function resize() {
       if (disposed) return
-      width = layer.clientWidth
-      height = layer.clientHeight
-      const ratio = Math.min(devicePixelRatio || 1, 1.75)
-      canvas.width = Math.round(width * ratio)
-      canvas.height = Math.round(height * ratio)
-      gl.viewport(0, 0, canvas.width, canvas.height)
       draw()
     }
     function tick(now) {
@@ -244,11 +330,15 @@ export function createMarineMotion(layer, images, getPoses) {
     return {
       setArtwork(w, h) { artworkWidth = w; artworkHeight = h; draw() },
       setActive(value) {
-        if (disposed || active === value) return
+        if (disposed) return
+        if (active === value) {
+          if (!active && canvas.parentNode !== layer) syncSurface()
+          return
+        }
         active = value
         lastTime = 0
-        if (active) frame = requestAnimationFrame(tick)
-        else { cancelAnimationFrame(frame); frame = 0 }
+        if (active) { draw(); frame = requestAnimationFrame(tick) }
+        else { cancelAnimationFrame(frame); frame = 0; syncSurface() }
       },
       destroy,
     }

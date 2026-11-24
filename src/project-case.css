@@ -1,4 +1,4 @@
-/* The cover and its seven details share one horizontal chapter. */
+/* The cover and its eight details share one horizontal chapter. */
 .project-details { position: relative; background: var(--insight-color-bg); }
 .project-details__stage { position: relative; overflow-x: clip; }
 .project-details.is-project-paged { height: calc(100svh + var(--project-pages-runway, 0px)); }
@@ -14,7 +14,7 @@
 .project-pages__navigation button[aria-current="page"] { color: #d4e6f3; }
 .project-pages__navigation button:focus-visible { outline: var(--focus-ring); outline-offset: -4px; }
 .project-pages__navigation span { width: 20px; height: 1px; background: #789db540; }
-.project-details--voyage { --project-page-count: 8; }
+.project-details--voyage { --project-page-count: 9; }
 .is-tidal .project-details--voyage.is-project-paged { height: 100%; background: transparent; }
 .is-tidal .project-details--voyage > .project-details__stage { position: relative; height: 100%; }
 .is-tidal .project-details--voyage:not(.is-project-ready) .project-pages__navigation { opacity: 0; visibility: hidden; }

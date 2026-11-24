@@ -1,0 +1,137 @@
+/* One quiet step selector for the portfolio's chapter and gallery controls.
+   Each section keeps its placement, labels, and navigation behavior. */
+:root {
+  --section-step-font: 'Julius Sans One', 'Intro Pretendard', 'Helvetica Neue', sans-serif;
+  --section-step-size: 10px;
+  --section-step-gap: 12px;
+  --section-step-muted: #7893a8;
+  --section-step-active: #d6e5ef;
+  --section-step-rule: #8baac04d;
+}
+
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: var(--section-step-gap);
+  width: max-content;
+  max-width: calc(100vw - var(--container-gutter) * 2 - var(--section-step-clearance, 0px));
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--section-step-muted);
+  font: 400 var(--section-step-size)/1.5 var(--section-step-font);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: .12em;
+  overflow-x: auto;
+  overflow-y: hidden;
+  overscroll-behavior-inline: contain;
+  scroll-padding-inline: 6px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--section-step-rule) transparent;
+}
+
+/* Legacy viewport-wide veils would become phantom scrollable content inside
+   the shared rail. The section's own background already supplies contrast. */
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label]::before {
+  content: none;
+}
+
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button {
+  position: relative;
+  display: inline-flex;
+  flex: 0 0 auto;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: auto;
+  min-width: 44px;
+  max-width: none;
+  height: 44px;
+  min-height: 44px;
+  margin: 0;
+  padding: 0 10px;
+  border: 0;
+  border-radius: 0;
+  color: var(--section-step-muted);
+  background: transparent;
+  box-shadow: none;
+  font: inherit;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: inherit;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+  cursor: pointer;
+  pointer-events: auto;
+  transition: color .2s ease;
+}
+
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button > :is(b, em, span) {
+  display: inline;
+  flex: 0 0 auto;
+  width: auto;
+  min-width: 0;
+  height: auto;
+  color: inherit;
+  background: none;
+  font: inherit;
+  font-style: normal;
+  letter-spacing: inherit;
+}
+
+/* Older rows contain separator spans; the same subtle rule now serves rows
+   with plain numbers, labels, or both, without changing their markup content. */
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > span {
+  display: none;
+}
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button:not(:first-child)::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: calc(var(--section-step-gap) * -.5 - 3px);
+  width: 6px;
+  height: 1px;
+  background: var(--section-step-rule);
+  pointer-events: none;
+}
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button::after {
+  content: '';
+  position: absolute;
+  right: 10px;
+  bottom: 5px;
+  left: 10px;
+  height: 1px;
+  background: currentColor;
+  opacity: 0;
+  transition: opacity .2s ease;
+  pointer-events: none;
+}
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button:is([aria-current='step'], [aria-current='page']) {
+  color: var(--section-step-active);
+}
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button:is([aria-current='step'], [aria-current='page'])::after {
+  opacity: .7;
+}
+:is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button:focus-visible {
+  outline: 1px solid var(--section-step-active);
+  outline-offset: -2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  :is(#design-process, #diptyque-details, #diptyque-process, #personal-brand-gallery, #short-form-contents) .section-step-nav:is(.design-process__pagination, .project-pages__navigation)[aria-label] > button:hover {
+    color: var(--section-step-active);
+  }
+}
+@media (max-width: 767px) {
+  :root { --section-step-gap: 8px; }
+  #diptyque-details { --section-step-clearance: 64px; }
+  #diptyque-process { --section-step-clearance: 68px; }
+  #short-form-contents { --section-step-clearance: 76px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .section-step-nav > button,
+  .section-step-nav > button::after { transition: none; }
+}

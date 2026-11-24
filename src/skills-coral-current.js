@@ -13,6 +13,7 @@ const fragmentSource = `
   precision highp float;
   uniform sampler2D u_art;
   uniform float u_part;
+  uniform float u_span;
   uniform float u_time;
   varying vec2 v_uv;
 
@@ -29,9 +30,9 @@ const fragmentSource = `
   }
 
   void main() {
-    // The same full-atlas UV and clock are used in all three crops. The
-    // current therefore has no seam when the crops form a single reef.
-    vec2 uv = vec2((u_part + v_uv.x) / 3.0, v_uv.y);
+    // Desktop paints the complete atlas once. Stacked layouts use the same
+    // atlas coordinates and clock for their individual habitat crops.
+    vec2 uv = vec2((u_part + v_uv.x * u_span) / 3.0, v_uv.y);
     float coral = 0.0;
     coral = max(coral, frond(uv, vec2(0.272, 0.185), vec2(0.132, 0.205), 0.265, 0.365));
     coral = max(coral, frond(uv, vec2(0.397, 0.385), vec2(0.102, 0.175), 0.465, 0.560) * 0.8);
@@ -88,7 +89,7 @@ function shader(gl, type, source) {
   return compiled;
 }
 
-function painter(image, art, part) {
+function painter(image, art, part, span = 1) {
   const canvas = document.createElement('canvas');
   canvas.className = 'skill-reef__coral-current';
   canvas.setAttribute('aria-hidden', 'true');
@@ -131,6 +132,7 @@ function painter(image, art, part) {
     gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, image);
     gl.uniform1i(gl.getUniformLocation(program, 'u_art'), 0);
     gl.uniform1f(gl.getUniformLocation(program, 'u_part'), part);
+    gl.uniform1f(gl.getUniformLocation(program, 'u_span'), span);
   } catch {
     if (texture) gl.deleteTexture(texture);
     if (buffer) gl.deleteBuffer(buffer);
@@ -160,7 +162,7 @@ function painter(image, art, part) {
     visible: false,
     measure() {
       const width = art.clientWidth;
-      const height = width * 3 * image.naturalHeight / image.naturalWidth;
+      const height = width * 3 / span * image.naturalHeight / image.naturalWidth;
       const resolution = Math.min(window.devicePixelRatio || 1, 1.5);
       const targetWidth = Math.max(1, Math.round(width * resolution));
       const targetHeight = Math.max(1, Math.round(height * resolution));
@@ -203,10 +205,20 @@ export function initSkillsCoralCurrent(scene) {
   if (!images.length) return () => {};
 
   const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const continuousLayout = window.matchMedia('(min-width: 1200px)');
   const previousState = scene.getAttribute('data-coral-current');
+  const hadContinuous = scene.classList.contains('has-continuous-coral');
+  const continuousArt = document.createElement('div');
+  continuousArt.className = 'skill-reef__art skill-reef__art--continuous';
+  continuousArt.setAttribute('aria-hidden', 'true');
+  const continuousImage = images[0].cloneNode(false);
+  continuousImage.loading = 'eager';
+  continuousArt.append(continuousImage);
+  scene.prepend(continuousArt);
+  scene.classList.add('has-continuous-coral');
   const painters = [];
   const pendingLoads = [];
-  const arts = images.map((image) => image.parentElement);
+  const arts = [...images.map((image) => image.parentElement), continuousArt];
   const visibleArts = new Map(arts.map((art) => {
     const rect = art.getBoundingClientRect();
     return [art, rect.bottom > -160 && rect.top < window.innerHeight + 160
@@ -238,6 +250,11 @@ export function initSkillsCoralCurrent(scene) {
 
   function sync() {
     if (disposed) return;
+    const continuous = continuousLayout.matches;
+    painters.forEach((item) => {
+      const inLayout = item.art === continuousArt ? continuous : !continuous;
+      item.visible = inLayout && (visibleArts.get(item.art) || false);
+    });
     // An entering crop is painted at the shared clock before it replaces its
     // original image. Distant crops remain static instead of consuming GPU.
     const running = canRun();
@@ -265,10 +282,17 @@ export function initSkillsCoralCurrent(scene) {
     const art = image.parentElement;
     const part = Number.parseFloat(getComputedStyle(art).getPropertyValue('--reef-part'));
     const item = painter(image, art, Number.isFinite(part) ? part : index);
-    if (!item) return;
-    item.visible = visibleArts.get(art) || false;
-    painters.push(item);
-    item.measure();
+    if (item) {
+      painters.push(item);
+      item.measure();
+    }
+    if (index === 0) {
+      const whole = painter(image, continuousArt, 0, 3);
+      if (whole) {
+        painters.push(whole);
+        whole.measure();
+      }
+    }
     sync();
   }
 
@@ -304,8 +328,9 @@ export function initSkillsCoralCurrent(scene) {
     });
     sync();
   });
-  images.forEach((image) => resize.observe(image.parentElement));
+  arts.forEach((art) => resize.observe(art));
   reduced.addEventListener('change', sync);
+  continuousLayout.addEventListener('change', sync);
   document.addEventListener('visibilitychange', sync);
   sync();
 
@@ -316,9 +341,12 @@ export function initSkillsCoralCurrent(scene) {
     artObserver.disconnect();
     resize.disconnect();
     reduced.removeEventListener('change', sync);
+    continuousLayout.removeEventListener('change', sync);
     document.removeEventListener('visibilitychange', sync);
     pendingLoads.forEach(([image, loaded]) => image.removeEventListener('load', loaded));
     painters.forEach((item) => item.destroy());
+    continuousArt.remove();
+    scene.classList.toggle('has-continuous-coral', hadContinuous);
     images.forEach((image) => delete image.dataset.coralCurrentPrepared);
     if (previousState === null) scene.removeAttribute('data-coral-current');
     else scene.setAttribute('data-coral-current', previousState);

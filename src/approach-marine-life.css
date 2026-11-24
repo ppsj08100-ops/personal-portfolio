@@ -1,0 +1,28 @@
+/* A few distant animals give scale to the water around the silver current. */
+.approach-marine-life {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100svh;
+  max-height: 100%;
+  overflow: hidden;
+  opacity: .2;
+  pointer-events: none;
+  user-select: none;
+  filter: saturate(calc(.5 + var(--approach-water-reveal-progress) * .48))
+    brightness(calc(.62 + var(--approach-water-reveal-progress) * .52));
+  -webkit-mask-image: linear-gradient(90deg, transparent 3%, #000 12% 88%, transparent 97%);
+  mask-image: linear-gradient(90deg, transparent 3%, #000 12% 88%, transparent 97%);
+}
+.approach-marine-life__still,
+.approach-marine-life > canvas {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+.approach-marine-life.has-marine-canvas > .approach-marine-life__still { visibility: hidden; }
