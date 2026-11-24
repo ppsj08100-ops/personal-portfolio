@@ -9,14 +9,24 @@
   position: absolute;
   top: 0;
   display: block;
-  margin-left: -2px;
-  border: 1px solid rgba(187, 220, 243, .68);
+  border: .75px solid rgba(187, 220, 243, .72);
   border-radius: 50%;
   background: radial-gradient(circle at 28% 24%, rgba(229, 244, 255, .35), transparent 29%),
     radial-gradient(circle at 68% 74%, rgba(132, 188, 222, .12), transparent 64%);
   box-shadow: inset -.5px -.5px 1.5px rgba(123, 183, 220, .18);
   opacity: 0;
   will-change: transform, opacity;
+}
+.capabilities__bubble::after {
+  content: '';
+  position: absolute;
+  top: 16%;
+  left: 18%;
+  width: 32%;
+  height: 19%;
+  border-top: .7px solid rgba(230, 246, 255, .86);
+  border-radius: 50%;
+  rotate: -38deg;
 }
 .capabilities.is-current-linked:not(.is-current-landed) .capabilities__bubbles { visibility: hidden; }
 @media (max-width: 599px) {

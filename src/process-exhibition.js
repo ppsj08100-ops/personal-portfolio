@@ -1,6 +1,7 @@
 import './process-exhibition.css'
 import './process-exhibition-simple.css'
 import './process-copy.css'
+import { initProcessAbyssAtmosphere } from './process-abyss-atmosphere.js'
 
 const scenes = [
   { id: 'diptyque-planning', motif: 'plinth', variant: 'ruined-plinth', title: '01 / LEAN CANVAS' },
@@ -286,6 +287,7 @@ export function initProcessExhibition(chapter) {
     }
   }
 
+  const cleanupAtmosphere = initProcessAbyssAtmosphere(chapter)
   const resize = new ResizeObserver(queueFit)
   for (const record of records) {
     resize.observe(record.visual)
@@ -303,6 +305,7 @@ export function initProcessExhibition(chapter) {
 
   return () => {
     disposed = true
+    cleanupAtmosphere()
     cancelAnimationFrame(resizeFrame)
     resize.disconnect()
     inView.disconnect()

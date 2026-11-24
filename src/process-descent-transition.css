@@ -43,6 +43,69 @@
 #diptyque-process.has-process-exhibition:not(.is-project-paged) #diptyque-planning {
   background-color: var(--process-boundary-water);
 }
-@media (prefers-reduced-motion: reduce) {
+
+/* The existing scroll boundary owns this sequence; every resting value keeps
+   the original chapter, documents and controls fully visible. */
+#diptyque-details { --process-source-opacity: 1; }
+#diptyque-process {
+  --process-depth-visibility: 1;
+  --process-frame-visibility: 1;
+  --process-document-visibility: 1;
+  --process-copy-visibility: 1;
+  --process-detail-visibility: 1;
+}
+
+#diptyque-details.has-process-depth-source #diptyque-together,
+#diptyque-details.has-process-depth-source > .project-details__stage::before,
+#diptyque-details.has-process-depth-source > .project-details__stage > .project-pages__navigation {
+  opacity: var(--process-source-opacity, 1);
+}
+
+#diptyque-process.has-process-exhibition.is-project-paged.has-process-depth-entry > .project-details__stage::before {
+  opacity: calc(.96 * var(--process-depth-visibility, 1));
+}
+#diptyque-process.has-process-exhibition.is-project-paged.has-process-depth-entry > .project-details__stage::after,
+#diptyque-process.has-process-exhibition.is-project-paged.has-process-depth-entry > .project-details__stage > .process-abyss-atmosphere {
+  opacity: var(--process-depth-visibility, 1);
+}
+
+/* Only the first archive page arrives in layers. The paper remains in its
+   original frame and keeps its original size, fitting and interaction. */
+#diptyque-process.has-process-exhibition.has-process-depth-entry #diptyque-planning .process-device {
+  opacity: var(--process-frame-visibility, 1);
+}
+#diptyque-process.has-process-exhibition.has-process-depth-entry #diptyque-planning .process-device__screen {
+  opacity: var(--process-document-visibility, 1);
+}
+#diptyque-process.has-process-exhibition.has-process-depth-entry #diptyque-planning .project-planning__content {
+  opacity: var(--process-copy-visibility, 1);
+}
+#diptyque-process.has-process-exhibition.has-process-depth-entry #diptyque-planning .process-exhibit__readout,
+#diptyque-process.has-process-exhibition.has-process-depth-entry > .project-details__stage > .project-pages__navigation {
+  opacity: var(--process-detail-visibility, 1);
+}
+
+#diptyque-process.has-process-depth-entry[data-process-copy-hidden] #diptyque-planning .project-planning__content {
+  visibility: hidden;
+}
+#diptyque-process.has-process-depth-entry[data-process-detail-hidden] #diptyque-planning .process-exhibit__readout,
+#diptyque-process.has-process-depth-entry[data-process-detail-hidden] > .project-details__stage > .project-pages__navigation {
+  visibility: hidden;
+}
+#diptyque-details.has-process-depth-source[data-process-source-hidden] #diptyque-together,
+#diptyque-details.has-process-depth-source[data-process-source-hidden] > .project-details__stage > .project-pages__navigation {
+  visibility: hidden;
+}
+
+@media (max-height: 699px), (prefers-reduced-motion: reduce) {
   .process-descent-transition { display: none; }
+  #diptyque-details.has-process-depth-source { --process-source-opacity: 1 !important; }
+  #diptyque-process.has-process-depth-entry {
+    --process-depth-visibility: 1 !important;
+    --process-frame-visibility: 1 !important;
+    --process-document-visibility: 1 !important;
+    --process-copy-visibility: 1 !important;
+    --process-detail-visibility: 1 !important;
+    --process-arrival: 1 !important;
+  }
 }

@@ -14,6 +14,7 @@
   font-display: swap;
 }
 .capabilities {
+  --mirror-rest-angle: 0deg;
   position: relative;
   isolation: isolate;
   overflow: hidden;
@@ -47,7 +48,12 @@
     rgba(18, 49, 84, .09) 46%,
     transparent 72%);
 }
-.capabilities__mirror { position: absolute; inset: 0; }
+.capabilities__mirror {
+  position: absolute;
+  inset: 0;
+  transform: rotate(var(--mirror-rest-angle));
+  transform-origin: 50% 50%;
+}
 .capabilities__mirror-frame {
   position: absolute;
   inset: 0;
@@ -93,16 +99,16 @@
 }
 .capabilities__copy:lang(ko) {
   font-family: 'Intro Pretendard', var(--font-family-body);
-  font-size: clamp(.9375rem, 1.05vw, 1.0625rem);
+  font-size: 1rem;
   font-weight: 300;
-  line-height: 1.9;
-  letter-spacing: -.015em;
+  line-height: 1.75;
+  letter-spacing: -.01em;
   color: #cbd7e3;
   word-break: keep-all;
   overflow-wrap: break-word;
 }
 .capabilities__copy p { margin: 0; }
-.capabilities__copy p + p { margin-top: 1.5rem; color: #98aabd; }
+.capabilities__copy p + p { margin-top: 1.125rem; color: #afc0cf; }
 .capabilities__copy p > span { display: block; }
 .capabilities__action { grid-column: 2; }
 .capabilities__button {
@@ -162,8 +168,8 @@
   .capabilities__message { grid-column: 1; grid-row: auto; }
   .capabilities__message h2 { font-size: clamp(1.5rem, 6.5vw, 2rem); }
   .capabilities__copy, .capabilities__action { grid-column: 1; }
-  .capabilities__copy:lang(ko) { font-size: .9375rem; }
   .capabilities__copy { padding-top: 0; }
+  .capabilities__copy p { text-wrap: balance; }
   .capabilities__copy p > span { display: inline; }
 }
 @media (prefers-reduced-motion: reduce) {

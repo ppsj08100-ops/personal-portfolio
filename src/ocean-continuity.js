@@ -99,13 +99,6 @@ export function initOceanContinuity(root = document) {
     const target = root.querySelector(selector), image = target?.querySelector('img')
     if (target && image) masks.push({ target, image, positionY: .5 })
   }
-  const floor = root.querySelector('#diptyque-process > .project-details__stage')
-  if (floor) {
-    const image = new Image()
-    image.decoding = 'async'
-    image.src = '/images/process-city-common-ground-v12.png'
-    masks.push({ target: floor, image, viewport: true, positionY: .6 })
-  }
   for (const record of masks) {
     record.original = record.target.style.getPropertyValue('--ocean-ink-mask')
     record.priority = record.target.style.getPropertyPriority('--ocean-ink-mask')

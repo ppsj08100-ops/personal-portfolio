@@ -1,6 +1,7 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './selected-title-type.css'
+import { createPearlTitleMaterial } from './pearl-title-material.js'
 
 gsap.registerPlugin(ScrollTrigger)
 const clamp = gsap.utils.clamp(0, 1)
@@ -17,6 +18,7 @@ export function initOceanType(section) {
 
   const hadEditorial = section.classList.contains('is-editorial-type')
   section.classList.add('is-editorial-type')
+  const material = createPearlTitleMaterial({ stage, runs })
   const media = gsap.matchMedia()
   let destroyed = false
   let refreshFrame = 0
@@ -53,6 +55,7 @@ export function initOceanType(section) {
       title.style.translate = `${-travelDistance * travel}px 0px`
       title.style.opacity = String(1 - smooth((p - .94) / .06))
       if (caption) caption.style.opacity = String(1 - smooth((p - .5) / .35))
+      material.render(p)
     }
     function measure() {
       if (!active) return
@@ -108,6 +111,7 @@ export function initOceanType(section) {
   return () => {
     destroyed = true
     media.revert()
+    material.destroy()
     if (!hadEditorial) section.classList.remove('is-editorial-type')
     delete stage.dataset.typeProgress
     delete stage.dataset.typeMotion

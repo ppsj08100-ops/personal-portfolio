@@ -1,6 +1,7 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import './skills-title-type.css'
+import { createPearlTitleMaterial } from './pearl-title-material.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -25,6 +26,7 @@ export function initSkillsCurrentTitle(section) {
   const originals = properties.map(name => [name, section.style.getPropertyValue(name), section.style.getPropertyPriority(name)])
   section.classList.add('has-skills-typography')
   stage.dataset.backgroundVariant = 'typography'
+  const material = createPearlTitleMaterial({ stage, runs: stage.querySelectorAll('[data-skills-first], [data-skills-amp], [data-skills-tools]') })
   let disposed = false, refreshFrame = 0
   function requestRefresh() {
     cancelAnimationFrame(refreshFrame)
@@ -51,6 +53,7 @@ export function initSkillsCurrentTitle(section) {
       section.style.setProperty('--skills-type-copy-x', `${moving ? -(stage.clientWidth + 24) * smooth(.15, 1, p) : 0}px`)
       section.style.setProperty('--skills-type-cue-opacity', String(moving ? 1 - smooth(.48, .75, p) : 1))
       stage.dataset.typographyProgress = p.toFixed(4)
+      material.render(moving ? p : 0)
     }
     const timeline = moving ? gsap.timeline({
       scrollTrigger: {
@@ -79,6 +82,7 @@ export function initSkillsCurrentTitle(section) {
   return () => {
     disposed = true
     media.revert()
+    material.destroy()
     cancelAnimationFrame(refreshFrame)
     if (!hadType) section.classList.remove('has-skills-typography')
     if (originalVariant === undefined) delete stage.dataset.backgroundVariant

@@ -1,0 +1,37 @@
+#diptyque-process.has-process-exhibition > .project-details__stage > .process-abyss-atmosphere {
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  display: none;
+  overflow: clip;
+  contain: paint;
+  pointer-events: none;
+}
+#diptyque-process.has-process-exhibition.is-project-paged > .project-details__stage > .process-abyss-atmosphere {
+  display: block;
+}
+.process-abyss-atmosphere__light {
+  position: absolute;
+  inset: -12%;
+  opacity: 0;
+  background: radial-gradient(ellipse 60% 45% at 28% 28%, rgba(92, 146, 185, .055), transparent 76%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+.process-abyss-atmosphere__mote {
+  position: absolute;
+  top: 100%;
+  display: block;
+  border: 0;
+  border-radius: 50%;
+  background: #a9c9da;
+  box-shadow: 0 0 1px #92bfd144;
+  opacity: 0;
+  pointer-events: none;
+}
+@media (max-width: 899px) {
+  .process-abyss-atmosphere__mote:nth-of-type(n + 13) { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  #diptyque-process.has-process-exhibition.is-project-paged > .project-details__stage > .process-abyss-atmosphere { display: none; }
+}

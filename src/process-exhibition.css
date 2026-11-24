@@ -1,9 +1,10 @@
-/* The seven archive scenes share the cobalt water of the DIPTYQUE introduction. */
+/* A quiet natural abyss leaves the seven original archive screens in focus. */
 #diptyque-process.has-process-exhibition {
   --process-arrival: 1;
-  --process-seabed-image: url('/images/process-city-common-ground-v12.png');
-  --process-seabed-position: 50% 60%;
+  --process-seabed-image: url('/images/process-natural-abyss-background-v18.png');
+  --process-seabed-position: 50% 75%;
   --process-seabed-size: cover;
+  --ocean-edge-fade: linear-gradient(180deg, transparent, #000 22% 84%, transparent 97%);
   --process-layout-top: clamp(90px, 12svh, 136px);
   --process-scene-height: clamp(440px, 68svh, 700px);
   --process-groundline: min(78svh, calc(100svh - 184px));
@@ -29,7 +30,7 @@
   z-index: -1;
   border: 0;
   background: var(--process-seabed-image) var(--process-seabed-position) / var(--process-seabed-size);
-  filter: url('#process-abyss-floor-grade');
+  filter: url('#process-abyss-ocean-grade');
   opacity: .96;
   pointer-events: none;
 }
@@ -282,7 +283,8 @@ body.has-process-exhibition-in-view .portfolio-chat__launcher-label { display: n
   #diptyque-process.has-process-exhibition {
     --process-scene-height: clamp(410px, 65vw, 570px);
     --process-world-height: calc(var(--process-scene-height) * 1.25 + 15px);
-    --process-seabed-position: center top;
+    --process-seabed-image: url('/images/process-natural-abyss-background-mobile-v18.png');
+    --process-seabed-position: center bottom;
   }
   #diptyque-process.has-process-exhibition .process-exhibition-page::before,
   #diptyque-process.project-process.has-process-exhibition.is-project-paged > .project-details__stage::before,

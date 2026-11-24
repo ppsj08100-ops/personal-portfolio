@@ -1,15 +1,16 @@
 import './capabilities-bubbles.css'
 
-// Fixed circles follow long, repeatable paths; no scroll or frame noise alters them.
+// Three close releases share each frame joint; the other two are isolated air.
+// Only the emission points rotate with the mirror. Buoyancy stays screen-up.
 const PROFILES = [
-  { x: -5, size: 4, duration: 34000, phase: .11, drift: -3, opacity: .46 },
-  { x: 104, size: 6, duration: 38000, phase: .46, drift: 4, opacity: .50 },
-  { x: 4, size: 8, duration: 36000, phase: .72, drift: -6, opacity: .44 },
-  { x: 96, size: 11, duration: 42000, phase: .28, drift: 5, opacity: .45 },
-  { x: -1, size: 5, duration: 40000, phase: .38, drift: -4, opacity: .48 },
-  { x: 108, size: 9, duration: 32000, phase: .82, drift: -5, opacity: .42 },
-  { x: 8, size: 3, duration: 30000, phase: .55, drift: -7, opacity: .52 },
-  { x: 101, size: 12, duration: 44000, phase: .63, drift: 6, opacity: .42 },
+  { angle: 135, size: 4, duration: 9100, phase: .00, drift: -18, opacity: .52 },
+  { angle: 134, size: 6.5, duration: 9100, phase: .05, drift: -26, opacity: .63 },
+  { angle: 136, size: 4.5, duration: 9100, phase: .10, drift: -14, opacity: .48 },
+  { angle: -25, size: 7.5, duration: 11200, phase: .52, drift: 19, opacity: .58 },
+  { angle: -26, size: 4, duration: 11200, phase: .57, drift: 28, opacity: .44 },
+  { angle: -24, size: 5.5, duration: 11200, phase: .62, drift: 13, opacity: .60 },
+  { angle: 82, size: 10.5, duration: 10300, phase: .34, drift: 23, opacity: .46 },
+  { angle: 153, size: 4, duration: 7800, phase: .76, drift: -29, opacity: .50 },
 ]
 
 export function initCapabilitiesBubbles(section) {
@@ -29,7 +30,7 @@ export function initCapabilitiesBubbles(section) {
     const element = document.createElement('span')
     element.className = 'capabilities__bubble'
     element.dataset.size = String(profile.size)
-    Object.assign(element.style, { left: `${profile.x}%`, width: `${profile.size}px`, height: `${profile.size}px` })
+    Object.assign(element.style, { width: `${profile.size}px`, height: `${profile.size}px` })
     layer.append(element)
     return { element, profile, animation: null }
   })
@@ -59,15 +60,36 @@ export function initCapabilitiesBubbles(section) {
 
   function resize() {
     if (destroyed) return
+    const width = artwork.clientWidth
     const height = artwork.clientHeight
-    if (!height) return sync()
+    if (!width || !height) return sync()
+    const bounds = artwork.getBoundingClientRect()
+    const degrees = Number.parseFloat(getComputedStyle(section).getPropertyValue('--mirror-rest-angle'))
+    const rotation = (Number.isFinite(degrees) ? degrees : 0) * Math.PI / 180
+    const cos = Math.cos(rotation)
+    const sin = Math.sin(rotation)
     bubbles.forEach(record => {
       const { element, profile } = record
-      const keyframes = [0, .12, .5, .86, 1].map((progress, index) => ({
-        offset: progress,
-        transform: `translate3d(${profile.drift * Math.sin(progress * Math.PI / 2)}px, ${height * (.90 - progress * .62)}px, 0)`,
-        opacity: index === 0 || index === 4 ? 0 : profile.opacity,
-      }))
+      const angle = profile.angle * Math.PI / 180
+      const localX = width * .38 * Math.cos(angle)
+      const localY = height * .40 * Math.sin(angle)
+      const anchorX = width / 2 + localX * cos - localY * sin
+      const anchorY = height / 2 + localX * sin + localY * cos
+      element.style.left = `${anchorX - profile.size / 2}px`
+      element.style.top = `${anchorY - profile.size / 2}px`
+      const room = profile.drift < 0
+        ? bounds.left + anchorX - profile.size / 2 - 10
+        : innerWidth - 10 - (bounds.left + anchorX + profile.size / 2)
+      const drift = Math.sign(profile.drift) * Math.min(Math.abs(profile.drift), Math.max(0, room))
+      const rise = Math.min(height * (profile.angle < 0 ? .32 : .46), 410)
+      const keyframes = [
+        { offset: 0, transform: 'translate3d(0,0,0)', opacity: 0 },
+        { offset: .035, transform: `translate3d(${drift * .035}px,${-rise * .05}px,0)`, opacity: profile.opacity * .7 },
+        { offset: .13, transform: `translate3d(${drift * .23}px,${-rise * .23}px,0)`, opacity: profile.opacity },
+        { offset: .40, transform: `translate3d(${drift * .76}px,${-rise * .77}px,0)`, opacity: profile.opacity * .76 },
+        { offset: .58, transform: `translate3d(${drift}px,${-rise}px,0)`, opacity: 0 },
+        { offset: 1, transform: `translate3d(${drift}px,${-rise}px,0)`, opacity: 0 },
+      ]
       if (record.animation) {
         const time = record.animation.currentTime
         record.animation.effect.setKeyframes(keyframes)

@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createMirrorWaterImpact } from './mirror-water-impact.js'
 import './mirror-current-transition.css'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -20,7 +21,8 @@ export function initMirrorCurrentTransition(section) {
 
   const media = gsap.matchMedia()
   let destroyed = false
-  media.add('(prefers-reduced-motion: no-preference) and (min-height: 600px)', () => {
+  media.add('(prefers-reduced-motion: no-preference)', () => {
+    const controller = new AbortController()
     const originalLoading = image.loading
     image.loading = 'eager'
     const id = `mirror-current-${++instance}`
@@ -64,6 +66,7 @@ export function initMirrorCurrentTransition(section) {
     const waterTint = layer.querySelector('.mirror-current__water-tint')
     const face = layer.querySelector('.mirror-current__portrait-image')
     const shade = layer.querySelector('.mirror-current__shade')
+    const water = createMirrorWaterImpact(svg, id)
     layer.querySelectorAll('image').forEach(copy => copy.setAttribute('href', image.currentSrc || image.src))
 
     let disposed = false
@@ -71,22 +74,57 @@ export function initMirrorCurrentTransition(section) {
     let trigger
     let last = -1
     let geometry
+    let waterFrame
+    let ticking = false
+    let elapsed = 0
+    let lastTick = null
+    let travel
+    const motion = { progress: 0 }
+    const menu = document.querySelector('#portfolio-menu')
+
+    function waterTick(time) {
+      if (ticking) {
+        if (lastTick !== null) elapsed += Math.max(0, Math.min(.05, time - lastTick))
+        lastTick = time
+      }
+      if (waterFrame) water.render({ ...waterFrame, time, elapsed })
+    }
+
+    function syncWater() {
+      const active = !disposed && !destroyed && last > .12 && last < .94
+        && !document.hidden && !menu?.open && !document.body.classList.contains('has-menu-open')
+      if (active === ticking) return
+      ticking = active
+      if (active) gsap.ticker.add(waterTick)
+      else {
+        gsap.ticker.remove(waterTick)
+        lastTick = null
+      }
+    }
+
+    document.addEventListener('visibilitychange', syncWater, { signal: controller.signal })
+    const menuObserver = new MutationObserver(syncWater)
+    if (menu) menuObserver.observe(menu, { attributes: true, attributeFilter: ['open'] })
+    menuObserver.observe(document.body, { attributes: true, attributeFilter: ['class'] })
 
     function measure() {
       const width = document.documentElement.clientWidth
       const height = window.innerHeight
       const boundary = section.getBoundingClientRect().top + window.scrollY
-      const rect = image.getBoundingClientRect()
+      // Measure the layout box so the falling frame's rotation cannot inflate
+      // the geometry of its final, upright handoff.
+      const rect = figure.getBoundingClientRect()
       const top = rect.top + window.scrollY
       const end = Math.max(boundary, Math.min(boundary + height * .45, top + rect.height - height * .96))
-      // Let the final approach chapter be read before the profile enters.
-      // Native document flow has no pin trigger, but still needs this boundary.
+      // The drop follows the final approach chapter without adding a scroll pin.
       const approachEnd = ScrollTrigger.getById('design-process-pinned')?.end
         ?? previous.getBoundingClientRect().bottom + window.scrollY - height
       const start = Math.max(boundary - height * 1.45, approachEnd)
       const fitHeight = Math.min(rect.height, height * .76)
+      const restAngle = Number.parseFloat(getComputedStyle(section).getPropertyValue('--mirror-rest-angle'))
       geometry = {
         width, height, start, end,
+        restAngle: Number.isFinite(restAngle) ? restAngle : 0,
         target: { x: rect.left, top, width: rect.width, height: rect.height },
         origin: { x: (width - fitHeight * 2 / 3) / 2, y: height * .43 - fitHeight / 2, width: fitHeight * 2 / 3, height: fitHeight },
       }
@@ -99,47 +137,78 @@ export function initMirrorCurrentTransition(section) {
       const p = clamp(progress)
       if (!force && Math.abs(p - last) < .00001) return
       last = p
-      const { width, height, origin, target } = geometry
-      const rising = smooth((p - .08) / .58)
-      const depth = mix(.84, 1, rising)
+      const { width, height, origin, target, restAngle } = geometry
+      const fall = clamp((p - .06) / .28)
+      const gravity = fall * fall
+      const drag = clamp((p - .34) / .38)
+      const settle = 1 - (1 - drag) ** 3
       const landing = smooth((p - .73) / .27)
-      const emergingWidth = origin.width * depth
-      const emergingHeight = origin.height * depth
+      const drop = Math.min(height * .26, 250)
+      const sideways = Math.min(width * .065, 72)
+      const fallY = origin.y - drop * (1 - gravity) + height * .055 * settle
+      const fallX = origin.x + sideways * (1 - smooth(fall)) - sideways * .12 * settle
       const rect = {
-        x: mix((width - emergingWidth) / 2, target.x, landing),
-        y: mix(origin.y + (origin.height - emergingHeight) / 2 + height * .07 * (1 - rising), target.top - window.scrollY, landing),
-        width: mix(emergingWidth, target.width, landing),
-        height: mix(emergingHeight, target.height, landing),
+        x: mix(fallX, target.x, landing),
+        y: mix(fallY, target.top - window.scrollY, landing),
+        width: mix(origin.width, target.width, landing),
+        height: mix(origin.height, target.height, landing),
       }
       const scale = rect.width / 1024
-      mirror.setAttribute('transform', `translate(${rect.x} ${rect.y}) scale(${scale})`)
+      const sinkingTilt = -5 - 5.5 * (1 - smooth(fall)) - 1.6 * Math.sin(settle * Math.PI)
+      const tilt = mix(sinkingTilt, restAngle, landing)
+      mirror.setAttribute('transform', `translate(${rect.x} ${rect.y}) scale(${scale}) rotate(${tilt} 512 768)`)
+      waterFrame = {
+        progress: p, width, height, mirrorWidth: rect.width, mirrorHeight: rect.height,
+        rotation: tilt,
+        x: rect.x + rect.width / 2,
+        y: rect.y + rect.height / 2,
+      }
+      if (p <= .08) { elapsed = 0; lastTick = null }
+      waterTick(gsap.ticker.time)
+      syncWater()
 
-      // One complete mirror sits beneath the water from the first moment.
-      // Change its light and refraction while preserving an opaque glass base.
-      const clarity = smooth((p - .18) / .50)
-      const contrast = mix(.045, 1, clarity)
+      // The frame descends through the water column. A soft blue veil and
+      // restrained refraction clear as trapped air escapes from its edges.
+      const clarity = smooth((p - .22) / .44)
+      const immersion = smooth((p - .10) / .20)
+      const contrast = mix(.72, 1, clarity)
       const tint = 1 - contrast
-      refraction.setAttribute('scale', String(26 * (1 - clarity)))
-      softFocus.setAttribute('stdDeviation', String(3.5 * (1 - clarity)))
+      refraction.setAttribute('scale', String(5.5 * immersion * (1 - clarity)))
+      softFocus.setAttribute('stdDeviation', String(.28 * immersion * (1 - clarity)))
       waterOffset.setAttribute('dx', String(p * 32))
       waterOffset.setAttribute('dy', String(p * 110))
       waterTint.setAttribute('values', `${contrast} 0 0 0 ${tint * 2 / 255} 0 ${contrast} 0 0 ${tint * 11 / 255} 0 0 ${contrast} 0 ${tint * 29 / 255} 0 0 0 1 0`)
       if (clarity >= .99999) submerged.removeAttribute('filter')
       else submerged.setAttribute('filter', `url(#${id}-water)`)
-      face.setAttribute('opacity', String(smooth((p - .39) / .30)))
+      face.setAttribute('opacity', String(smooth((p - .12) / .28)))
+      mirror.style.opacity = String(smooth((p - .055) / .06))
 
       const title = smooth((p - .72) / .22)
       section.style.setProperty('--current-title-opacity', String(title))
       section.style.setProperty('--current-title-offset', `${16 * (1 - title)}px`)
       section.dataset.currentProgress = p.toFixed(4)
+      section.dataset.currentPhase = p < .08 ? 'waiting' : p < .34 ? 'falling' : p < .73 ? 'submerged' : p < 1 ? 'landing' : 'landed'
 
-      // The previous scene sinks into navy before the reflection approaches.
-      // Clear that veil only after the mirror has regained its original light.
-      shade.style.opacity = String(smooth((p - .01) / .18) * (1 - smooth((p - .72) / .23)))
-      mirror.style.visibility = p <= .12 ? 'hidden' : 'visible'
+      shade.style.opacity = String(smooth((p - .005) / .10) * (1 - smooth((p - .72) / .23)))
+      mirror.style.visibility = p <= .055 ? 'hidden' : 'visible'
       const landed = p >= .99999
       section.classList.toggle('is-current-landed', landed)
       layer.hidden = p <= .00001 || landed
+    }
+
+    function follow(progress, immediate = false) {
+      travel?.kill()
+      if (immediate) {
+        motion.progress = progress
+        render(progress, true)
+        return
+      }
+      const distance = Math.abs(progress - motion.progress)
+      // A quick wheel gesture still passes through the drop and its impact.
+      travel = gsap.to(motion, {
+        progress, duration: distance > .45 ? .9 : .32, ease: 'power1.out',
+        onUpdate: () => render(motion.progress),
+      })
     }
 
     const load = image.complete && image.naturalWidth ? Promise.resolve() : image.decode()
@@ -154,14 +223,19 @@ export function initMirrorCurrentTransition(section) {
         end: () => geometry.end,
         invalidateOnRefresh: true,
         onRefreshInit: measure,
-        onRefresh: self => render(self.progress, true),
-        onUpdate: self => render(self.progress),
+        onRefresh: self => follow(self.progress, true),
+        onUpdate: self => follow(self.progress),
       })
-      render(trigger.progress, true)
+      follow(trigger.progress, true)
     }).catch(() => {})
 
     return () => {
       disposed = true
+      controller.abort()
+      menuObserver.disconnect()
+      travel?.kill()
+      gsap.ticker.remove(waterTick)
+      water.destroy()
       trigger?.kill()
       layer.remove()
       image.loading = originalLoading
@@ -169,6 +243,7 @@ export function initMirrorCurrentTransition(section) {
       section.style.removeProperty('--current-title-opacity')
       section.style.removeProperty('--current-title-offset')
       delete section.dataset.currentProgress
+      delete section.dataset.currentPhase
     }
   })
 

@@ -1,5 +1,6 @@
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { createPearlTitleMaterial } from './pearl-title-material.js'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -22,6 +23,7 @@ export function initAboutTitle(section) {
   const originalVariant = stage.getAttribute('data-bg-variant')
   section.classList.add('has-about-typography')
   stage.dataset.bgVariant = 'typography'
+  const material = createPearlTitleMaterial({ stage, runs: [first, final] })
   const media = gsap.matchMedia()
   let disposed = false
   let refreshFrame = 0
@@ -71,6 +73,7 @@ export function initAboutTitle(section) {
         heading.style.opacity = (1 - smooth(clamp((progress - .97) / .03))).toFixed(4)
       }
       if (cue) cue.style.opacity = (1 - smooth(clamp((progress - .25) / .2))).toFixed(4)
+      material.render(progress)
       paintHandoff()
     }
     function measure() {
@@ -132,6 +135,7 @@ export function initAboutTitle(section) {
   return () => {
     disposed = true
     media.revert()
+    material.destroy()
     if (!hadTypography) section.classList.remove('has-about-typography')
     if (originalVariant === null) stage.removeAttribute('data-bg-variant')
     else stage.setAttribute('data-bg-variant', originalVariant)
